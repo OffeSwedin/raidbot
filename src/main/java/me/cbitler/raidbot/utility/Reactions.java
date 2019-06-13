@@ -7,11 +7,11 @@ import java.util.List;
 public class Reactions {
 
     static Reaction[] reactions = {
-            new Reaction("tank", "587246785144160256"),
-            new Reaction("healer", "587244937846849536"),
-            new Reaction("melee", "587246716345122817"),
-            new Reaction("ranged", "587246755741958166"),
-            new Reaction("not attending", "587246903369138187")
+            new Reaction("Tank", "588456264716124162"),
+            new Reaction("Healer", "588452960661536777"),
+            new Reaction("Melee", "588455826625265684"),
+            new Reaction("Ranged", "588456430185480194"),
+            new Reaction("Not Attending", "588459958484598784")
     };
 
     public static List<Reaction> getReactions(){return new ArrayList<>(Arrays.asList(reactions)); }
