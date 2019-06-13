@@ -1,6 +1,6 @@
 FROM java:8-jre
 
-COPY ./target/RaidSignUpBot-1.0.jar /app/
-COPY ./.env /app/
+COPY ./target/RaidSignUpBot-1.0.jar /
+COPY ./.env /
 
-CMD ["java", "-Xmx200m", "-jar", "/app/RaidSignUpBot-1.0.jar"]
+CMD ["java", "-Xmx200m", "-jar", "/RaidSignUpBot-1.0.jar"]
