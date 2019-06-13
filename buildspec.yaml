@@ -17,7 +17,7 @@ phases:
       - echo DISCORD_TOKEN=$DISCORD_TOKEN >> .env
       - echo DATABASE_URL=$DATABASE_URL >> .env
       - echo DATABASE_USERNAME=$DATABASE_USERNAME >> .env
-      - echo DATABASE_PASSWORD=$DATABASE_PASSWORD# >> .env
+      - echo DATABASE_PASSWORD=$DATABASE_PASSWORD >> .env
       - echo building the Java package
       - mvn package
       - echo Building the Docker image...
