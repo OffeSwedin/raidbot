@@ -8,11 +8,10 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.Role;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.util.*;
-
-import javax.xml.ws.Response;
 
 /**
  * Represents a raid and has methods for adding/removing users, user flex roles,
@@ -426,20 +425,35 @@ public class Raid {
 	 * @return The embedded message representing this raid
 	 */
 	public MessageEmbed buildEmbed() {
-		EmbedBuilder builder = new EmbedBuilder();
-		builder.setTitle(getName());
-		builder.addField("Date and time: ", getDate() + ", " + getTime(), true);
-		builder.addBlankField(false);
+		RaidBot bot = RaidBot.getInstance();
+		Guild guild = bot.getJda().getGuilds().get(0);
 
-		builder.addField("Roles:", buildRolesText(), true);
-		Integer numberOfNotResponded = 0;
-		String notRespondedText = buildNotRespondedText(numberOfNotResponded);
-		builder.addField("Not responded: ("+numberOfNotResponded+")", notRespondedText , true);
+		List<Member> notRespondedMembers = getNotRespondedMembers(guild);
+
+		EmbedBuilder builder = new EmbedBuilder();
+		builder.setTitle("**" + getName() + " - " + getDate() + " " + getTime() + "**");
+		builder.addBlankField(false);
+		builder.addField("Roles:", buildRolesText(guild), true);
+		builder.addField("Not responded: ("+notRespondedMembers.size()+")", buildNotRespondedText(notRespondedMembers) , true);
 		builder.addBlankField(false);
 		builder.addField("ID: ", messageId, true);
 		//builder.addField("@"+RaidBot.getInstance().getRaiderRole(this.getServerId()), "", true);
 
 		return builder.build();
+	}
+
+	private List<Member> getNotRespondedMembers(Guild guild) {
+		List<Member> members = guild.getMembers();
+		List<Member> notRespondedMembers = new ArrayList<>();
+
+		for (Member member : members) {
+			if (!this.isUserInRaidByName(member.getUser().getName())) {
+				if (PermissionsUtil.hasRaiderRole(member)) {
+					notRespondedMembers.add(member);
+				}
+			}
+		}
+		return notRespondedMembers;
 	}
 
 	/**
@@ -448,21 +462,11 @@ public class Raid {
 	 * 
 	 * @return The flex role text
 	 */
-	private String buildNotRespondedText(Integer number) {
+	private String buildNotRespondedText(List<Member> notRespondedMembers) {
 		String response = "";
-
-		RaidBot bot = RaidBot.getInstance();
-		Guild guild = bot.getJda().getGuilds().get(0);
-		List<Member> members = guild.getMembers();
-
 		
-		for (Member member : members) {
-			if (!this.isUserInRaidByName(member.getUser().getName())) {
-				if (PermissionsUtil.hasRaiderRole(member)) {
-					response += member.getEffectiveName() + "\n";
-					number = number+1;
-				}
-			}
+		for (Member member : notRespondedMembers) {
+			response += member.getEffectiveName() + "\n";
 		}
 
 		return response;
@@ -473,19 +477,12 @@ public class Raid {
 	 * 
 	 * @return The role text
 	 */
-	private String buildRolesText() {
-
-		JDA jda = RaidBot.getInstance().getJda();
-		RaidBot bot = RaidBot.getInstance();
-		Guild guild = bot.getJda().getGuilds().get(0);
-		List<Member> members = guild.getMembers();
-
+	private String buildRolesText(Guild guild) {
 		String text = "";
 		for (RaidRole role : roles) {
 			text += ("**" + role.name + " (" + this.getUserNumberInRole(role.name) + "):** \n");
 			for (RaidUser user : getUsersInRole(role.name)) {
 				text += "   - " + guild.getMemberById(user.id).getEffectiveName() + "\n";
-				// text += " - " + user.name + "\n";
 			}
 			text += "\n";
 		}

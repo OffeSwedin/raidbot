@@ -24,7 +24,8 @@ public class Main {
             System.exit(1);
         }
 
-        JDA jda = new JDABuilder(AccountType.BOT).setToken(token).buildBlocking();
+        JDA jda = new JDABuilder(token).build();
+        jda.awaitReady();
         RaidBot bot = new RaidBot(jda);
     }
 

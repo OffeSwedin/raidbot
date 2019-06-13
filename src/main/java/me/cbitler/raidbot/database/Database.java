@@ -1,20 +1,23 @@
 package me.cbitler.raidbot.database;
 
+import me.cbitler.raidbot.utility.EnvVariables;
+
+import java.io.IOException;
 import java.sql.*;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Class for managing the SQLite database for this bot
  * @author Christopher Bitler
  */
 public class Database {
-    String databaseName;
     Connection connection;
 
     //Thee are the queries for creating the tables
 
     String raidTableInit = "CREATE TABLE IF NOT EXISTS raids (\n"
-            + " raidId text PRIMARY KEY, \n"
+            + " raidId VARCHAR(255) PRIMARY KEY, \n"
             + " serverId text NOT NULL, \n"
             + " channelId text NOT NULL, \n"
             + " leader text NOT NULL, \n"
@@ -44,7 +47,7 @@ public class Database {
 */
     
     String botServerSettingsInit = "CREATE TABLE IF NOT EXISTS serverSettings (\n"
-            + " serverId text PRIMARY KEY, \n"
+            + " serverId VARCHAR(255) PRIMARY KEY, \n"
             + " raid_leader_role text, \n"
             + " raider_role text, \n"
             + " signup_channel text, \n"
@@ -52,22 +55,29 @@ public class Database {
     
     
     /**
-     * Create a new database with the specific filename
-     * @param databaseName The filename/location of the SQLite database
+     * Create a new database
      */
-    public Database(String databaseName) {
-        this.databaseName = databaseName;
-    }
+    public Database(){}
 
     /**
      * Connect to the SQLite database and create the tables if they don't exist
      */
     public void connect() {
-        String url = "jdbc:sqlite:" + databaseName;
         try {
-            connection = DriverManager.getConnection(url);
+            EnvVariables envVariables = new EnvVariables();
+            envVariables.loadFromEnvFile();
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(envVariables.getValue("DATABASE_URL"), envVariables.getValue("DATABASE_USERNAME"), envVariables.getValue("DATABASE_PASSWORD"));
         } catch (SQLException e) {
             System.out.println("Database connection error");
+            System.exit(1);
+        } catch(IOException e){
+            System.out.println("Error reading env-file for database connection string. ");
+            System.exit(1);
+        }catch (ClassNotFoundException e){
+            System.out.println("Couldn't find or access the mysql jdbc driver");
+            e.printStackTrace();
             System.exit(1);
         }
 

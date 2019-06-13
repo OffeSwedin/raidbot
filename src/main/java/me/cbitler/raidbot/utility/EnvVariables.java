@@ -15,7 +15,7 @@ public class EnvVariables {
      * @throws IOException
      */
     public void loadFromEnvFile() throws IOException {
-        File file = new File("token");
+        File file = new File(".env");
         System.err.println(file.getAbsolutePath());
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line;

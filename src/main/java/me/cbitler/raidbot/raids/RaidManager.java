@@ -3,6 +3,7 @@ package me.cbitler.raidbot.raids;
 import me.cbitler.raidbot.RaidBot;
 import me.cbitler.raidbot.database.Database;
 import me.cbitler.raidbot.database.QueryResult;
+import me.cbitler.raidbot.utility.Reaction;
 import me.cbitler.raidbot.utility.Reactions;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.*;
@@ -52,8 +53,8 @@ public class RaidManager {
 						newRaid.roles.addAll(raid.rolesWithNumbers);
 						raids.add(newRaid);
 
-						for (Emote emote : Reactions.getEmotes()) {
-							message1.addReaction(emote).queue();
+						for (Reaction reaction : Reactions.getReactions()) {
+							message1.addReaction(reaction.getEmote()).queue();
 						}
 						newRaid.updateMessage();
 					} else {
@@ -165,7 +166,7 @@ public class RaidManager {
 				}
 			}
 
-			QueryResult userFlexRolesResults = db.query("SELECT * FROM `raidUsersFlexroles`", new String[] {});
+			QueryResult userFlexRolesResults = db.query("SELECT * FROM `raidUsersFlexRoles`", new String[] {});
 
 			while (userFlexRolesResults.getResults().next()) {
 				String id = userFlexRolesResults.getResults().getString("userId");
