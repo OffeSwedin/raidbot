@@ -13,8 +13,14 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - echo Building the Docker image...
+      - Creating .env file
+      - echo DISCORD_TOKEN=$DISCORD_TOKEN >> .env
+      - echo DATABASE_URL=$DATABASE_URL >> .env
+      - echo DATABASE_USERNAME=$DATABASE_USERNAME >> .env
+      - echo DATABASE_PASSWORD=$DATABASE_PASSWORD# >> .env
+      - echo building the Java package
       - mvn package
+      - echo Building the Docker image...
       - docker build -t $REPOSITORY_URI:latest .
   post_build:
     commands:
