@@ -66,6 +66,7 @@ public class DMHandler extends ListenerAdapter {
                         RaidManager.createRaid(raid);
                         e.getChannel().sendMessage("Raid Created").queue();
                     } catch (Exception exception) {
+                    	System.err.println(exception.getMessage());
                         e.getChannel().sendMessage("Cannot create raid - does the bot have permission to post in the specified channel?").queue();
                     }
                 }

@@ -428,12 +428,13 @@ public class Raid {
 	public MessageEmbed buildEmbed() {
 		EmbedBuilder builder = new EmbedBuilder();
 		builder.setTitle(getName());
-		builder.addField("Description:", getDescription(), true);
 		builder.addField("Date and time: ", getDate() + ", " + getTime(), true);
 		builder.addBlankField(false);
 
 		builder.addField("Roles:", buildRolesText(), true);
-		builder.addField("Not responded:", buildNotRespondedText(), true);
+		Integer numberOfNotResponded = 0;
+		String notRespondedText = buildNotRespondedText(numberOfNotResponded);
+		builder.addField("Not responded: ("+numberOfNotResponded+")", notRespondedText , true);
 		builder.addBlankField(false);
 		builder.addField("ID: ", messageId, true);
 		//builder.addField("@"+RaidBot.getInstance().getRaiderRole(this.getServerId()), "", true);
@@ -447,7 +448,7 @@ public class Raid {
 	 * 
 	 * @return The flex role text
 	 */
-	private String buildNotRespondedText() {
+	private String buildNotRespondedText(Integer number) {
 		String response = "";
 
 		RaidBot bot = RaidBot.getInstance();
@@ -459,6 +460,7 @@ public class Raid {
 			if (!this.isUserInRaidByName(member.getUser().getName())) {
 				if (PermissionsUtil.hasRaiderRole(member)) {
 					response += member.getEffectiveName() + "\n";
+					number = number+1;
 				}
 			}
 		}

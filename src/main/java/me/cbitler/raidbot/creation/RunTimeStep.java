@@ -27,11 +27,11 @@ public class RunTimeStep implements CreationStep {
 
         int aNumberThatIsSoLargeWeWillNeverNeedLargerThanTHis = 999;
         
-        raid.getRolesWithNumbers().add(new RaidRole(aNumberThatIsSoLargeWeWillNeverNeedLargerThanTHis, "tank"));
-        raid.getRolesWithNumbers().add(new RaidRole(aNumberThatIsSoLargeWeWillNeverNeedLargerThanTHis, "healer"));
-        raid.getRolesWithNumbers().add(new RaidRole(aNumberThatIsSoLargeWeWillNeverNeedLargerThanTHis, "melee"));
-        raid.getRolesWithNumbers().add(new RaidRole(aNumberThatIsSoLargeWeWillNeverNeedLargerThanTHis, "ranged"));
-        raid.getRolesWithNumbers().add(new RaidRole(aNumberThatIsSoLargeWeWillNeverNeedLargerThanTHis, "notAttending"));
+        raid.getRolesWithNumbers().add(new RaidRole(aNumberThatIsSoLargeWeWillNeverNeedLargerThanTHis, "Tank"));
+        raid.getRolesWithNumbers().add(new RaidRole(aNumberThatIsSoLargeWeWillNeverNeedLargerThanTHis, "Healer"));
+        raid.getRolesWithNumbers().add(new RaidRole(aNumberThatIsSoLargeWeWillNeverNeedLargerThanTHis, "Melee"));
+        raid.getRolesWithNumbers().add(new RaidRole(aNumberThatIsSoLargeWeWillNeverNeedLargerThanTHis, "Ranged"));
+        raid.getRolesWithNumbers().add(new RaidRole(aNumberThatIsSoLargeWeWillNeverNeedLargerThanTHis, "NotAttending"));
         
         
         return true;
