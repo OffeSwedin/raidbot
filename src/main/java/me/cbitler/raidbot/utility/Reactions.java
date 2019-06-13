@@ -13,19 +13,19 @@ public class Reactions {
      */
     static String[] specs = {
 
-            "tank", //587246785144160256
-            "healer", //587244937846849536
-            "melee", //587246755741958166
-            "ranged", //587246716345122817
-            "notAttending" //587246903369138187
+            "Tank", //587246785144160256
+            "Healer", //588452960661536777
+            "Melee", //587246755741958166
+            "Ranged", //587246716345122817
+            "NotAttending" //587246903369138187
     };
 
     static Emote[] reactions = {
-    		getEmoji("587246785144160256"), // tank
-    		getEmoji("587244937846849536"), // healer
-    		getEmoji("587246755741958166"), // Melee
-    		getEmoji("587246716345122817"), // Ranged
-            getEmoji("587246903369138187") // not Attending
+    		getEmoji("588456264716124162"), // tank
+    		getEmoji("588452960661536777"), // healer
+    		getEmoji("588455826625265684"), // Melee
+    		getEmoji("588456430185480194"), // Ranged
+            getEmoji("588459958484598784") // not Attending
     };
 
     /**

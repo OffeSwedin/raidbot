@@ -22,11 +22,7 @@ public class RunDescriptionStep implements CreationStep {
             return false;
         }
 
-        raid.setDescription(e.getMessage().getContentRaw());
-        
-        System.err.println("Value of signup channel: " + bot.getSignupChannel(raid.getServerId()));
-        
-        raid.setAnnouncementChannel(bot.getSignupChannel(raid.getServerId()));
+
 
         return true;
     }

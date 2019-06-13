@@ -36,6 +36,10 @@ public class RunNameStep implements CreationStep {
 
         raid.setName(e.getMessage().getContentRaw());
         raid.setServerId(serverId);
+        
+        raid.setDescription("");
+                
+        raid.setAnnouncementChannel(bot.getSignupChannel(raid.getServerId()));
 
         return true;
     }
@@ -51,6 +55,6 @@ public class RunNameStep implements CreationStep {
      * {@inheritDoc}
      */
     public CreationStep getNextStep() {
-        return new RunDescriptionStep();
+        return new RunDateStep();
     }
 }
