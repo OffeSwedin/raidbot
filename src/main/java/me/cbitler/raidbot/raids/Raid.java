@@ -543,9 +543,9 @@ public class Raid {
 
 	public void resetReactions(){
 		try {
-			RaidBot.getInstance().getServer(getServerId()).getTextChannelById(getChannelId()).clearReactionsById(getMessageId());
+			RaidBot.getInstance().getServer(getServerId()).getTextChannelById(getChannelId()).clearReactionsById(getMessageId()).queue();
 			for (Reaction reaction : Reactions.getReactions()){
-				RaidBot.getInstance().getServer(getServerId()).getTextChannelById(getChannelId()).addReactionById(getMessageId(), reaction.getEmote());
+				RaidBot.getInstance().getServer(getServerId()).getTextChannelById(getChannelId()).addReactionById(getMessageId(), reaction.getEmote()).queue();
 			}
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
