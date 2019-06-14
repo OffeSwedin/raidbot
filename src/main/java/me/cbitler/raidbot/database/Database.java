@@ -68,7 +68,10 @@ public class Database {
             envVariables.loadFromEnvFile();
 
             Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection(envVariables.getValue("DATABASE_URL"), envVariables.getValue("DATABASE_USERNAME"), envVariables.getValue("DATABASE_PASSWORD"));
+            String databaseUrl = envVariables.getValue("DATABASE_URL") + "?autoReconnect=true";
+            String databaseUsername = envVariables.getValue("DATABASE_USERNAME");
+            String databasePassword = envVariables.getValue("DATABASE_PASSWORD");
+            connection = DriverManager.getConnection(databaseUrl, databaseUsername, databasePassword);
         } catch (SQLException e) {
             System.out.println("Database connection error");
             System.exit(1);
