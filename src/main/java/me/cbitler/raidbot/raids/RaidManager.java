@@ -183,6 +183,7 @@ public class RaidManager {
 
 			for (Raid raid : raids) {
 				raid.updateMessage();
+				raid.resetReactions();
 			}
 		} catch (SQLException e) {
 			System.out.println("Couldn't load raids.. exiting");

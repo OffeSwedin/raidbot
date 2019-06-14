@@ -2,12 +2,11 @@ package me.cbitler.raidbot.raids;
 
 import me.cbitler.raidbot.RaidBot;
 import me.cbitler.raidbot.utility.PermissionsUtil;
+import me.cbitler.raidbot.utility.Reaction;
+import me.cbitler.raidbot.utility.Reactions;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.MessageEmbed;
-import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.core.entities.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
@@ -540,5 +539,16 @@ public class Raid {
 		}
 
 		return 0;
+	}
+
+	public void resetReactions(){
+		try {
+			RaidBot.getInstance().getServer(getServerId()).getTextChannelById(getChannelId()).clearReactionsById(getMessageId());
+			for (Reaction reaction : Reactions.getReactions()){
+				RaidBot.getInstance().getServer(getServerId()).getTextChannelById(getChannelId()).addReactionById(getMessageId(), reaction.getEmote());
+			}
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
 	}
 }
