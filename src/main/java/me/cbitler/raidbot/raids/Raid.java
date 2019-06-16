@@ -446,7 +446,7 @@ public class Raid {
 		List<Member> notRespondedMembers = new ArrayList<>();
 
 		for (Member member : members) {
-			if (!this.isUserInRaidByName(member.getUser().getName())) {
+			if (!this.isUserInRaid(member.getUser().getId())) {
 				if (PermissionsUtil.hasRaiderRole(member)) {
 					notRespondedMembers.add(member);
 				}
