@@ -53,17 +53,7 @@ public class ChannelMessageHandler extends ListenerAdapter {
 
 		if (e.getMember().getPermissions().contains(Permission.MANAGE_SERVER)) {
 			if (e.getMessage().getContentRaw().toLowerCase().startsWith("!setraidleaderrole")) {
-				try {
-					String[] commandParts = e.getMessage().getContentRaw().split(" ");
-					String raidLeaderRole = combineArguments(commandParts, 1);
-					RaidBot.getInstance().setRaidLeaderRole(e.getMember().getGuild().getId(), raidLeaderRole);
-					e.getAuthor().openPrivateChannel().queue(privateChannel -> privateChannel
-							.sendMessage("Raid leader role updated to: " + raidLeaderRole).queue());
-					e.getMessage().delete().queue();
-				} catch (Exception exc) {
-					e.getMember().getUser().openPrivateChannel().queue(privateChannel -> privateChannel
-							.sendMessage("Make sure that the bot has the 'Manage messages' permission").queue());
-				}
+
 			} else if (e.getMessage().getContentRaw().toLowerCase().startsWith("!setraiderrole")) {
 				try {
 					String[] commandParts = e.getMessage().getContentRaw().split(" ");

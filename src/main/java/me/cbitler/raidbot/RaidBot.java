@@ -58,6 +58,7 @@ public class RaidBot {
         CommandRegistry.addCommand("endRaid", new EndRaidCommand());
         CommandRegistry.addCommand("createRaid", new CreateRaidCommand());
         CommandRegistry.addCommand("removeFromRaid", new RemoveFromRaidCommand());
+        CommandRegistry.addCommand("setRaidleaderRole", new SetRaidleaderRoleCommand());
     }
 
     /**
