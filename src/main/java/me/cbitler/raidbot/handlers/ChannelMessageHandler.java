@@ -52,18 +52,7 @@ public class ChannelMessageHandler extends ListenerAdapter {
 		}
 
 		if (PermissionsUtil.hasRaidLeaderRole(e.getMember())) {
-			if (e.getMessage().getContentRaw().equalsIgnoreCase("!createRaid")) {
-				try {
-					CreationStep runNameStep = new RunNameStep(e.getMessage().getGuild().getId());
-					e.getAuthor().openPrivateChannel()
-							.queue(privateChannel -> privateChannel.sendMessage(runNameStep.getStepText()).queue());
-					bot.getCreationMap().put(e.getAuthor().getId(), runNameStep);
-					e.getMessage().delete().queue();
-				} catch (Exception exc) {
-					e.getMember().getUser().openPrivateChannel().queue(privateChannel -> privateChannel
-							.sendMessage("Make sure that the bot has the 'Manage messages' permission").queue());
-				}
-			} else if (e.getMessage().getContentRaw().toLowerCase().startsWith("!removefromraid")) {
+			if (e.getMessage().getContentRaw().toLowerCase().startsWith("!removefromraid")) {
 				String[] split = e.getMessage().getContentRaw().split(" ");
 				if (split.length < 3) {
 					e.getAuthor().openPrivateChannel().queue(privateChannel -> privateChannel
