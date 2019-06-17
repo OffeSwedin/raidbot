@@ -15,7 +15,7 @@ import net.dv8tion.jda.core.entities.User;
 public class RemoveFromRaidCommand implements Command {
     @Override
     public void handleCommand(String command, String[] args, TextChannel channel, User author) {
-        if (args.length > 2) {
+        if (args.length >= 2) {
             String messageId = args[1];
             String name = args[2];
 
