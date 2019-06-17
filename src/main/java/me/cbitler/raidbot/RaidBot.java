@@ -105,9 +105,19 @@ public class RaidBot {
         return db;
     }
 
+
+    /**
+     * Set the raid leader role for a server.
+     * @param serverId The server ID
+     * @param role The role name
+     */
+    public void setRaidLeaderRole(String serverId, String role) {
+        raidLeaderRoleCache.put(serverId, role);
+        saveServerSetting(serverId, "raid_leader_role", role);
+    }
+
     /**
      * Get the raid leader role for a specific server.
-     * This works by caching the role once it's retrieved once, and returning the default if a server hasn't set one.
      * @param serverId the ID of the server
      * @return The name of the role that is considered the raid leader for that server
      */
@@ -115,167 +125,126 @@ public class RaidBot {
         if (raidLeaderRoleCache.get(serverId) != null) {
             return raidLeaderRoleCache.get(serverId);
         } else {
-            try {
-                QueryResult results = db.query("SELECT `raid_leader_role` FROM `serverSettings` WHERE `serverId` = ?",
-                        new String[]{serverId});
-                if (results.getResults().next()) {
-                    raidLeaderRoleCache.put(serverId, results.getResults().getString("raid_leader_role"));
-                    return raidLeaderRoleCache.get(serverId);
-                } else {
-                    return "Raid Leader";
-                }
-            } catch (Exception e) {
-                return "Raid Leader";
+            String raidleaderRole = loadServerSetting(serverId, "raid_leader_role");
+            if(raidleaderRole == null){
+                raidleaderRole = "raidleader";
             }
-        }
-    }
-
-    /**
-     * Set the raid leader role for a server. This also updates it in SQLite
-     * @param serverId The server ID
-     * @param role The role name
-     */
-    public void setRaidLeaderRole(String serverId, String role) {
-        raidLeaderRoleCache.put(serverId, role);
-        try {
-            db.update("INSERT INTO `serverSettings` (`serverId`,`raid_leader_role`) VALUES (?,?)",
-                    new String[] { serverId, role});
-        } catch (SQLException e) {
-            //TODO: There is probably a much better way of doing this
-            try {
-                db.update("UPDATE `serverSettings` SET `raid_leader_role` = ? WHERE `serverId` = ?",
-                        new String[] { role, serverId });
-            } catch (SQLException e1) {
-                // Not much we can do if there is also an insert error
-            }
+            raidLeaderRoleCache.put(serverId, raidleaderRole);
+            return raidleaderRole;
         }
     }
     
     /**
-     * Set the raid leader role for a server. This also updates it in SQLite
+     * Set the raider role for a server.
      * @param serverId The server ID
      * @param role The role name
      */
     public void setRaiderRole(String serverId, String role) {
         raiderRoleCache.put(serverId, role);
-        try {
-            db.update("INSERT INTO `serverSettings` (`serverId`,`raider_role`) VALUES (?,?)",
-                    new String[] { serverId, role});
-        } catch (SQLException e) {
-            //TODO: There is probably a much better way of doing this
-            try {
-                db.update("UPDATE `serverSettings` SET `raider_role` = ? WHERE `serverId` = ?",
-                        new String[] { role, serverId });
-            } catch (SQLException e1) {
-                // Not much we can do if there is also an insert error
-            }
-        }
+        saveServerSetting(serverId, "raider_role", role);
     }
     
     /**
      * Get the raider role for a specific server.
-     * This works by caching the role once it's retrieved once, and returning the default if a server hasn't set one.
      * @param serverId the ID of the server
-     * @return The name of the role that is considered the raid leader for that server
+     * @return The name of the role that is considered the raider for that server
      */
     public String getRaiderRole(String serverId) {
         if (raiderRoleCache.get(serverId) != null) {
             return raiderRoleCache.get(serverId);
         } else {
-            try {
-                QueryResult results = db.query("SELECT `raider_role` FROM `serverSettings` WHERE `serverId` = ?",
-                        new String[]{serverId});
-                if (results.getResults().next()) {
-                    raiderRoleCache.put(serverId, results.getResults().getString("raider_role"));
-                    return raiderRoleCache.get(serverId);
-                } else {
-                    return "Raider";
-                }
-            } catch (Exception e) {
-                return "Raider";
+            String raiderRole = loadServerSetting(serverId, "raider_role");
+            if(raiderRole == null){
+                raiderRole = "raider";
             }
+            raidLeaderRoleCache.put(serverId, raiderRole);
+            return raiderRole;
         }
     }
         
     /**
-     * Set the signup channel for a server. This also updates it in SQLite
+     * Set the signup channel for a server.
      * @param serverId The server ID
      * @param channelName The signup channel name
      */
     public void setSignupChannel(String serverId, String channelName) {
         signupChannelCache.put(serverId, channelName);
-        try {
-            db.update("INSERT INTO `serverSettings` (`serverId`,`signup_channel`) VALUES (?,?)",
-                    new String[] { serverId, channelName});
-        } catch (SQLException e) {
-            //TODO: There is probably a much better way of doing this
-            try {
-                db.update("UPDATE `serverSettings` SET `signup_channel` = ? WHERE `serverId` = ?",
-                        new String[] { channelName, serverId });
-            } catch (SQLException e1) {
-            	System.err.println(e1.getMessage());
-                // Not much we can do if there is also an insert error
-            }
-        }
+        saveServerSetting(serverId, "signup_channel", channelName);
     }
-    
+
+    /**
+     * Get the signup channel for a specific server.
+     * @param serverId the ID of the server
+     * @return The signup channel that is set for that server
+     */
     public String getSignupChannel(String serverId) {
         if (signupChannelCache.get(serverId) != null) {
             return signupChannelCache.get(serverId);
         } else {
-            try {
-                QueryResult results = db.query("SELECT `signup_channel` FROM `serverSettings` WHERE `serverId` = ?",
-                        new String[]{serverId});
-                if (results.getResults().next()) {
-                	signupChannelCache.put(serverId, results.getResults().getString("signup_channel"));
-                    return signupChannelCache.get(serverId);
-                } else {
-                    return "SignupChannel";
-                }
-            } catch (Exception e) {
-                return "SignupChannel";
+            String signupChannel = loadServerSetting(serverId, "signup_channel");
+            if(signupChannel == null){
+                signupChannel = "signup";
             }
+            signupChannelCache.put(serverId, signupChannel);
+            return signupChannel;
         }
     }
-    
-    
+
     /**
-     * Set the archive channel for a server. This also updates it in SQLite
+     * Set the archive channel for a server.
      * @param serverId The server ID
      * @param channelName The archive channel name
      */
     public void setArchiveChannel(String serverId, String channelName) {
         archiveChannelCache.put(serverId, channelName);
-        try {
-            db.update("INSERT INTO `serverSettings` (`serverId`,`archive_channel`) VALUES (?,?)",
-                    new String[] { serverId, channelName});
-        } catch (SQLException e) {
-            //TODO: There is probably a much better way of doing this
-            try {
-                db.update("UPDATE `serverSettings` SET `archive_channel` = ? WHERE `serverId` = ?",
-                        new String[] { channelName, serverId });
-            } catch (SQLException e1) {
-                // Not much we can do if there is also an insert error
-            }
-        }
+        saveServerSetting(serverId, "archive_channel", channelName);
     }
-    
+
+    /**
+     * Get the archive channel for a specific server.
+     * @param serverId the ID of the server
+     * @return The archive channel that is set for that server
+     */
     public String getArchiveChannel(String serverId) {
         if (archiveChannelCache.get(serverId) != null) {
             return archiveChannelCache.get(serverId);
         } else {
-            try {
-                QueryResult results = db.query("SELECT `archive_channel` FROM `serverSettings` WHERE `serverId` = ?",
-                        new String[]{serverId});
-                if (results.getResults().next()) {
-                	archiveChannelCache.put(serverId, results.getResults().getString("archive_channel"));
-                    return archiveChannelCache.get(serverId);
-                } else {
-                    return "Archive";
-                }
-            } catch (Exception e) {
-                return "Archive";
+            String archiveChannel = loadServerSetting(serverId, "archive_channel");
+            if(archiveChannel == null){
+                archiveChannel = "archive";
             }
+            signupChannelCache.put(serverId, archiveChannel);
+            return archiveChannel;
+        }
+    }
+
+    public void saveServerSetting(String serverId, String settingName, String settingValue){
+        try {
+            db.update("INSERT INTO `serverSettings` (`serverId`,`" + settingName + "`) VALUES (?,?)",
+                    new String[] { serverId, settingValue});
+        } catch (SQLException e) {
+            //TODO: There is probably a much better way of doing this
+            try {
+                db.update("UPDATE `serverSettings` SET `" + settingName + "` = ? WHERE `serverId` = ?",
+                        new String[] { settingValue, serverId });
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }
+
+    private String loadServerSetting(String serverId, String settingName) {
+        try {
+            QueryResult results = db.query("SELECT `" + settingName + "` FROM `serverSettings` WHERE `serverId` = ?",
+                    new String[]{serverId});
+            if (results.getResults().next()) {
+                return results.getResults().getString(settingName);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
     
