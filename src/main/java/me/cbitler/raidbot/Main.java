@@ -13,7 +13,7 @@ import java.io.*;
  * @author Christopher Bitler
  */
 public class Main {
-    public static void main(String[] args) throws LoginException, InterruptedException, RateLimitedException {
+    public static void main(String[] args) throws LoginException, InterruptedException {
         String token = null;
         try {
             token = readToken();
