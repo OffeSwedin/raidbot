@@ -263,7 +263,7 @@ public class Raid {
 		String response = "";
 		
 		for (Member member : notRespondedMembers) {
-			response += member.getEffectiveName() + "\n";
+			response += member.getAsMention() + "\n";
 		}
 
 		return response;
@@ -281,7 +281,7 @@ public class Raid {
 			text += ("**" + role + " (" + usersInRole.size() + "):** \n");
 			for (RaidUser user : usersInRole) {
 				
-				text += "   - " + guild.getMemberById(user.id).getEffectiveName() + createSignupStatusText(user) + "\n";
+				text += "   - " + guild.getMemberById(user.id).getEffectiveName() + " " + createSignupStatusText(user) + "\n";
 				
 				
 			}
@@ -291,13 +291,15 @@ public class Raid {
 	}
 
 	private String createSignupStatusText(RaidUser user){
+		Emote emote;
 		if(user.isAccepted()){
-			return "(Y)";
+			emote = Reactions.getReactions().get(0).getEmote();
 		}else if(user.isBenched()){
-			return "(B)";
+			emote = Reactions.getReactions().get(1).getEmote();
 		}else{
-			return "(?)";
+			emote = Reactions.getReactions().get(2).getEmote();
 		}
+		return "<:" + emote.getName() + ":" + emote.getId() + ">";
 	}
 	
 	/**
