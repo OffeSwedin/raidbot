@@ -14,14 +14,14 @@ public class SetArchiveChannelCommand implements Command {
                     String archiveChannel = args[0];
                     RaidBot.getInstance().setArchiveChannel(channel.getGuild().getId(), archiveChannel);
                     author.openPrivateChannel().queue(privateChannel -> privateChannel
-                            .sendMessage("Raid leader role updated to: " + archiveChannel).queue());
+                            .sendMessage("Archive channel updated to: " + archiveChannel).queue());
                 } catch (Exception exc) {
                     author.openPrivateChannel().queue(privateChannel -> privateChannel
                             .sendMessage("Make sure that the bot has the 'Manage messages' permission").queue());
                 }
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage("Format for !removeFromRaid: !removeFromRaid [raid id] [name]").queue());
+                        .sendMessage("Format for !setArchiveChannel: !setArchiveChannel [channelName]").queue());
             }
         }
     }

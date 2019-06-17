@@ -25,7 +25,7 @@ public class SetRaidleaderRoleCommand implements Command {
                 }
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage("Format for !removeFromRaid: !removeFromRaid [raid id] [name]").queue());
+                        .sendMessage("Format for !setRaidleaderRole: !setRaidleaderRole [roleName]").queue());
             }
         }
     }

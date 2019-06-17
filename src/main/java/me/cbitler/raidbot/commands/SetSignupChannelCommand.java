@@ -15,14 +15,14 @@ public class SetSignupChannelCommand implements Command {
                     String signupChannel = args[0];
                     RaidBot.getInstance().setSignupChannel(channel.getGuild().getId(), signupChannel);
                     author.openPrivateChannel().queue(privateChannel -> privateChannel
-                            .sendMessage("Raid leader role updated to: " + signupChannel).queue());
+                            .sendMessage("Signup channel updated to: " + signupChannel).queue());
                 } catch (Exception exc) {
                     author.openPrivateChannel().queue(privateChannel -> privateChannel
                             .sendMessage("Make sure that the bot has the 'Manage messages' permission").queue());
                 }
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage("Format for !removeFromRaid: !removeFromRaid [raid id] [name]").queue());
+                        .sendMessage("Format for !setSignupChannel: !setSignupChannel [channelName]").queue());
             }
         }
     }

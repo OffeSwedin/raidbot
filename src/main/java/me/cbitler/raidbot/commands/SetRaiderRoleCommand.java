@@ -15,14 +15,14 @@ public class SetRaiderRoleCommand implements Command {
                     String raiderRole = args[0];
                     RaidBot.getInstance().setRaiderRole(channel.getGuild().getId(), raiderRole);
                     author.openPrivateChannel().queue(privateChannel -> privateChannel
-                            .sendMessage("Raid leader role updated to: " + raiderRole).queue());
+                            .sendMessage("Raider role updated to: " + raiderRole).queue());
                 } catch (Exception exc) {
                     author.openPrivateChannel().queue(privateChannel -> privateChannel
                             .sendMessage("Make sure that the bot has the 'Manage messages' permission").queue());
                 }
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage("Format for !removeFromRaid: !removeFromRaid [raid id] [name]").queue());
+                        .sendMessage("Format for !setRaiderRole: !setRaiderRole [roleName]").queue());
             }
         }
     }
