@@ -51,37 +51,6 @@ public class ChannelMessageHandler extends ListenerAdapter {
 			}
 		}
 
-		if (PermissionsUtil.hasRaidLeaderRole(e.getMember())) {
-			if (e.getMessage().getContentRaw().toLowerCase().startsWith("!removefromraid")) {
-				String[] split = e.getMessage().getContentRaw().split(" ");
-				if (split.length < 3) {
-					e.getAuthor().openPrivateChannel().queue(privateChannel -> privateChannel
-							.sendMessage("Format for !removeFromRaid: !removeFromRaid [raid id] [name]").queue());
-				} else {
-					String messageId = split[1];
-					String name = split[2];
-
-					Raid raid = RaidManager.getRaid(messageId);
-
-					if (raid != null && raid.getServerId().equalsIgnoreCase(e.getGuild().getId())) {
-						RaidUser user = raid.getUserByName(name);
-						if (user != null) {
-							raid.removeUser(user.id);
-						}
-					} else {
-						e.getAuthor().openPrivateChannel()
-								.queue(privateChannel -> privateChannel.sendMessage("Non-existant raid").queue());
-					}
-				}
-				try {
-					e.getMessage().delete().queue();
-				} catch (Exception exception) {
-					e.getMember().getUser().openPrivateChannel().queue(privateChannel -> privateChannel
-							.sendMessage("Make sure that the bot has the 'Manage messages' permission").queue());
-				}
-			}
-		}
-
 		if (e.getMember().getPermissions().contains(Permission.MANAGE_SERVER)) {
 			if (e.getMessage().getContentRaw().toLowerCase().startsWith("!setraidleaderrole")) {
 				try {
