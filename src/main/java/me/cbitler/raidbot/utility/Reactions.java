@@ -22,7 +22,7 @@ public class Reactions {
             new Reaction("Not Attending", "587246903369138187")
     };
 
-    private static Reaction[] reactionsToUse = testReactions;
+    private static Reaction[] reactionsToUse = reactions;
 
     public static List<Reaction> getReactions(){return new ArrayList<>(Arrays.asList(reactionsToUse)); }
 
