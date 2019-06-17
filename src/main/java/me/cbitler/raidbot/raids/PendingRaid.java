@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class PendingRaid {
     private String name, description, date, time, announcementChannel, serverId, leaderName;
-    private List<RaidRole> rolesWithNumbers = new ArrayList<>();
+    private List<String> roles = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -60,9 +60,9 @@ public class PendingRaid {
         this.leaderName = leaderName;
     }
 
-    public List<RaidRole> getRolesWithNumbers() {
-        return rolesWithNumbers;
-    }
+    public List<String> getRoles() { return roles; }
+
+    public void addRole(String role) { roles.add(role); }
 
     public String getDescription() {
         return description;

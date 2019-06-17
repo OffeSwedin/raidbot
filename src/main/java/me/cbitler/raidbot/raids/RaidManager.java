@@ -45,7 +45,7 @@ public class RaidManager {
 					if (inserted) {
 						Raid newRaid = new Raid(message1.getId(), message1.getGuild().getId(),
 								message1.getChannel().getId(), raid.getName(), raid.getDate(), raid.getTime());
-						newRaid.addRoles(raid.getRolesWithNumbers());
+						newRaid.addRoles(raid.getRoles());
 						raids.add(newRaid);
 
 						for (Reaction reaction : Reactions.getReactions()) {
@@ -82,7 +82,7 @@ public class RaidManager {
 		RaidBot bot = RaidBot.getInstance();
 		Database db = bot.getDatabase();
 
-		String roles = formatRolesForDatabase(raid.getRolesWithNumbers());
+		String roles = formatRolesForDatabase(raid.getRoles());
 
 		try {
 			db.update(
@@ -120,13 +120,10 @@ public class RaidManager {
 
 				try {
 					Raid raid = new Raid(messageId, serverId, channelId, name, date, time);
-					ArrayList<RaidRole> roles = new ArrayList<>();
+					ArrayList<String> roles = new ArrayList<>();
 					String[] roleSplit = rolesText.split(";");
-					for (String roleAndAmount : roleSplit) {
-						String[] parts = roleAndAmount.split(":");
-						int amnt = Integer.parseInt(parts[0]);
-						String role = parts[1];
-						roles.add(new RaidRole(amnt, role));
+					for (String role : roleSplit) {
+						roles.add(role);
 					}
 					raid.addRoles(roles);
 					raids.add(raid);
@@ -235,15 +232,15 @@ public class RaidManager {
 	 *            The roles and their amounts
 	 * @return The formatted string
 	 */
-	private static String formatRolesForDatabase(List<RaidRole> rolesWithNumbers) {
+	private static String formatRolesForDatabase(List<String> rolesWithNumbers) {
 		String data = "";
 
 		for (int i = 0; i < rolesWithNumbers.size(); i++) {
-			RaidRole role = rolesWithNumbers.get(i);
+			String role = rolesWithNumbers.get(i);
 			if (i == rolesWithNumbers.size() - 1) {
-				data += (role.amount + ":" + role.name);
+				data += (role);
 			} else {
-				data += (role.amount + ":" + role.name + ";");
+				data += (role + ";");
 			}
 		}
 

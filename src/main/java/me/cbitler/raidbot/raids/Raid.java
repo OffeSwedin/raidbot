@@ -16,7 +16,7 @@ import java.util.*;
  */
 public class Raid {
 	private String messageId, name, date, time, serverId, channelId;
-	private List<RaidRole> roles = new ArrayList<>();
+	private List<String> roles = new ArrayList<>();
 	private List<RaidUser> users = new ArrayList<>();
 
 	/**
@@ -102,7 +102,7 @@ public class Raid {
 		}
 	}
 
-	public void addRoles(List<RaidRole> roles){
+	public void addRoles(List<String> roles){
 		this.roles.addAll(roles);
 	}
 
@@ -244,9 +244,9 @@ public class Raid {
 	 */
 	private String buildRolesText(Guild guild) {
 		String text = "";
-		for (RaidRole role : roles) {
-			List<RaidUser> usersInRole = getUsersInRole(role.name);
-			text += ("**" + role.name + " (" + usersInRole.size() + "):** \n");
+		for (String role : roles) {
+			List<RaidUser> usersInRole = getUsersInRole(role);
+			text += ("**" + role + " (" + usersInRole.size() + "):** \n");
 			for (RaidUser user : usersInRole) {
 				text += "   - " + guild.getMemberById(user.id).getEffectiveName() + "\n";
 			}

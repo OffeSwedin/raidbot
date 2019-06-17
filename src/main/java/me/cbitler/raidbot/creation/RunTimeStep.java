@@ -2,7 +2,6 @@ package me.cbitler.raidbot.creation;
 
 import me.cbitler.raidbot.RaidBot;
 import me.cbitler.raidbot.raids.PendingRaid;
-import me.cbitler.raidbot.raids.RaidRole;
 import me.cbitler.raidbot.utility.Reaction;
 import me.cbitler.raidbot.utility.Reactions;
 import net.dv8tion.jda.core.events.message.priv.PrivateMessageReceivedEvent;
@@ -27,10 +26,8 @@ public class RunTimeStep implements CreationStep {
 
         raid.setTime(e.getMessage().getContentRaw());
 
-        int largeNumber = 999;
-
         for(Reaction reaction : Reactions.getReactions()){
-            raid.getRolesWithNumbers().add(new RaidRole(largeNumber, reaction.getSpec()));
+            raid.addRole(reaction.getSpec());
         }
         
         return true;
