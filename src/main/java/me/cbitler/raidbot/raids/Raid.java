@@ -102,19 +102,35 @@ public class Raid {
 		}
 	}
 
-	public void acceptUser(RaidUser userToAccept){
+	public boolean acceptUser(String username){
 		for(RaidUser user : users){
-			if(user.id.equalsIgnoreCase(userToAccept.id)){
+			if(user.name.equalsIgnoreCase(username)){
 				user.accept();
+				updateUser(user);
+				return true;
 			}
 		}
+		return false;
 	}
 
-	public void benchUser(RaidUser userToBench){
+	public boolean benchUser(String username){
 		for(RaidUser user : users){
-			if(user.id.equalsIgnoreCase(userToBench.id)){
+			if(user.name.equalsIgnoreCase(username)){
 				user.bench();
+				updateUser(user);
+				return true;
 			}
+		}
+		return false;
+	}
+
+	private void updateUser(RaidUser user) {
+		try {
+			RaidBot.getInstance().getDatabase()
+					.update("UPDATE `raidUsers` SET `signupStatus` = ? WHERE `userId` = ? AND `raidId` = ?",
+							new String[] { user.signupStatus, user.id, this.messageId});
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 

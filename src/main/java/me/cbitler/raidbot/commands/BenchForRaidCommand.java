@@ -23,9 +23,12 @@ public class BenchForRaidCommand implements Command {
                 Raid raid = RaidManager.getRaid(messageId);
 
                 if (raid != null && raid.getServerId().equalsIgnoreCase(channel.getGuild().getId())) {
-                    RaidUser user = raid.getUserByName(name);
-                    if (user != null) {
-                        raid.benchUser(user);
+                    boolean benched = raid.benchUser(name);
+                    if(benched){
+                        raid.updateMessage();
+                    }else{
+                        author.openPrivateChannel()
+                                .queue(privateChannel -> privateChannel.sendMessage("Player '" + name + "' does not exist in raid. ").queue());
                     }
                 } else {
                     author.openPrivateChannel()

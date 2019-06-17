@@ -23,9 +23,12 @@ public class AcceptToRaidCommand implements Command {
                 Raid raid = RaidManager.getRaid(messageId);
 
                 if (raid != null && raid.getServerId().equalsIgnoreCase(channel.getGuild().getId())) {
-                    RaidUser user = raid.getUserByName(name);
-                    if (user != null) {
-                        raid.acceptUser(user);
+                    boolean accepted = raid.acceptUser(name);
+                    if(accepted){
+                        raid.updateMessage();
+                    }else{
+                        author.openPrivateChannel()
+                                .queue(privateChannel -> privateChannel.sendMessage("Player '" + name + "' does not exist in raid. ").queue());
                     }
                 } else {
                     author.openPrivateChannel()

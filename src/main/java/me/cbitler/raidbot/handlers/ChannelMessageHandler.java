@@ -24,7 +24,6 @@ public class ChannelMessageHandler extends ListenerAdapter {
 	 */
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
-		RaidBot bot = RaidBot.getInstance();
 		if (e.getAuthor().isBot()) {
 			return;
 		}
