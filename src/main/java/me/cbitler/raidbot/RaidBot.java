@@ -61,6 +61,7 @@ public class RaidBot {
         CommandRegistry.addCommand("setRaidleaderRole", new SetRaidleaderRoleCommand());
         CommandRegistry.addCommand("setRaiderRole", new SetRaiderRoleCommand());
         CommandRegistry.addCommand("setSignupChannel", new SetSignupChannelCommand());
+        CommandRegistry.addCommand("setArchiveChannel", new SetArchiveChannelCommand());
     }
 
     /**
