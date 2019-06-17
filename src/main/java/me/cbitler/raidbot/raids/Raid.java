@@ -248,13 +248,26 @@ public class Raid {
 			List<RaidUser> usersInRole = getUsersInRole(role);
 			text += ("**" + role + " (" + usersInRole.size() + "):** \n");
 			for (RaidUser user : usersInRole) {
-				text += "   - " + guild.getMemberById(user.id).getEffectiveName() + "\n";
+				
+				text += "   - " + guild.getMemberById(user.id).getEffectiveName() + createSignupStatusText(user) + "\n";
+				
+				
 			}
 			text += "\n";
 		}
 		return text;
 	}
 
+	private String createSignupStatusText(RaidUser user){
+		if(user.isAccepted()){
+			return "(Y)";
+		}else if(user.isBenched()){
+			return "(B)";
+		}else{
+			return "(?)";
+		}
+	}
+	
 	/**
 	 * Get list of users in a role
 	 *

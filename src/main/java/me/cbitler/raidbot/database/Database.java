@@ -30,7 +30,8 @@ public class Database {
             + " username text, \n"
             + " spec text, \n"
             + " role text, \n"
-            + " raidId text)";
+            + " raidId text, \n"
+            + " signupStatus text)";
     
     private final String botServerSettingsInit = "CREATE TABLE IF NOT EXISTS serverSettings (\n"
             + " serverId VARCHAR(255) PRIMARY KEY, \n"
