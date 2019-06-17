@@ -1,6 +1,7 @@
 package me.cbitler.raidbot.raids;
 
 import me.cbitler.raidbot.RaidBot;
+import me.cbitler.raidbot.utility.EnvVariables;
 import me.cbitler.raidbot.utility.PermissionsUtil;
 import me.cbitler.raidbot.utility.Reaction;
 import me.cbitler.raidbot.utility.Reactions;
@@ -9,6 +10,7 @@ import net.dv8tion.jda.core.entities.*;
 
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Represents a raid and has methods for adding/removing users,
@@ -293,12 +295,25 @@ public class Raid {
 	private String createSignupStatusText(RaidUser user){
 		Emote emote;
 		if(user.isAccepted()){
-			emote = Reactions.getReactions().get(0).getEmote();
+			if(EnvVariables.getInstance().isTestEnvironment()){
+				emote = RaidBot.getInstance().getJda().getEmoteById("590293224250408981");
+			}else{
+				emote = RaidBot.getInstance().getJda().getEmoteById("590293759166775307");
+			}
 		}else if(user.isBenched()){
-			emote = Reactions.getReactions().get(1).getEmote();
+			if(EnvVariables.getInstance().isTestEnvironment()) {
+				emote = RaidBot.getInstance().getJda().getEmoteById("590292731436335166");
+			}else{
+				emote = RaidBot.getInstance().getJda().getEmoteById("590293760726925372");
+			}
 		}else{
-			emote = Reactions.getReactions().get(2).getEmote();
+			if(EnvVariables.getInstance().isTestEnvironment()) {
+				emote = RaidBot.getInstance().getJda().getEmoteById("590292700842950656");
+			}else{
+				emote = RaidBot.getInstance().getJda().getEmoteById("590293759519096832");
+			}
 		}
+
 		return "<:" + emote.getName() + ":" + emote.getId() + ">";
 	}
 	
@@ -337,14 +352,19 @@ public class Raid {
 		return null;
 	}
 
-	public void resetReactions(){
+	public int resetReactions(int delay){
 		try {
-			RaidBot.getInstance().getServer(getServerId()).getTextChannelById(getChannelId()).clearReactionsById(getMessageId()).queue();
+			RaidBot.getInstance().getServer(getServerId()).getTextChannelById(getChannelId()).clearReactionsById(getMessageId()).queueAfter(delay, TimeUnit.MILLISECONDS);
+			delay += 1000;
 			for (Reaction reaction : Reactions.getReactions()){
-				RaidBot.getInstance().getServer(getServerId()).getTextChannelById(getChannelId()).addReactionById(getMessageId(), reaction.getEmote()).queue();
+				RaidBot.getInstance().getServer(getServerId()).getTextChannelById(getChannelId()).addReactionById(getMessageId(), reaction.getEmote()).queueAfter(delay, TimeUnit.MILLISECONDS);
+				delay += 1000;
+				System.err.println("Delay: " + delay);
 			}
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
+
+		return delay;
 	}
 }

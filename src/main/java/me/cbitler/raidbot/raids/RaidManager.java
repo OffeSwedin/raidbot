@@ -6,6 +6,7 @@ import me.cbitler.raidbot.database.QueryResult;
 import me.cbitler.raidbot.utility.Reaction;
 import me.cbitler.raidbot.utility.Reactions;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.*;
 
 import java.sql.SQLException;
@@ -31,7 +32,8 @@ public class RaidManager {
 	 *            The pending raid to create
 	 */
 	public static void createRaid(PendingRaid raid) {
-		MessageEmbed message = buildEmbed(raid);
+		Raid raidBaseMessage = new Raid("", "", "", "", "", "");
+		MessageEmbed message = raidBaseMessage.buildEmbed();
 
 		Guild guild = RaidBot.getInstance().getServer(raid.getServerId());
 		List<TextChannel> channels = guild.getTextChannelsByName(raid.getAnnouncementChannel(), true);
@@ -151,9 +153,10 @@ public class RaidManager {
 				}
 			}
 
+			int delay = 0;
 			for (Raid raid : raids) {
 				raid.updateMessage();
-				raid.resetReactions();
+				delay = raid.resetReactions(delay);
 			}
 		} catch (SQLException e) {
 			System.out.println("Couldn't load raids.. exiting");

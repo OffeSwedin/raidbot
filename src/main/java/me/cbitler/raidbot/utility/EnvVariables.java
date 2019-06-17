@@ -8,6 +8,7 @@ import java.util.HashMap;
  * @author Christopher Bitler
  */
 public class EnvVariables {
+    private static EnvVariables instance;
     private HashMap<String,String> variables = new HashMap<>();
 
     /**
@@ -15,6 +16,8 @@ public class EnvVariables {
      * @throws IOException IOException
      */
     public void loadFromEnvFile() throws IOException {
+        instance = this;
+
         File file = new File(".env");
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line;
@@ -36,4 +39,8 @@ public class EnvVariables {
     public String getValue(String key) {
         return variables.get(key);
     }
+
+    public boolean isTestEnvironment(){ return variables.get("ENVIRONMENT").equalsIgnoreCase("TEST"); }
+
+    public static EnvVariables getInstance(){ return instance; }
 }

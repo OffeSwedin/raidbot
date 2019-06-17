@@ -24,9 +24,25 @@ public class Reactions {
 
     private static Reaction[] reactionsToUse = testReactions;
 
-    public static List<Reaction> getReactions(){return new ArrayList<>(Arrays.asList(reactionsToUse)); }
+    public static List<Reaction> getReactions(){
+        Reaction[] reactionsToUse;
+        if(EnvVariables.getInstance().isTestEnvironment()){
+            reactionsToUse = testReactions;
+        }else{
+            reactionsToUse = reactions;
+        }
+
+        return new ArrayList<>(Arrays.asList(reactionsToUse));
+    }
 
     public static Reaction getReactionFromEmojiId(String emojiId){
+        Reaction[] reactionsToUse;
+        if(EnvVariables.getInstance().isTestEnvironment()){
+            reactionsToUse = testReactions;
+        }else{
+            reactionsToUse = reactions;
+        }
+
         for(Reaction reaction : reactionsToUse){
             if(reaction.getEmote().getId().equals(emojiId)){
                 return reaction;
