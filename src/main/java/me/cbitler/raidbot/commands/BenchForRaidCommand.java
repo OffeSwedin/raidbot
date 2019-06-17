@@ -9,7 +9,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 
-public class RemoveFromRaidCommand implements Command {
+public class BenchForRaidCommand implements Command {
     @Override
     public void handleCommand(String command, String[] args, TextChannel channel, User author) {
         Guild guild = channel.getGuild();
@@ -25,7 +25,7 @@ public class RemoveFromRaidCommand implements Command {
                 if (raid != null && raid.getServerId().equalsIgnoreCase(channel.getGuild().getId())) {
                     RaidUser user = raid.getUserByName(name);
                     if (user != null) {
-                        raid.removeUser(user.id);
+                        raid.benchUser(user);
                     }
                 } else {
                     author.openPrivateChannel()
@@ -33,7 +33,7 @@ public class RemoveFromRaidCommand implements Command {
                 }
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage("Format for !removeFromRaid: !removeFromRaid [raid id] [name]").queue());
+                        .sendMessage("Format for !bench: !bench [raid id] [name]").queue());
             }
         }
     }

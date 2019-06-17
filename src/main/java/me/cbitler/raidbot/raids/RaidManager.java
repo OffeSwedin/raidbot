@@ -142,10 +142,11 @@ public class RaidManager {
 				String spec = userResults.getResults().getString("spec");
 				String role = userResults.getResults().getString("role");
 				String raidId = userResults.getResults().getString("raidId");
+				String signupStatus = userResults.getResults().getString("signupStatus");
 
 				Raid raid = RaidManager.getRaid(raidId);
 				if (raid != null) {
-					RaidUser user = new RaidUser(id, name, spec, role);
+					RaidUser user = new RaidUser(id, name, spec, role, signupStatus);
 					raid.addUser(user, false, false);
 				}
 			}

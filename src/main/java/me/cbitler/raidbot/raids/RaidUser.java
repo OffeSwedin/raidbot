@@ -11,7 +11,7 @@ public class RaidUser {
 	public final String name;
 	public final String spec;
 	public final String role;
-	private String signupStatus;
+	public String signupStatus;
 
 	public RaidUser(String id, String name, String spec, String role) {
 		this.id = id;
@@ -27,6 +27,14 @@ public class RaidUser {
 		this.spec = spec;
 		this.role = role;
 		this.signupStatus = signupStatus;
+	}
+
+	public void bench(){
+		signupStatus = "1";
+	}
+
+	public void accept(){
+		signupStatus = "2";
 	}
 
 	public boolean isBenched() {

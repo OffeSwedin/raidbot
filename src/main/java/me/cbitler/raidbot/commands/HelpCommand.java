@@ -7,6 +7,8 @@ public class HelpCommand implements Command {
     private final String helpMessage = "GW2-Raid-Bot Help:\n" +
             "Commands:\n" +
             "**!createRaid** - Start the raid creation process. Usable by people with the raid leader role\n" +
+            "**!accept [raid id] [name]** - Accept a player to a raid. Only usable by raid leaders\n" +
+            "**!bench [raid id] [name]** - Bench a player for a raid. Only usable by raid leaders\n" +
             "**!removeFromRaid [raid id] [name]** - Remove a player from a raid. Only usable by raid leaders\n" +
             "**!endRaid [raid id] [log link 1] [log link 2] ...** - End a raid, removing the message and DM'ing the users in the raid with log links. The log links are optional arguments\n" +
             "**!help** - You are looking at it\n" +

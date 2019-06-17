@@ -88,8 +88,8 @@ public class Raid {
 		if (db_insert) {
 			try {
 				RaidBot.getInstance().getDatabase()
-						.update("INSERT INTO `raidUsers` (`userId`, `username`, `spec`, `role`, `raidId`)"
-								+ " VALUES (?,?,?,?,?)", new String[] { user.id, user.name, user.spec, user.role, this.messageId });
+						.update("INSERT INTO `raidUsers` (`userId`, `username`, `spec`, `role`, `raidId`, `signupStatus`)"
+								+ " VALUES (?,?,?,?,?,?)", new String[] { user.id, user.name, user.spec, user.role, this.messageId, user.signupStatus });
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -99,6 +99,22 @@ public class Raid {
 
 		if (update_message) {
 			updateMessage();
+		}
+	}
+
+	public void acceptUser(RaidUser userToAccept){
+		for(RaidUser user : users){
+			if(user.id.equalsIgnoreCase(userToAccept.id)){
+				user.accept();
+			}
+		}
+	}
+
+	public void benchUser(RaidUser userToBench){
+		for(RaidUser user : users){
+			if(user.id.equalsIgnoreCase(userToBench.id)){
+				user.bench();
+			}
 		}
 	}
 
