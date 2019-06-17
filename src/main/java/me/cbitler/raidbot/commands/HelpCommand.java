@@ -1,6 +1,5 @@
 package me.cbitler.raidbot.commands;
 
-import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 

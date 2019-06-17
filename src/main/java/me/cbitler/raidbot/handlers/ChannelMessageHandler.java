@@ -5,15 +5,11 @@ import me.cbitler.raidbot.commands.Command;
 import me.cbitler.raidbot.commands.CommandRegistry;
 import me.cbitler.raidbot.creation.CreationStep;
 import me.cbitler.raidbot.creation.RunNameStep;
-import me.cbitler.raidbot.logs.LogParser;
 import me.cbitler.raidbot.raids.Raid;
 import me.cbitler.raidbot.raids.RaidManager;
+import me.cbitler.raidbot.raids.RaidUser;
 import me.cbitler.raidbot.utility.PermissionsUtil;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.ChannelType;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
@@ -79,8 +75,9 @@ public class ChannelMessageHandler extends ListenerAdapter {
 					Raid raid = RaidManager.getRaid(messageId);
 
 					if (raid != null && raid.getServerId().equalsIgnoreCase(e.getGuild().getId())) {
-						if (raid.getUserByName(name) != null) {
-							raid.removeUserByName(name);
+						RaidUser user = raid.getUserByName(name);
+						if (user != null) {
+							raid.removeUser(user.id);
 						}
 					} else {
 						e.getAuthor().openPrivateChannel()

@@ -5,8 +5,8 @@ package me.cbitler.raidbot.raids;
  * @author Christopher Bitler
  */
 public class RaidRole {
-    int amount;
-    String name;
+    public final int amount;
+    public final String name;
 
     /**
      * Create a new RaidRole object
@@ -16,29 +16,5 @@ public class RaidRole {
     public RaidRole(int amount, String name) {
         this.amount = amount;
         this.name = name;
-    }
-
-    /**
-     * Get the maximum number of people in this role
-     * @return The maximum number of people in this role
-     */
-    public int getAmount() {
-        return amount;
-    }
-
-    /**
-     * Get the name of the role
-     * @return The name of the role
-     */
-    public String getName() {
-        return name;
-    }
-    
-    public void incrementAmount(){
-    	this.amount++;
-    }
-    
-    public void decrementAmount(){
-    	this.amount--;
     }
 }

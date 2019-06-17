@@ -9,8 +9,8 @@ import java.util.List;
  * @author Christopher Bitler
  */
 public class PendingRaid {
-    String name, description, date, time, announcementChannel, serverId, leaderName;
-    List<RaidRole> rolesWithNumbers = new ArrayList<RaidRole>();
+    private String name, description, date, time, announcementChannel, serverId, leaderName;
+    private List<RaidRole> rolesWithNumbers = new ArrayList<>();
 
     public String getName() {
         return name;

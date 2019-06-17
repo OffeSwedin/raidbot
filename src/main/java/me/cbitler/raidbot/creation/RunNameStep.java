@@ -10,7 +10,7 @@ import net.dv8tion.jda.core.events.message.priv.PrivateMessageReceivedEvent;
  */
 public class RunNameStep implements CreationStep {
 
-    String serverId;
+    private String serverId;
 
     /**
      * Set the serverId for this step. This is needed for setting the serverId in the PendingRaid

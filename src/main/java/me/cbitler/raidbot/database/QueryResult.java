@@ -9,8 +9,8 @@ import java.sql.Statement;
  * @author Christopher Bitler
  */
 public class QueryResult {
-    Statement stmt;
-    ResultSet results;
+    private Statement stmt;
+    private ResultSet results;
 
     /**
      * Create a new QueryResult with the specified values

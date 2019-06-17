@@ -2,12 +2,8 @@ package me.cbitler.raidbot.handlers;
 
 import me.cbitler.raidbot.RaidBot;
 import me.cbitler.raidbot.creation.CreationStep;
-import me.cbitler.raidbot.logs.LogParser;
 import me.cbitler.raidbot.raids.PendingRaid;
 import me.cbitler.raidbot.raids.RaidManager;
-import me.cbitler.raidbot.selection.SelectionStep;
-import net.dv8tion.jda.core.entities.ChannelType;
-import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
@@ -17,15 +13,6 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
  * @author Christopher Bitler
  */
 public class DMHandler extends ListenerAdapter {
-    RaidBot bot;
-
-    /**
-     * Create a new direct message handler with the parent bot
-     * @param bot The parent bot
-     */
-    public DMHandler(RaidBot bot) {
-        this.bot = bot;
-    }
 
     /**
      * Handle receiving a private message.
@@ -35,6 +22,7 @@ public class DMHandler extends ListenerAdapter {
      */
     @Override
     public void onPrivateMessageReceived(PrivateMessageReceivedEvent e) {
+        RaidBot bot = RaidBot.getInstance();
         User author = e.getAuthor();
 
         if (bot.getCreationMap().containsKey(author.getId())) {
@@ -69,36 +57,6 @@ public class DMHandler extends ListenerAdapter {
                     	System.err.println(exception.getMessage());
                         e.getChannel().sendMessage("Cannot create raid - does the bot have permission to post in the specified channel?").queue();
                     }
-                }
-            }
-        } else if (bot.getRoleSelectionMap().containsKey(author.getId())) {
-            if(e.getMessage().getContentRaw().equalsIgnoreCase("cancel")) {
-                bot.getRoleSelectionMap().remove(author.getId());
-                e.getChannel().sendMessage("Role selection cancelled.").queue();
-                return;
-            }
-            SelectionStep step = bot.getRoleSelectionMap().get(author.getId());
-            boolean done = step.handleDM(e);
-
-            //If this step is done, move onto the next one or finish
-            if(done) {
-                SelectionStep nextStep = step.getNextStep();
-                if(nextStep != null) {
-                    bot.getRoleSelectionMap().put(author.getId(), nextStep);
-                    e.getChannel().sendMessage(nextStep.getStepText()).queue();
-                } else {
-                    // We don't need to handle adding to the raid here, that's done in the pickrolestep
-                    bot.getRoleSelectionMap().remove(author.getId());
-                }
-            }
-
-        }
-        
-        if(e.getMessage().getAttachments().size() > 0 && e.getChannel().getType() == ChannelType.PRIVATE) {
-            for(Message.Attachment attachment : e.getMessage().getAttachments()) {
-                System.out.println(attachment.getFileName());
-                if(attachment.getFileName().endsWith(".evtc") || attachment.getFileName().endsWith(".evtc.zip")) {
-                    new Thread(new LogParser(e.getChannel(), attachment)).start();
                 }
             }
         }

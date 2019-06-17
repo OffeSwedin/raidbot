@@ -9,14 +9,10 @@ import me.cbitler.raidbot.handlers.DMHandler;
 import me.cbitler.raidbot.handlers.ReactionHandler;
 import me.cbitler.raidbot.handlers.RoleChangeHandler;
 import me.cbitler.raidbot.raids.PendingRaid;
-import me.cbitler.raidbot.raids.Raid;
 import me.cbitler.raidbot.raids.RaidManager;
-import me.cbitler.raidbot.selection.SelectionStep;
-import me.cbitler.raidbot.utility.GuildCountUtil;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Guild;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 
@@ -32,17 +28,16 @@ public class RaidBot {
     private static RaidBot instance;
     private JDA jda;
 
-    HashMap<String, CreationStep> creation = new HashMap<String, CreationStep>();
-    HashMap<String, PendingRaid> pendingRaids = new HashMap<String, PendingRaid>();
-    HashMap<String, SelectionStep> roleSelection = new HashMap<String, SelectionStep>();
+    private HashMap<String, CreationStep> creation = new HashMap<>();
+    private HashMap<String, PendingRaid> pendingRaids = new HashMap<>();
 
     //TODO: This should be moved to it's own settings thing
-    HashMap<String, String> raidLeaderRoleCache = new HashMap<>();
-    HashMap<String, String> raiderRoleCache = new HashMap<>();
-    HashMap<String, String> signupChannelCache = new HashMap<>();
-    HashMap<String, String> archiveChannelCache = new HashMap<>();
+    private HashMap<String, String> raidLeaderRoleCache = new HashMap<>();
+    private HashMap<String, String> raiderRoleCache = new HashMap<>();
+    private HashMap<String, String> signupChannelCache = new HashMap<>();
+    private HashMap<String, String> archiveChannelCache = new HashMap<>();
 
-    Database db;
+    private Database db;
 
     /**
      * Create a new instance of the raid bot with the specified JDA api
@@ -52,7 +47,7 @@ public class RaidBot {
         instance = this;
 
         this.jda = jda;
-        jda.addEventListener(new DMHandler(this), new ChannelMessageHandler(), new ReactionHandler(), new RoleChangeHandler());        
+        jda.addEventListener(new DMHandler(), new ChannelMessageHandler(), new ReactionHandler(), new RoleChangeHandler());
         
         db = new Database();
         db.connect();
@@ -61,24 +56,6 @@ public class RaidBot {
         CommandRegistry.addCommand("help", new HelpCommand());
         CommandRegistry.addCommand("info", new InfoCommand());
         CommandRegistry.addCommand("endRaid", new EndRaidCommand());
-        
-        
-        /*
-        new Thread(() -> {
-            while (true) {
-                try {
-                    //GuildCountUtil.sendGuilds(jda);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    Thread.sleep(1000*60*5);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-        */
     }
 
     /**
@@ -87,14 +64,6 @@ public class RaidBot {
      */
     public HashMap<String, CreationStep> getCreationMap() {
         return creation;
-    }
-
-    /**
-     * Map of the UserId -> roleSelection step for people in the role selection process
-     * @return The map of the UserId -> roleSelection step for people in the role selection process
-     */
-    public HashMap<String, SelectionStep> getRoleSelectionMap() {
-        return roleSelection;
     }
 
     /**
@@ -225,7 +194,7 @@ public class RaidBot {
     /**
      * Set the signup channel for a server. This also updates it in SQLite
      * @param serverId The server ID
-     * @param role The role name
+     * @param channelName The signup channel name
      */
     public void setSignupChannel(String serverId, String channelName) {
         signupChannelCache.put(serverId, channelName);
@@ -267,7 +236,7 @@ public class RaidBot {
     /**
      * Set the archive channel for a server. This also updates it in SQLite
      * @param serverId The server ID
-     * @param role The role name
+     * @param channelName The archive channel name
      */
     public void setArchiveChannel(String serverId, String channelName) {
         archiveChannelCache.put(serverId, channelName);

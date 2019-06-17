@@ -3,7 +3,6 @@ package me.cbitler.raidbot.commands;
 import java.util.HashMap;
 
 public class CommandRegistry {
-    public static final String CMD_PREFIX = "!";
     private static final HashMap<String, Command> commands = new HashMap<>();
 
     public static void addCommand(String commandText, Command cmd) {

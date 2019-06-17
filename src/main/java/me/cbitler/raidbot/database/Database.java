@@ -4,19 +4,17 @@ import me.cbitler.raidbot.utility.EnvVariables;
 
 import java.io.IOException;
 import java.sql.*;
-import java.util.List;
-import java.util.Properties;
 
 /**
  * Class for managing the SQLite database for this bot
  * @author Christopher Bitler
  */
 public class Database {
-    Connection connection;
+    private Connection connection;
 
     //Thee are the queries for creating the tables
 
-    String raidTableInit = "CREATE TABLE IF NOT EXISTS raids (\n"
+    private final String raidTableInit = "CREATE TABLE IF NOT EXISTS raids (\n"
             + " raidId VARCHAR(255) PRIMARY KEY, \n"
             + " serverId text NOT NULL, \n"
             + " channelId text NOT NULL, \n"
@@ -27,26 +25,14 @@ public class Database {
             + " `time` text NOT NULL, \n"
             + " roles text NOT NULL);";
 
-    String raidUsersTableInit = "CREATE TABLE IF NOT EXISTS raidUsers (\n"
+    private final String raidUsersTableInit = "CREATE TABLE IF NOT EXISTS raidUsers (\n"
             + " userId text, \n"
             + " username text, \n"
             + " spec text, \n"
             + " role text, \n"
             + " raidId text)";
-
-    String raidUsersFlexRolesTableInit = "CREATE TABLE IF NOT EXISTS raidUsersFlexRoles (\n"
-            + " userId text, \n"
-            + " username text, \n"
-            + " spec text, \n"
-            + " role text, \n"
-            + " raidId text)";
-/*
-    String botServerSettingsInit = "CREATE TABLE IF NOT EXISTS serverSettings (\n"
-            + " serverId text PRIMARY KEY, \n"
-            + " raid_leader_role text)";
-*/
     
-    String botServerSettingsInit = "CREATE TABLE IF NOT EXISTS serverSettings (\n"
+    private final String botServerSettingsInit = "CREATE TABLE IF NOT EXISTS serverSettings (\n"
             + " serverId VARCHAR(255) PRIMARY KEY, \n"
             + " raid_leader_role text, \n"
             + " raider_role text, \n"
@@ -73,13 +59,15 @@ public class Database {
             String databasePassword = envVariables.getValue("DATABASE_PASSWORD");
             connection = DriverManager.getConnection(databaseUrl, databaseUsername, databasePassword);
         } catch (SQLException e) {
-            System.out.println("Database connection error");
+            System.out.println("Database connection error: " + e.getMessage());
+            e.printStackTrace();
             System.exit(1);
         } catch(IOException e){
-            System.out.println("Error reading env-file for database connection string. ");
+            System.out.println("Error reading env-file for database connection string. " + e.getMessage());
+            e.printStackTrace();
             System.exit(1);
         }catch (ClassNotFoundException e){
-            System.out.println("Couldn't find or access the mysql jdbc driver");
+            System.out.println("Couldn't find or access the mysql jdbc driver. " + e.getMessage());
             e.printStackTrace();
             System.exit(1);
         }
@@ -98,7 +86,7 @@ public class Database {
      * @param query The query with ?s where the parameters need to be placed
      * @param data The parameters to put in the query
      * @return QueryResult representing the statement used and the ResultSet
-     * @throws SQLException
+     * @throws SQLException SQLException
      */
     public QueryResult query(String query, String[] data) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement(query);
@@ -117,7 +105,7 @@ public class Database {
      * Run an update query with the specified parameters
      * @param query The query with ?s where the parameters need to be placed
      * @param data The parameters to put in the query
-     * @throws SQLException
+     * @throws SQLException SQLException
      */
     public void update(String query, String[] data) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement(query);
@@ -133,17 +121,11 @@ public class Database {
 
     /**
      * Create the database tables. Also alters the raid table to add the leader column if it doesn't exist.
-     * @throws SQLException
+     * @throws SQLException SQLException
      */
-    public void tableInits() throws SQLException {
+    private void tableInits() throws SQLException {
         connection.createStatement().execute(raidTableInit);
         connection.createStatement().execute(raidUsersTableInit);
-        connection.createStatement().execute(raidUsersFlexRolesTableInit);
         connection.createStatement().execute(botServerSettingsInit);
-
-        try {
-            connection.createStatement().execute("ALTER TABLE raids ADD COLUMN leader text");
-            connection.createStatement().execute("ALTER TABLE raids ADD COLUMN `description` text");
-        } catch (Exception e) { }
     }
 }

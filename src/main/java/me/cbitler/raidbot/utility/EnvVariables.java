@@ -12,11 +12,10 @@ public class EnvVariables {
 
     /**
      * Load variables from .env file
-     * @throws IOException
+     * @throws IOException IOException
      */
     public void loadFromEnvFile() throws IOException {
         File file = new File(".env");
-        System.err.println(file.getAbsolutePath());
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line;
         while((line = reader.readLine()) != null) {

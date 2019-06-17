@@ -1,8 +1,6 @@
 package me.cbitler.raidbot;
 
-import me.cbitler.raidbot.handlers.DMHandler;
 import me.cbitler.raidbot.utility.EnvVariables;
-import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
@@ -20,19 +18,20 @@ public class Main {
         try {
             token = readToken();
         } catch (IOException e) {
-            System.out.println("Specify Discord Bot Token in file 'token'");
+            System.out.println("Specify Discord Bot Token in .env file. " + e.getMessage());
+            e.printStackTrace();
             System.exit(1);
         }
 
         JDA jda = new JDABuilder(token).build();
         jda.awaitReady();
-        RaidBot bot = new RaidBot(jda);
+        new RaidBot(jda);
     }
 
     /**
      * Read the token from the token file
      * @return The token text
-     * @throws IOException
+     * @throws IOException IOException
      */
     private static String readToken() throws IOException {
         EnvVariables variables = new EnvVariables();
