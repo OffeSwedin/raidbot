@@ -11,7 +11,6 @@ public class SetArchiveChannelCommand implements Command {
         if (channel.getGuild().getMember(author).getPermissions().contains(Permission.MANAGE_SERVER)) {
             if (args.length >= 1) {
                 try {
-                    ;
                     String archiveChannel = args[0];
                     RaidBot.getInstance().setArchiveChannel(channel.getGuild().getId(), archiveChannel);
                     author.openPrivateChannel().queue(privateChannel -> privateChannel

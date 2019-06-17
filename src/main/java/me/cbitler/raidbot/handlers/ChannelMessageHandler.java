@@ -50,56 +50,6 @@ public class ChannelMessageHandler extends ListenerAdapter {
 				}
 			}
 		}
-
-		if (e.getMember().getPermissions().contains(Permission.MANAGE_SERVER)) {
-			if (e.getMessage().getContentRaw().toLowerCase().startsWith("!setraidleaderrole")) {
-
-			} else if (e.getMessage().getContentRaw().toLowerCase().startsWith("!setraiderrole")) {
-				try {
-					String[] commandParts = e.getMessage().getContentRaw().split(" ");
-					String raiderRole = combineArguments(commandParts, 1);
-					RaidBot.getInstance().setRaiderRole(e.getMember().getGuild().getId(), raiderRole);
-					e.getAuthor().openPrivateChannel().queue(privateChannel -> privateChannel
-							.sendMessage("Raider role updated to: " + raiderRole).queue());
-					e.getMessage().delete().queue();
-				} catch (Exception exc) {
-					e.getMember().getUser().openPrivateChannel().queue(privateChannel -> privateChannel
-							.sendMessage("Make sure that the bot has the 'Manage messages' permission").queue());
-				}
-			} else if (e.getMessage().getContentRaw().toLowerCase().startsWith("!setsignupchannel")) {
-				try {
-					
-					System.err.println("received command");
-					
-					String[] commandParts = e.getMessage().getContentRaw().split(" ");
-					String signupChannel = combineArguments(commandParts, 1);
-					
-					RaidBot.getInstance().setSignupChannel(e.getMember().getGuild().getId(), signupChannel);
-					
-					e.getAuthor().openPrivateChannel().queue(privateChannel -> privateChannel
-							.sendMessage("Signup channel updated to: " + signupChannel).queue());
-					e.getMessage().delete().queue();
-				} catch (Exception exc) {
-					e.getMember().getUser().openPrivateChannel().queue(privateChannel -> privateChannel
-							.sendMessage("Make sure that the bot has the 'Manage messages' permission").queue());
-				}
-			}  else if (e.getMessage().getContentRaw().toLowerCase().startsWith("!setarchivechannel")) {
-				try {
-					
-					String[] commandParts = e.getMessage().getContentRaw().split(" ");
-					String archiveChannel = combineArguments(commandParts, 1);
-					
-					RaidBot.getInstance().setArchiveChannel(e.getMember().getGuild().getId(), archiveChannel);
-					
-					e.getAuthor().openPrivateChannel().queue(privateChannel -> privateChannel
-							.sendMessage("Archive channel updated to: " + archiveChannel).queue());
-					e.getMessage().delete().queue();
-				} catch (Exception exc) {
-					e.getMember().getUser().openPrivateChannel().queue(privateChannel -> privateChannel
-							.sendMessage("Make sure that the bot has the 'Manage messages' permission").queue());
-				}
-			}
-		}
 	}
 
 	@Override
