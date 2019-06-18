@@ -6,6 +6,7 @@ import me.cbitler.raidbot.utility.PermissionsUtil;
 import me.cbitler.raidbot.utility.Reaction;
 import me.cbitler.raidbot.utility.Reactions;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.*;
 
 import java.sql.SQLException;
@@ -210,11 +211,15 @@ public class Raid {
 	 * Update the embedded message for the raid
 	 */
 	public void updateMessage() {
-		
 		MessageEmbed embed = buildEmbed();
+
 		try {
+			MessageBuilder mb = new MessageBuilder();
+			mb.setEmbed(embed);
+			mb.setContent(" ");
+			Message message = mb.build();
 			RaidBot.getInstance().getServer(getServerId()).getTextChannelById(getChannelId())
-					.editMessageById(getMessageId(), embed).queue();
+					.editMessageById(getMessageId(), message).queue();
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}

@@ -33,7 +33,12 @@ public class RaidManager {
 	 */
 	public static void createRaid(PendingRaid raid) {
 		Raid raidBaseMessage = new Raid("", "", "", "", "", "");
-		MessageEmbed message = raidBaseMessage.buildEmbed();
+		MessageEmbed messageEmbed = raidBaseMessage.buildEmbed();
+
+		MessageBuilder mb = new MessageBuilder();
+		mb.setEmbed(messageEmbed);
+		mb.setContent("<@&587687727235858436>");
+		Message message = mb.build();
 
 		Guild guild = RaidBot.getInstance().getServer(raid.getServerId());
 		List<TextChannel> channels = guild.getTextChannelsByName(raid.getAnnouncementChannel(), true);
