@@ -13,8 +13,14 @@ import me.cbitler.raidbot.raids.RaidManager;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Guild;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Class representing the raid bot itself.
@@ -64,6 +70,24 @@ public class RaidBot {
         CommandRegistry.addCommand("setRaiderRole", new SetRaiderRoleCommand());
         CommandRegistry.addCommand("setSignupChannel", new SetSignupChannelCommand());
         CommandRegistry.addCommand("setArchiveChannel", new SetArchiveChannelCommand());
+
+        ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
+        Runnable task = () -> {
+            SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
+            Date date = new Date(System.currentTimeMillis());
+
+            System.out.println("Refreshing database connection at " + formatter.format(date));
+            try{
+                QueryResult results = db.query("SELECT * FROM `serverSettings`", new String[]{});
+
+                results.getResults().close();
+                results.getStmt().close();
+            } catch(SQLException e){
+                System.err.println(e.getMessage());
+                e.printStackTrace();
+            }
+        };
+        ses.scheduleAtFixedRate(task, 0, 15, TimeUnit.MINUTES);
     }
 
     /**
