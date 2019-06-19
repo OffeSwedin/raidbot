@@ -5,6 +5,7 @@ import me.cbitler.raidbot.utility.EnvVariables;
 import me.cbitler.raidbot.utility.PermissionsUtil;
 import me.cbitler.raidbot.utility.Reaction;
 import me.cbitler.raidbot.utility.Reactions;
+import me.cbitler.raidbot.utility.TimestampComparator;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.*;
@@ -91,8 +92,8 @@ public class Raid {
 		if (db_insert) {
 			try {
 				RaidBot.getInstance().getDatabase()
-						.update("INSERT INTO `raidUsers` (`userId`, `username`, `spec`, `role`, `raidId`, `signupStatus`)"
-								+ " VALUES (?,?,?,?,?,?)", new String[] { user.id, user.name, user.spec, user.role, this.messageId, user.signupStatus });
+						.update("INSERT INTO `raidUsers` (`userId`, `username`, `spec`, `role`, `raidId`, `signupStatus`, `signupTime`)"
+								+ " VALUES (?,?,?,?,?,?,?)", new String[] { user.id, user.name, user.spec, user.role, this.messageId, user.signupStatus, Long.toString(user.signupTime.getTime())});
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -285,12 +286,17 @@ public class Raid {
 		String text = "";
 		for (String role : roles) {
 			List<RaidUser> usersInRole = getUsersInRole(role);
+			usersInRole.sort(new TimestampComparator());
+			
 			text += ("**" + role + " (" + usersInRole.size() + "):** \n");
+			
 			for (RaidUser user : usersInRole) {
-				
-				text += "   - " + guild.getMemberById(user.id).getEffectiveName() + " " + createSignupStatusText(user) + "\n";
-				
-				
+				if(!role.equals("Not Attending")){
+					text += "   - " + guild.getMemberById(user.id).getEffectiveName() + " " + createSignupStatusText(user) + "\n";
+				}else{
+					text += "   - " + guild.getMemberById(user.id).getEffectiveName() + "\n";
+				}
+					
 			}
 			text += "\n";
 		}

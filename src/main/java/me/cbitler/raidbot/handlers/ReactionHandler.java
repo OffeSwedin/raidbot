@@ -1,5 +1,7 @@
 package me.cbitler.raidbot.handlers;
 
+import java.sql.Timestamp;
+
 import me.cbitler.raidbot.raids.Raid;
 import me.cbitler.raidbot.raids.RaidManager;
 import me.cbitler.raidbot.raids.RaidUser;
@@ -28,7 +30,9 @@ public class ReactionHandler extends ListenerAdapter {
 						raid.removeUser(event.getUser().getId());
 					}
 
-					RaidUser user = new RaidUser(event.getUser().getId(), event.getUser().getName(), "", reaction.getSpec());
+					Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+					
+					RaidUser user = new RaidUser(event.getUser().getId(), event.getUser().getName(), "", reaction.getSpec(), timestamp);
 					raid.addUser(user, true, true);
 				}
 			}

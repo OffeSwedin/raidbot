@@ -10,6 +10,7 @@ import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.*;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -195,10 +196,12 @@ public class RaidManager {
 				String role = userResults.getResults().getString("role");
 				String raidId = userResults.getResults().getString("raidId");
 				String signupStatus = userResults.getResults().getString("signupStatus");
+				String signupTime = userResults.getResults().getString("signupTime");
+				Timestamp timestamp = new Timestamp(Long.parseLong(signupTime));
 
 				Raid raid = RaidManager.getRaid(raidId);
 				if (raid != null) {
-					RaidUser user = new RaidUser(id, name, spec, role, signupStatus);
+					RaidUser user = new RaidUser(id, name, spec, role, signupStatus, timestamp);
 					raid.addUser(user, false, false);
 				}
 			}
