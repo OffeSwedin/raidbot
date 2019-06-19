@@ -6,10 +6,7 @@ import me.cbitler.raidbot.raids.RaidUser;
 
 public class TimestampComparator implements Comparator<RaidUser> {
 	@Override
-	public int compare(RaidUser o1, RaidUser o2) {
-		RaidUser r1 = (RaidUser) o1;
-		RaidUser r2 = (RaidUser) o2;
-
+	public int compare(RaidUser r1, RaidUser r2) {
 		if (r1.signupTime.equals(r2.signupTime)) {
 			return 0;
 		} else if (r1.signupTime.after(r2.signupTime)) {
