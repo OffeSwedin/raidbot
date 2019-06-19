@@ -239,7 +239,7 @@ public class RaidBot {
             if(archiveChannel == null){
                 archiveChannel = "archive";
             }
-            signupChannelCache.put(serverId, archiveChannel);
+            archiveChannelCache.put(serverId, archiveChannel);
             return archiveChannel;
         }
     }
