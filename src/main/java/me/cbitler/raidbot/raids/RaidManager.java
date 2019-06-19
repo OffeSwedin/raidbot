@@ -35,41 +35,86 @@ public class RaidManager {
 		Raid raidBaseMessage = new Raid("", "", "", "", "", "");
 		MessageEmbed messageEmbed = raidBaseMessage.buildEmbed();
 
+		RaidBot bot = RaidBot.getInstance();
+		Guild guild = bot.getServer(raid.getServerId());
+
+		TextChannel channel = guild.getTextChannelsByName(RaidBot.getInstance().getSignupChannel(raid.getServerId()), true).get(0);
+		Role role = guild.getRolesByName(bot.getRaiderRole(raid.getServerId()), true).get(0);
+
 		MessageBuilder mb = new MessageBuilder();
 		mb.setEmbed(messageEmbed);
-		mb.setContent("<@&587687727235858436>");
-		Message message = mb.build();
+		mb.setContent(role.getAsMention());
 
-		Guild guild = RaidBot.getInstance().getServer(raid.getServerId());
-		List<TextChannel> channels = guild.getTextChannelsByName(raid.getAnnouncementChannel(), true);
-		if (channels.size() > 0) {
-			// We always go with the first channel if there is more than one
-			try {
-				channels.get(0).sendMessage(message).queue(message1 -> {
+		try {
+			mb.sendTo(channel).queue(message -> {
 
-					boolean inserted = insertToDatabase(raid, message1.getId(), message1.getGuild().getId(),
-							message1.getChannel().getId());
-					if (inserted) {
-						Raid newRaid = new Raid(message1.getId(), message1.getGuild().getId(),
-								message1.getChannel().getId(), raid.getName(), raid.getDate(), raid.getTime());
-						newRaid.addRoles(raid.getRoles());
-						raids.add(newRaid);
+				boolean inserted = insertToDatabase(raid, message.getId(), message.getGuild().getId(),
+						message.getChannel().getId());
+				if (inserted) {
+					Raid newRaid = new Raid(message.getId(), message.getGuild().getId(),
+							message.getChannel().getId(), raid.getName(), raid.getDate(), raid.getTime());
+					newRaid.addRoles(raid.getRoles());
+					raids.add(newRaid);
 
-						for (Reaction reaction : Reactions.getReactions()) {
-							message1.addReaction(reaction.getEmote()).queue();
-						}
-						newRaid.updateMessage();
-					} else {
-						message1.delete().queue();
+					for (Reaction reaction : Reactions.getReactions()) {
+						message.addReaction(reaction.getEmote()).queue();
 					}
+					newRaid.updateMessage();
+				} else {
+					message.delete().queue();
+				}
+			});
+
+		} catch (Exception e) {
+			System.out.println("Error encountered in sending message.");
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	/**
+	 * Delete the raid from the database and maps, and delete the message if it
+	 * is still there
+	 *
+	 * @param messageId
+	 *            The raid ID
+	 * @return true if deleted, false if not deleted
+	 */
+	public static boolean deleteRaid(String messageId) {
+		Raid r = getRaid(messageId);
+		if (r != null) {
+			try {
+
+				Guild guild = RaidBot.getInstance().getServer(r.getServerId());
+				TextChannel archiveChannel = guild
+						.getTextChannelsByName(RaidBot.getInstance().getArchiveChannel(r.getServerId()), true).get(0);
+
+				archiveChannel.sendMessage(r.buildEmbed()).queue(message1 -> {
 				});
 
+				RaidBot.getInstance().getServer(r.getServerId()).getTextChannelById(r.getChannelId())
+						.getMessageById(messageId).queue(message -> message.delete().queue());
+
 			} catch (Exception e) {
-				System.out.println("Error encountered in sending message.");
-				e.printStackTrace();
-				throw e;
+				System.out.println("Tried to delete raid without message");
+				// Nothing, the message doesn't exist - it can happen
 			}
+
+			raids.removeIf((Raid raid) -> raid.getMessageId().equalsIgnoreCase(messageId));
+
+			try {
+				RaidBot.getInstance().getDatabase().update("DELETE FROM `raids` WHERE `raidId` = ?",
+						new String[] { messageId });
+				RaidBot.getInstance().getDatabase().update("DELETE FROM `raidUsers` WHERE `raidId` = ?",
+						new String[] { messageId });
+			} catch (Exception e) {
+				System.out.println("Error encountered deleting raid");
+			}
+
+			return true;
 		}
+
+		return false;
 	}
 
 	/**
@@ -168,51 +213,6 @@ public class RaidManager {
 			e.printStackTrace();
 			System.exit(1);
 		}
-	}
-
-	/**
-	 * Delete the raid from the database and maps, and delete the message if it
-	 * is still there
-	 * 
-	 * @param messageId
-	 *            The raid ID
-	 * @return true if deleted, false if not deleted
-	 */
-	public static boolean deleteRaid(String messageId) {
-		Raid r = getRaid(messageId);
-		if (r != null) {
-			try {
-
-				Guild guild = RaidBot.getInstance().getServer(r.getServerId());
-				TextChannel archiveChannel = guild
-						.getTextChannelsByName(RaidBot.getInstance().getArchiveChannel(r.getServerId()), true).get(0);
-
-				archiveChannel.sendMessage(r.buildEmbed()).queue(message1 -> {
-				});
-
-				RaidBot.getInstance().getServer(r.getServerId()).getTextChannelById(r.getChannelId())
-						.getMessageById(messageId).queue(message -> message.delete().queue());
-
-			} catch (Exception e) {
-				System.out.println("Tried to delete raid without message");
-				// Nothing, the message doesn't exist - it can happen
-			}
-
-			raids.removeIf((Raid raid) -> raid.getMessageId().equalsIgnoreCase(messageId));
-
-			try {
-				RaidBot.getInstance().getDatabase().update("DELETE FROM `raids` WHERE `raidId` = ?",
-						new String[] { messageId });
-				RaidBot.getInstance().getDatabase().update("DELETE FROM `raidUsers` WHERE `raidId` = ?",
-						new String[] { messageId });
-			} catch (Exception e) {
-				System.out.println("Error encountered deleting raid");
-			}
-
-			return true;
-		}
-
-		return false;
 	}
 
 	/**
