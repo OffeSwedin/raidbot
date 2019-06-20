@@ -32,12 +32,11 @@ public class ReactionHandler extends ListenerAdapter {
 
 					Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 					
-					RaidUser user = new RaidUser(event.getUser().getId(), event.getUser().getName(), "", reaction.getSpec(), timestamp);
+					RaidUser user = new RaidUser(event.getUser().getId(), event.getMember().getEffectiveName(), "", reaction.getSpec(), timestamp);
 					raid.addUser(user, true, true);
 				}
 			}
 			event.getReaction().removeReaction(event.getUser()).queue();
 		}
 	}
-
 }
