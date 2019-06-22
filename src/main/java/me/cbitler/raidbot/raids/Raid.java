@@ -243,7 +243,7 @@ public class Raid {
 		builder.addBlankField(false);
 		
 		List<List<String>> roleTexts = buildRolesText(guild);
-		System.err.println(roleTexts.toString());
+
 		int uglyLoopCounterIndex = 0;
 		for(List<String> role: roleTexts){
 
@@ -253,7 +253,6 @@ public class Raid {
 			String fullRoleText = "";
 			for(String roleText : role){
 				fullRoleText += roleText + "\n";
-				System.err.println(roleText);
 			}
 			builder.addField(header, fullRoleText, true);
 			uglyLoopCounterIndex++;
@@ -304,10 +303,10 @@ public class Raid {
 	 * @return The role text
 	 */
 	private List<List<String>> buildRolesText(Guild guild) {
-		List<List<String>> roleTexts = new ArrayList<List<String>>();
+		List<List<String>> roleTexts = new ArrayList<>();
 
 		for (String role : roles) {
-			ArrayList<String> roleStrings = new ArrayList<String>();
+			ArrayList<String> roleStrings = new ArrayList<>();
 			roleTexts.add(roleStrings);
 			
 			List<RaidUser> usersInRole = getUsersInRole(role);
@@ -425,7 +424,6 @@ public class Raid {
 			for (Reaction reaction : Reactions.getReactions()){
 				RaidBot.getInstance().getServer(getServerId()).getTextChannelById(getChannelId()).addReactionById(getMessageId(), reaction.getEmote()).queueAfter(delay, TimeUnit.MILLISECONDS);
 				delay += 1000;
-				System.err.println("Delay: " + delay);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
