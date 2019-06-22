@@ -241,8 +241,28 @@ public class Raid {
 		EmbedBuilder builder = new EmbedBuilder();
 		builder.setTitle("**" + this.name + " - " + this.date + " " + this.time + "**");
 		builder.addBlankField(false);
-		builder.addField("Roles:", buildRolesText(guild), true);
-		builder.addField("Not responded: ("+notRespondedMembers.size()+")", buildNotRespondedText(notRespondedMembers) , true);
+		
+		List<List<String>> roleTexts = buildRolesText(guild);
+		System.err.println(roleTexts.toString());
+		int uglyLoopCounterIndex = 0;
+		for(List<String> role: roleTexts){
+
+			String header = role.get(0);
+			role.remove(0);
+			
+			String fullRoleText = "";
+			for(String roleText : role){
+				fullRoleText += roleText + "\n";
+				System.err.println(roleText);
+			}
+			builder.addField(header, fullRoleText, true);
+			uglyLoopCounterIndex++;
+			if(uglyLoopCounterIndex == 3){
+				builder.addBlankField(false);
+			}
+		}
+		
+		builder.addField("**Not responded: ("+notRespondedMembers.size()+")**", buildNotRespondedText(notRespondedMembers) , true);
 		builder.addBlankField(false);
 		builder.addField("ID: ", messageId, true);
 
@@ -283,25 +303,28 @@ public class Raid {
 	 * 
 	 * @return The role text
 	 */
-	private String buildRolesText(Guild guild) {
-		String text = "";
+	private List<List<String>> buildRolesText(Guild guild) {
+		List<List<String>> roleTexts = new ArrayList<List<String>>();
+
 		for (String role : roles) {
+			ArrayList<String> roleStrings = new ArrayList<String>();
+			roleTexts.add(roleStrings);
+			
 			List<RaidUser> usersInRole = getUsersInRole(role);
 			usersInRole.sort(new TimestampComparator());
 			
-			text += ("**" + role + " (" + usersInRole.size() + "):** \n");
+			roleStrings.add("**" + role + " (" + usersInRole.size() + "):**");
 			
 			for (RaidUser user : usersInRole) {
 				if(!role.equals("Not Attending")){
-					text += "   - " + guild.getMemberById(user.id).getEffectiveName() + " " + createSignupStatusText(user) + "\n";
+					roleStrings.add("   - "+ guild.getMemberById(user.id).getEffectiveName() + " " + createSignupStatusText(user));
 				}else{
-					text += "   - " + guild.getMemberById(user.id).getEffectiveName() + "\n";
+					roleStrings.add("   - "+ guild.getMemberById(user.id).getEffectiveName());
 				}
 					
 			}
-			text += "\n";
 		}
-		return text;
+		return roleTexts;
 	}
 
 	private String createSignupStatusText(RaidUser user){
