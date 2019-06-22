@@ -1,13 +1,7 @@
 package me.cbitler.raidbot.handlers;
 
-import java.sql.Timestamp;
-
 import me.cbitler.raidbot.raids.Raid;
 import me.cbitler.raidbot.raids.RaidManager;
-import me.cbitler.raidbot.raids.RaidUser;
-import me.cbitler.raidbot.utility.PermissionsUtil;
-import me.cbitler.raidbot.utility.Reaction;
-import me.cbitler.raidbot.utility.Reactions;
 import net.dv8tion.jda.core.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
@@ -20,22 +14,7 @@ public class ReactionHandler extends ListenerAdapter {
 		}
 
 		if (raid != null) {
-
-			if (PermissionsUtil.hasRaiderRole(event.getMember())) {
-				// Checks for the "command" emojis
-				String emojiId = event.getReactionEmote().getEmote().getId();
-				Reaction reaction = Reactions.getReactionFromEmojiId(emojiId);
-				if (reaction != null) {
-					if (raid.isUserInRaid(event.getUser().getId())) {
-						raid.removeUser(event.getUser().getId());
-					}
-
-					Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-					
-					RaidUser user = new RaidUser(event.getUser().getId(), event.getMember().getEffectiveName(), "", reaction.getSpec(), timestamp);
-					raid.addUser(user, true, true);
-				}
-			}
+			raid.parseReaction(event.getMember(), event.getReactionEmote().getEmote(), true);
 			event.getReaction().removeReaction(event.getUser()).queue();
 		}
 	}

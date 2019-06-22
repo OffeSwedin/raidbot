@@ -208,6 +208,7 @@ public class RaidManager {
 
 			int delay = 0;
 			for (Raid raid : raids) {
+				raid.parseReactions();
 				raid.updateMessage();
 				delay = raid.resetReactions(delay);
 			}

@@ -11,6 +11,7 @@ import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.*;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -361,6 +362,37 @@ public class Raid {
 			}
 		}
 		return null;
+	}
+
+	public void parseReactions() {
+		Guild guild = RaidBot.getInstance().getJda().getGuilds().get(0);
+		Message message = RaidBot.getInstance().getServer(getServerId()).getTextChannelById(getChannelId()).getMessageById(getMessageId()).complete();
+		for(MessageReaction reaction : message.getReactions()){
+			List<User> users = reaction.getUsers().complete();
+			for(User user : users){
+				if(!user.isBot()){
+					parseReaction(guild.getMember(user), reaction.getReactionEmote().getEmote(), false);
+				}
+			}
+		}
+	}
+
+	public void parseReaction(Member member, Emote emote, boolean update_message){
+		if (PermissionsUtil.hasRaiderRole(member)) {
+
+			String emojiId = emote.getId();
+			Reaction reaction = Reactions.getReactionFromEmojiId(emojiId);
+			if (reaction != null) {
+				if (this.isUserInRaid(member.getUser().getId())) {
+					this.removeUser(member.getUser().getId());
+				}
+
+				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+				RaidUser user = new RaidUser(member.getUser().getId(), member.getEffectiveName(), "", reaction.getSpec(), timestamp);
+				this.addUser(user, true, update_message);
+			}
+		}
 	}
 
 	public int resetReactions(int delay){
