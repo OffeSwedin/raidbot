@@ -1,18 +1,15 @@
 package me.cbitler.raidbot.raids;
 
 import me.cbitler.raidbot.RaidBot;
-import me.cbitler.raidbot.utility.EnvVariables;
-import me.cbitler.raidbot.utility.PermissionsUtil;
-import me.cbitler.raidbot.utility.Reaction;
-import me.cbitler.raidbot.utility.Reactions;
-import me.cbitler.raidbot.utility.TimestampComparator;
+import me.cbitler.raidbot.utility.*;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.*;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -97,8 +94,7 @@ public class Raid {
 	 *            Whether or not the user should be inserted. This is false when
 	 *            the roles are loaded from the database.
 	 */
-	public void addUser(RaidUser user, boolean db_insert,
-			boolean update_message) {
+	public void addUser(RaidUser user, boolean db_insert) {
 
 		if (db_insert) {
 			try {
@@ -111,10 +107,6 @@ public class Raid {
 		}
 
 		users.add(user);
-
-		if (update_message) {
-			updateMessage();
-		}
 	}
 
 	public boolean acceptUser(String username){
@@ -188,8 +180,6 @@ public class Raid {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
-		updateMessage();
 	}
 
 	/**
@@ -424,7 +414,11 @@ public class Raid {
 				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
 				RaidUser user = new RaidUser(member.getUser().getId(), member.getEffectiveName(), "", reaction.getSpec(), timestamp);
-				this.addUser(user, true, update_message);
+				this.addUser(user, true);
+
+				if(update_message){
+					this.updateMessage();
+				}
 			}
 		}
 	}

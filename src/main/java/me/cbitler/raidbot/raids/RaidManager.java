@@ -7,7 +7,9 @@ import me.cbitler.raidbot.utility.Reaction;
 import me.cbitler.raidbot.utility.Reactions;
 import me.cbitler.raidbot.utility.ServerSettings;
 import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.core.entities.TextChannel;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -227,7 +229,7 @@ public class RaidManager {
 				Raid raid = RaidManager.getRaid(raidId);
 				if (raid != null) {
 					RaidUser user = new RaidUser(id, name, spec, role, signupStatus, timestamp);
-					raid.addUser(user, false, false);
+					raid.addUser(user, false);
 				}
 			}
 

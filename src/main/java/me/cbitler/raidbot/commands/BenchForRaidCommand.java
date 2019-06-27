@@ -8,6 +8,10 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class BenchForRaidCommand extends Command {
     @Override
     public void handleCommand(String[] args, TextChannel channel, User author) {
@@ -16,18 +20,24 @@ public class BenchForRaidCommand extends Command {
 
         if (PermissionsUtil.hasRaidLeaderRole(member)) {
             if (args.length >= 2) {
-                String messageId = args[0];
-                String name = args[1];
+                List<String> names = new ArrayList<>(Arrays.asList(args));
+                String messageId = names.remove(0);
 
                 Raid raid = RaidManager.getRaid(messageId);
 
                 if (raid != null && raid.getServerId().equalsIgnoreCase(channel.getGuild().getId())) {
-                    boolean benched = raid.benchUser(name);
-                    if(benched){
+                    boolean needToUpdateMessage = false;
+                    for (String name : names){
+                        if(raid.benchUser(name)) {
+                            needToUpdateMessage = true;
+                        }else{
+                            author.openPrivateChannel()
+                                    .queue(privateChannel -> privateChannel.sendMessage("Player '" + name + "' does not exist in raid. ").queue());
+                        }
+                    }
+
+                    if(needToUpdateMessage){
                         raid.updateMessage();
-                    }else{
-                        author.openPrivateChannel()
-                                .queue(privateChannel -> privateChannel.sendMessage("Player '" + name + "' does not exist in raid. ").queue());
                     }
                 } else {
                     author.openPrivateChannel()

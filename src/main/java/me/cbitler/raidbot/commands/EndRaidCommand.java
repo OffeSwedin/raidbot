@@ -7,6 +7,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class EndRaidCommand extends Command {
                 if (raid != null && raid.getServerId().equalsIgnoreCase(channel.getGuild().getId())) {
                     //Get list of log messages and send them
                     if (args.length > 1) {
-                        List<String> links = Arrays.asList(args);
+                        List<String> links = new ArrayList<>(Arrays.asList(args));
                         raid.messagePlayersWithLogLinks(links);
                     }
                     boolean deleted = RaidManager.deleteRaid(raidId);

@@ -5,7 +5,7 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 
 import javax.security.auth.login.LoginException;
-import java.io.*;
+import java.io.IOException;
 
 /**
  * Start the program, read the token, and start the bot

@@ -1,8 +1,8 @@
 package me.cbitler.raidbot.utility;
 
-import java.util.Comparator;
-
 import me.cbitler.raidbot.raids.RaidUser;
+
+import java.util.Comparator;
 
 public class TimestampComparator implements Comparator<RaidUser> {
 	@Override
