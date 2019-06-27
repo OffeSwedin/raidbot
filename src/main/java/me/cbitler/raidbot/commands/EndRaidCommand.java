@@ -12,7 +12,7 @@ import java.util.List;
 
 public class EndRaidCommand extends Command {
     @Override
-    public void handleCommand(String command, String[] args, TextChannel channel, User author) {
+    public void handleCommand(String[] args, TextChannel channel, User author) {
         Member member = channel.getGuild().getMember(author);
                 
         if(PermissionsUtil.hasRaidLeaderRole(member)) {

@@ -19,7 +19,7 @@ public class HelpCommand extends Command {
             "**!setSignupChannel [channel]** - Set the channel that serves as the signup channel. This is only usable by people with the manage server permission\n" +
             "**!setArchiveChannel [channel]** - Set the channel that serves as the archive channel. This is only usable by people with the manage server permission";
     @Override
-    public void handleCommand(String command, String[] args, TextChannel channel, User author) {
+    public void handleCommand(String[] args, TextChannel channel, User author) {
         channel.sendMessage(helpMessage).queue();
     }
 }

@@ -11,7 +11,7 @@ import net.dv8tion.jda.core.entities.User;
 
 public class RemoveFromRaidCommand extends Command {
     @Override
-    public void handleCommand(String command, String[] args, TextChannel channel, User author) {
+    public void handleCommand(String[] args, TextChannel channel, User author) {
         Guild guild = channel.getGuild();
         Member member = guild.getMember(author);
 

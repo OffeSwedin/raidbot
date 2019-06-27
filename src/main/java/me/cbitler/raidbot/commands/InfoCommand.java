@@ -9,7 +9,7 @@ public class InfoCommand extends Command {
             "Contact us with any questions.";
 
     @Override
-    public void handleCommand(String command, String[] args, TextChannel channel, User author) {
+    public void handleCommand(String[] args, TextChannel channel, User author) {
         channel.sendMessage(information).queue();
     }
 }

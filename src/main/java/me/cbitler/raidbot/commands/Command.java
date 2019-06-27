@@ -4,7 +4,7 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 
 public abstract class Command {
-    public abstract void handleCommand(String command, String[] args, TextChannel channel, User author);
+    public abstract void handleCommand(String[] args, TextChannel channel, User author);
 
     protected String combineArguments(String[] parts, int startIndex) {
         StringBuilder text = new StringBuilder();

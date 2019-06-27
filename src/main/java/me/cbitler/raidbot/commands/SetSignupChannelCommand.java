@@ -7,7 +7,7 @@ import net.dv8tion.jda.core.entities.User;
 
 public class SetSignupChannelCommand extends Command {
     @Override
-    public void handleCommand(String command, String[] args, TextChannel channel, User author) {
+    public void handleCommand(String[] args, TextChannel channel, User author) {
         if (channel.getGuild().getMember(author).getPermissions().contains(Permission.MANAGE_SERVER)) {
             if (args.length >= 1) {
                 try {
