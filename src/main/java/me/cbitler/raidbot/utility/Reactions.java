@@ -11,7 +11,7 @@ public class Reactions {
             new Reaction("Healer", "588452960661536777"),
             new Reaction("Melee", "588455826625265684"),
             new Reaction("Ranged", "588456430185480194"),
-            new Reaction("Not Attending", "588459958484598784")
+            new Reaction("Can't Attend", "588459958484598784")
     };
 
     private final static Reaction[] testReactions = {
@@ -19,10 +19,8 @@ public class Reactions {
             new Reaction("Healer", "587244937846849536"),
             new Reaction("Melee", "587246755741958166"),
             new Reaction("Ranged", "587246716345122817"),
-            new Reaction("Not Attending", "587246903369138187")
+            new Reaction("Can't Attend", "587246903369138187")
     };
-
-    private static Reaction[] reactionsToUse = testReactions;
 
     public static List<Reaction> getReactions(){
         Reaction[] reactionsToUse;

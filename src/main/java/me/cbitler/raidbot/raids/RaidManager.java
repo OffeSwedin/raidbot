@@ -25,25 +25,36 @@ public class RaidManager {
 	private static List<Raid> raids = new ArrayList<>();
 
 	/**
-	 * Create a raid. This turns a PendingRaid object into a Raid object and
-	 * inserts it into the list of raids. It also sends the associated embedded
-	 * message and adds the reactions for people to join to the embed
+	 * Create a raid.
 	 * 
-	 * @param raid
-	 *            The pending raid to create
+	 * @param raidText
+	 *          	The header-text for the raid
+	 * @param serverId
+	 * 				The id of the server to create the raid for
+	 * @param announcementChannel
+	 * 				The name of the channel to announce the raid in
 	 */
-	public static void createRaid(PendingRaid raid) {
-		Raid raidBaseMessage = new Raid("", "", "", "", "", "");
-		MessageEmbed messageEmbed = raidBaseMessage.buildEmbed();
-
+	public static void createRaid(String raidText, String serverId, String announcementChannel) {
 		RaidBot bot = RaidBot.getInstance();
-		Guild guild = bot.getServer(raid.getServerId());
+		Guild guild = bot.getServer(serverId);
+
+		PendingRaid raid = new PendingRaid();
+		raid.setName(raidText);
+		raid.setServerId(serverId);
+		raid.setAnnouncementChannel(announcementChannel);
+		raid.setLeaderName("");
+		raid.setDescription("");
+		raid.setDate("");
+		raid.setTime("");
+
+		for(Reaction reaction : Reactions.getReactions()){
+			raid.addRole(reaction.getSpec());
+		}
 
 		TextChannel channel = guild.getTextChannelsByName(RaidBot.getInstance().getSignupChannel(raid.getServerId()), true).get(0);
 		Role role = guild.getRolesByName(bot.getRaiderRole(raid.getServerId()), true).get(0);
 
 		MessageBuilder mb = new MessageBuilder();
-		mb.setEmbed(messageEmbed);
 		mb.setContent(role.getAsMention());
 
 		try {
@@ -71,6 +82,34 @@ public class RaidManager {
 			e.printStackTrace();
 			throw e;
 		}
+	}
+
+	/**
+	 * Create a raid.
+	 *
+	 * @param messageId
+	 * 				The id of the raidmessage to edit
+	 * @param raidText
+	 *          	The header-text for the raid
+	 */
+	public static boolean editRaid(String messageId, String raidText){
+		Raid raid = getRaid(messageId);
+
+		if (raid != null) {
+			try {
+				RaidBot.getInstance().getDatabase().update("UPDATE `raids` SET `name` = ? WHERE `raidId` = ?",
+						new String[] { raidText, messageId });
+			} catch (Exception e) {
+				System.out.println("Error encountered updating raid");
+			}
+
+			raid.editName(raidText);
+			raid.updateMessage();
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

@@ -8,7 +8,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 
-public class CreateRaidCommand extends Command {
+public class EditRaidCommand extends Command {
     @Override
     public void handleCommand(String command, String[] args, TextChannel channel, User author) {
         Guild guild = channel.getGuild();
@@ -16,12 +16,13 @@ public class CreateRaidCommand extends Command {
         RaidBot bot = RaidBot.getInstance();
 
         if(PermissionsUtil.hasRaidLeaderRole(member)) {
-            if (args.length >= 1) {
-                String raidText = combineArguments(args, 0);
-                RaidManager.createRaid(raidText, guild.getId(), bot.getSignupChannel(guild.getId()));
+            if (args.length >= 2) {
+                String raidId = args[0];
+                String raidText = combineArguments(args, 1);
+                RaidManager.editRaid(raidId, raidText);
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage("Format for !createRaid: !createRaid [raidText]").queue());
+                        .sendMessage("Format for !editRaid: !editRaid [raidID] [raidText]").queue());
             }
         }
     }

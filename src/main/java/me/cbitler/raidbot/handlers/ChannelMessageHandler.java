@@ -1,6 +1,5 @@
 package me.cbitler.raidbot.handlers;
 
-import me.cbitler.raidbot.RaidBot;
 import me.cbitler.raidbot.commands.Command;
 import me.cbitler.raidbot.commands.CommandRegistry;
 import me.cbitler.raidbot.raids.RaidManager;
@@ -50,23 +49,5 @@ public class ChannelMessageHandler extends ListenerAdapter {
 		if (RaidManager.getRaid(e.getMessageId()) != null) {
 			RaidManager.deleteRaid(e.getMessageId());
 		}
-	}
-
-	/**
-	 * Combine the strings in an array of strings
-	 * 
-	 * @param parts
-	 *            The array of strings
-	 * @param offset
-	 *            The offset in the array to start at
-	 * @return The combined string
-	 */
-	private String combineArguments(String[] parts, int offset) {
-		String text = "";
-		for (int i = offset; i < parts.length; i++) {
-			text += (parts[i] + " ");
-		}
-
-		return text.trim();
 	}
 }

@@ -9,7 +9,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 
-public class RemoveFromRaidCommand implements Command {
+public class RemoveFromRaidCommand extends Command {
     @Override
     public void handleCommand(String command, String[] args, TextChannel channel, User author) {
         Guild guild = channel.getGuild();

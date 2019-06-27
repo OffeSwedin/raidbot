@@ -1,11 +1,9 @@
 package me.cbitler.raidbot;
 
 import me.cbitler.raidbot.commands.*;
-import me.cbitler.raidbot.creation.CreationStep;
 import me.cbitler.raidbot.database.Database;
 import me.cbitler.raidbot.database.QueryResult;
 import me.cbitler.raidbot.handlers.ChannelMessageHandler;
-import me.cbitler.raidbot.handlers.DMHandler;
 import me.cbitler.raidbot.handlers.ReactionHandler;
 import me.cbitler.raidbot.handlers.RoleChangeHandler;
 import me.cbitler.raidbot.raids.PendingRaid;
@@ -13,7 +11,6 @@ import me.cbitler.raidbot.raids.RaidManager;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Guild;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,9 +31,6 @@ public class RaidBot {
     private static RaidBot instance;
     private JDA jda;
 
-    private HashMap<String, CreationStep> creation = new HashMap<>();
-    private HashMap<String, PendingRaid> pendingRaids = new HashMap<>();
-
     //TODO: This should be moved to it's own settings thing
     private HashMap<String, String> raidLeaderRoleCache = new HashMap<>();
     private HashMap<String, String> raiderRoleCache = new HashMap<>();
@@ -53,7 +47,7 @@ public class RaidBot {
         instance = this;
 
         this.jda = jda;
-        jda.addEventListener(new DMHandler(), new ChannelMessageHandler(), new ReactionHandler(), new RoleChangeHandler());
+        jda.addEventListener(new ChannelMessageHandler(), new ReactionHandler(), new RoleChangeHandler());
         
         db = new Database();
         db.connect();
@@ -63,6 +57,7 @@ public class RaidBot {
         CommandRegistry.addCommand("info", new InfoCommand());
         CommandRegistry.addCommand("endRaid", new EndRaidCommand());
         CommandRegistry.addCommand("createRaid", new CreateRaidCommand());
+        CommandRegistry.addCommand("editRaid", new EditRaidCommand());
         CommandRegistry.addCommand("accept", new AcceptToRaidCommand());
         CommandRegistry.addCommand("bench", new BenchForRaidCommand());
         CommandRegistry.addCommand("removeFromRaid", new RemoveFromRaidCommand());
@@ -88,22 +83,6 @@ public class RaidBot {
             }
         };
         ses.scheduleAtFixedRate(task, 0, 15, TimeUnit.MINUTES);
-    }
-
-    /**
-     * Map of UserId -> creation step for people in the creation process
-     * @return The map of UserId -> creation step for people in the creation process
-     */
-    public HashMap<String, CreationStep> getCreationMap() {
-        return creation;
-    }
-
-    /**
-     * Map of the UserId -> pendingRaid step for raids in the setup process
-     * @return The map of UserId -> pendingRaid
-     */
-    public HashMap<String, PendingRaid> getPendingRaids() {
-        return pendingRaids;
     }
 
     /**

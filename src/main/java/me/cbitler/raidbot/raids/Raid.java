@@ -77,6 +77,17 @@ public class Raid {
 	}
 
 	/**
+	 * Get the channel ID for this raid
+	 *
+	 * @return The channel ID for this raid
+	 */
+	public void editName(String name) {
+		this.name = name;
+	}
+
+
+
+	/**
 	 * Add a user to this raid. This first creates the user and attempts to
 	 * insert it into the database, if needed Then it adds them to list of raid
 	 * users with their role
@@ -239,7 +250,7 @@ public class Raid {
 		List<Member> notRespondedMembers = getNotRespondedMembers(guild);
 
 		EmbedBuilder builder = new EmbedBuilder();
-		builder.setTitle("**" + this.name + " - " + this.date + " " + this.time + "**");
+		builder.setTitle("**" + this.name + "**");
 		builder.addBlankField(false);
 		
 		List<List<String>> roleTexts = buildRolesText(guild);
@@ -291,7 +302,7 @@ public class Raid {
 		String response = "";
 		
 		for (Member member : notRespondedMembers) {
-			response += member.getAsMention() + "\n";
+			response += "- " + member.getEffectiveName() + "\n";
 		}
 
 		return response;
@@ -316,9 +327,9 @@ public class Raid {
 			
 			for (RaidUser user : usersInRole) {
 				if(!role.equals("Not Attending")){
-					roleStrings.add("   - "+ guild.getMemberById(user.id).getEffectiveName() + " " + createSignupStatusText(user));
+					roleStrings.add("- "+ guild.getMemberById(user.id).getEffectiveName() + " " + createSignupStatusText(user));
 				}else{
-					roleStrings.add("   - "+ guild.getMemberById(user.id).getEffectiveName());
+					roleStrings.add("- "+ guild.getMemberById(user.id).getEffectiveName());
 				}
 					
 			}

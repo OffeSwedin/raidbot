@@ -5,7 +5,7 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 
-public class SetArchiveChannelCommand implements Command {
+public class SetArchiveChannelCommand extends Command {
     @Override
     public void handleCommand(String command, String[] args, TextChannel channel, User author) {
         if (channel.getGuild().getMember(author).getPermissions().contains(Permission.MANAGE_SERVER)) {
