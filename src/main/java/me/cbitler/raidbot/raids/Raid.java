@@ -20,9 +20,13 @@ import java.util.concurrent.TimeUnit;
  * etc
  */
 public class Raid {
-	private String messageId, name, serverId, channelId;
-	private List<String> roles = new ArrayList<>();
-	private List<RaidUser> users = new ArrayList<>();
+	private final String messageId;
+	private final String serverId;
+	private final String channelId;
+	private final List<String> roles = new ArrayList<>();
+	private final List<RaidUser> users = new ArrayList<>();
+
+	private String name;
 
 	/**
 	 * Create a new Raid with the specified data
@@ -145,18 +149,14 @@ public class Raid {
 		}
 	}
 
-	public void addRoles(List<String> roles){
-		this.roles.addAll(roles);
-	}
-
 	/**
 	 * Check if a specific user is in this raid
-	 * 
+	 *
 	 * @param id
 	 *            The id of the user
 	 * @return True if they are in the raid, false otherwise
 	 */
-	public boolean isUserInRaid(String id) {
+	private boolean isUserInRaid(String id) {
 		for (RaidUser user : users){
 			if(user.id.equalsIgnoreCase(id)){
 				return true;
@@ -165,6 +165,12 @@ public class Raid {
 
 		return false;
 	}
+
+	public void addRoles(List<String> roles){
+		this.roles.addAll(roles);
+	}
+
+
 
 	/**
 	 * Remove a user from this raid. This also updates the database to remove

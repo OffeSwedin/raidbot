@@ -4,8 +4,8 @@ import me.cbitler.raidbot.RaidBot;
 import net.dv8tion.jda.core.entities.Emote;
 
 public class Reaction {
-    private String spec;
-    private Emote emote;
+    private final String spec;
+    private final Emote emote;
 
     public Reaction(String spec, String emoteId){
         this.spec = spec;

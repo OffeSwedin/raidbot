@@ -28,15 +28,15 @@ import java.util.concurrent.TimeUnit;
  */
 public class RaidBot {
     private static RaidBot instance;
-    private JDA jda;
+
+    private final JDA jda;
+    private final Database db;
 
     //TODO: This should be moved to it's own settings thing
     private HashMap<String, String> raidLeaderRoleCache = new HashMap<>();
     private HashMap<String, String> raiderRoleCache = new HashMap<>();
     private HashMap<String, String> signupChannelCache = new HashMap<>();
     private HashMap<String, String> archiveChannelCache = new HashMap<>();
-
-    private Database db;
 
     /**
      * Create a new instance of the raid bot with the specified JDA api
@@ -222,7 +222,7 @@ public class RaidBot {
         }
     }
 
-    public void saveServerSetting(String serverId, String settingName, String settingValue){
+    private void saveServerSetting(String serverId, String settingName, String settingValue){
         try {
             db.update("INSERT INTO `serverSettings` (`serverId`,`" + settingName + "`) VALUES (?,?)",
                     new String[] { serverId, settingValue});

@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class RaidManager {
 
-	private static List<Raid> raids = new ArrayList<>();
+	private static final List<Raid> raids = new ArrayList<>();
 
 	/**
 	 * Create a raid.

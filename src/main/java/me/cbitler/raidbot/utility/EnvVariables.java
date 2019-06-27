@@ -9,7 +9,7 @@ import java.util.HashMap;
  */
 public class EnvVariables {
     private static EnvVariables instance;
-    private HashMap<String,String> variables = new HashMap<>();
+    private final HashMap<String,String> variables = new HashMap<>();
 
     /**
      * Load variables from .env file
