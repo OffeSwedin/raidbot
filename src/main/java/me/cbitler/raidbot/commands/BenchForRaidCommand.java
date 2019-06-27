@@ -2,7 +2,6 @@ package me.cbitler.raidbot.commands;
 
 import me.cbitler.raidbot.raids.Raid;
 import me.cbitler.raidbot.raids.RaidManager;
-import me.cbitler.raidbot.raids.RaidUser;
 import me.cbitler.raidbot.utility.PermissionsUtil;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;

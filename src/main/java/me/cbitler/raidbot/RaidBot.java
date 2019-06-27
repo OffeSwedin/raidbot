@@ -6,7 +6,6 @@ import me.cbitler.raidbot.database.QueryResult;
 import me.cbitler.raidbot.handlers.ChannelMessageHandler;
 import me.cbitler.raidbot.handlers.ReactionHandler;
 import me.cbitler.raidbot.handlers.RoleChangeHandler;
-import me.cbitler.raidbot.raids.PendingRaid;
 import me.cbitler.raidbot.raids.RaidManager;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Guild;

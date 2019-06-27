@@ -73,7 +73,8 @@ public class Raid {
 	/**
 	 * Get the channel ID for this raid
 	 *
-	 * @return The channel ID for this raid
+	 * @param name
+	 *		The new raidText for this raid
 	 */
 	public void editName(String name) {
 		this.name = name;
@@ -192,12 +193,12 @@ public class Raid {
 	 *            The list of links
 	 */
 	public void messagePlayersWithLogLinks(List<String> logLinks) {
-		String logLinkMessage = "ArcDPS reports from **" + this.name + "**:\n";
+		StringBuilder logLinkMessage = new StringBuilder("ArcDPS reports from **" + this.name + "**:\n");
 		for (String link : logLinks) {
-			logLinkMessage += (link + "\n");
+			logLinkMessage.append(link).append("\n");
 		}
 
-		final String finalLogLinkMessage = logLinkMessage;
+		final String finalLogLinkMessage = logLinkMessage.toString();
 		for (RaidUser user : this.users) {
 			RaidBot.getInstance().getServer(this.serverId).getMemberById(user.id).getUser().openPrivateChannel()
 					.queue(privateChannel -> privateChannel.sendMessage(finalLogLinkMessage).queue());
@@ -255,11 +256,11 @@ public class Raid {
 			String header = role.get(0);
 			role.remove(0);
 			
-			String fullRoleText = "";
+			StringBuilder fullRoleText = new StringBuilder();
 			for(String roleText : role){
-				fullRoleText += roleText + "\n";
+				fullRoleText.append(roleText).append("\n");
 			}
-			builder.addField(header, fullRoleText, true);
+			builder.addField(header, fullRoleText.toString(), true);
 			uglyLoopCounterIndex++;
 			if(uglyLoopCounterIndex == 3){
 				builder.addBlankField(false);
@@ -293,13 +294,13 @@ public class Raid {
 	 * @return The not responded text
 	 */
 	private String buildNotRespondedText(List<Member> notRespondedMembers) {
-		String response = "";
+		StringBuilder response = new StringBuilder();
 		
 		for (Member member : notRespondedMembers) {
-			response += "- " + member.getEffectiveName() + "\n";
+			response.append("- ").append(member.getEffectiveName()).append("\n");
 		}
 
-		return response;
+		return response.toString();
 	}
 
 	/**

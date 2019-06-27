@@ -30,6 +30,7 @@ public class ChannelMessageHandler extends ListenerAdapter {
 		if (e.getMessage().getContentRaw().startsWith("!")) {
 			String[] messageParts = e.getMessage().getContentRaw().split(" ");
 			String[] arguments = CommandRegistry.getArguments(messageParts);
+			
 			Command command = CommandRegistry.getCommand(messageParts[0].replace("!", ""));
 			if (command != null) {
 				command.handleCommand(messageParts[0], arguments, e.getChannel(), e.getAuthor());

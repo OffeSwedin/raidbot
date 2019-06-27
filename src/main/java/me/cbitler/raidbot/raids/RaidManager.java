@@ -5,13 +5,13 @@ import me.cbitler.raidbot.database.Database;
 import me.cbitler.raidbot.database.QueryResult;
 import me.cbitler.raidbot.utility.Reaction;
 import me.cbitler.raidbot.utility.Reactions;
-import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.*;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,25 +31,18 @@ public class RaidManager {
 	 *          	The header-text for the raid
 	 * @param serverId
 	 * 				The id of the server to create the raid for
-	 * @param announcementChannel
-	 * 				The name of the channel to announce the raid in
 	 */
-	public static void createRaid(String raidText, String serverId, String announcementChannel) {
+	public static void createRaid(String raidText, String serverId) {
 		RaidBot bot = RaidBot.getInstance();
 		Guild guild = bot.getServer(serverId);
 
-		PendingRaid raid = new PendingRaid();
-		raid.setName(raidText);
-		raid.setServerId(serverId);
-		raid.setAnnouncementChannel(announcementChannel);
-		raid.setLeaderName("");
-		raid.setDescription("");
+		List<String> roles = new ArrayList<>();
 		for(Reaction reaction : Reactions.getReactions()){
-			raid.addRole(reaction.getSpec());
+			roles.add(reaction.getSpec());
 		}
 
-		TextChannel channel = guild.getTextChannelsByName(RaidBot.getInstance().getSignupChannel(raid.getServerId()), true).get(0);
-		Role role = guild.getRolesByName(bot.getRaiderRole(raid.getServerId()), true).get(0);
+		TextChannel channel = guild.getTextChannelsByName(RaidBot.getInstance().getSignupChannel(serverId), true).get(0);
+		Role role = guild.getRolesByName(bot.getRaiderRole(serverId), true).get(0);
 
 		MessageBuilder mb = new MessageBuilder();
 		mb.setContent(role.getAsMention());
@@ -57,12 +50,12 @@ public class RaidManager {
 		try {
 			mb.sendTo(channel).queue(message -> {
 
-				boolean inserted = insertToDatabase(raid, message.getId(), message.getGuild().getId(),
+				boolean inserted = insertToDatabase(raidText, roles, message.getId(), message.getGuild().getId(),
 						message.getChannel().getId());
 				if (inserted) {
 					Raid newRaid = new Raid(message.getId(), message.getGuild().getId(),
-							message.getChannel().getId(), raid.getName());
-					newRaid.addRoles(raid.getRoles());
+							message.getChannel().getId(), raidText);
+					newRaid.addRoles(roles);
 					raids.add(newRaid);
 
 					for (Reaction reaction : Reactions.getReactions()) {
@@ -89,7 +82,7 @@ public class RaidManager {
 	 * @param raidText
 	 *          	The header-text for the raid
 	 */
-	public static boolean editRaid(String messageId, String raidText){
+	public static void editRaid(String messageId, String raidText){
 		Raid raid = getRaid(messageId);
 
 		if (raid != null) {
@@ -102,11 +95,7 @@ public class RaidManager {
 
 			raid.editName(raidText);
 			raid.updateMessage();
-
-			return true;
 		}
-
-		return false;
 	}
 
 	/**
@@ -157,8 +146,10 @@ public class RaidManager {
 	/**
 	 * Insert a raid into the database
 	 * 
-	 * @param raid
-	 *            The raid to insert
+	 * @param raidName
+	 *            The name of the raid to insert
+	 * @param raidRoles
+	 *            The roles for the raid
 	 * @param messageId
 	 *            The embedded message / 'raidId'
 	 * @param serverId
@@ -167,17 +158,17 @@ public class RaidManager {
 	 *            The channelId for the announcement of this raid
 	 * @return True if inserted, false otherwise
 	 */
-	private static boolean insertToDatabase(PendingRaid raid, String messageId, String serverId, String channelId) {
+	private static boolean insertToDatabase(String raidName, List<String> raidRoles, String messageId, String serverId, String channelId) {
 		RaidBot bot = RaidBot.getInstance();
 		Database db = bot.getDatabase();
 
-		String roles = formatRolesForDatabase(raid.getRoles());
+		String roles = formatRolesForDatabase(raidRoles);
 
 		try {
 			db.update(
 					"INSERT INTO `raids` (`raidId`, `serverId`, `channelId`, `leader`, `name`, `description`, `date`, `time`, `roles`) VALUES (?,?,?,?,?,?,?,?,?)",
-					new String[] { messageId, serverId, channelId, raid.getLeaderName(), raid.getName(),
-							raid.getDescription(), "", "", roles });
+					new String[] { messageId, serverId, channelId, "", raidName,
+							"", "", "", roles });
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -209,9 +200,8 @@ public class RaidManager {
 					Raid raid = new Raid(messageId, serverId, channelId, name);
 					ArrayList<String> roles = new ArrayList<>();
 					String[] roleSplit = rolesText.split(";");
-					for (String role : roleSplit) {
-						roles.add(role);
-					}
+					Collections.addAll(roles, roleSplit);
+
 					raid.addRoles(roles);
 					raids.add(raid);
 				} catch (Exception e) {
@@ -280,31 +270,18 @@ public class RaidManager {
 	 * @return The formatted string
 	 */
 	private static String formatRolesForDatabase(List<String> rolesWithNumbers) {
-		String data = "";
+		StringBuilder data = new StringBuilder();
 
 		for (int i = 0; i < rolesWithNumbers.size(); i++) {
 			String role = rolesWithNumbers.get(i);
 			if (i == rolesWithNumbers.size() - 1) {
-				data += (role);
+				data.append(role);
 			} else {
-				data += (role + ";");
+				data.append(role).append(";");
 			}
 		}
 
-		return data;
-	}
-
-	/**
-	 * Create a message embed to show the raid
-	 * 
-	 * @param raid
-	 *            The raid object
-	 * @return The embedded message
-	 */
-	private static MessageEmbed buildEmbed(PendingRaid raid) {
-		EmbedBuilder builder = new EmbedBuilder();
-		builder.setTitle(raid.getName());
-		return builder.build();
+		return data.toString();
 	}
 
 	public static List<Raid> getRaids() {

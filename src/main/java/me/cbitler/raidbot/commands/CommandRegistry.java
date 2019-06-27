@@ -16,9 +16,7 @@ public class CommandRegistry {
     public static String[] getArguments(String[] messageParts) {
         if(messageParts.length != 1) {
             String[] args = new String[messageParts.length - 1];
-            for(int i = 1; i < messageParts.length; i++) {
-                args[i-1] = messageParts[i];
-            }
+            System.arraycopy(messageParts, 1, args, 0, messageParts.length - 1);
 
             return args;
         } else {

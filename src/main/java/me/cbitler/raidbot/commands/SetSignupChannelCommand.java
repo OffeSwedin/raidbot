@@ -11,7 +11,6 @@ public class SetSignupChannelCommand extends Command {
         if (channel.getGuild().getMember(author).getPermissions().contains(Permission.MANAGE_SERVER)) {
             if (args.length >= 1) {
                 try {
-                    ;
                     String signupChannel = args[0];
                     RaidBot.getInstance().setSignupChannel(channel.getGuild().getId(), signupChannel);
                     author.openPrivateChannel().queue(privateChannel -> privateChannel

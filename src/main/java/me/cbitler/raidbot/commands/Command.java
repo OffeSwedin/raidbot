@@ -6,12 +6,12 @@ import net.dv8tion.jda.core.entities.User;
 public abstract class Command {
     public abstract void handleCommand(String command, String[] args, TextChannel channel, User author);
 
-    public static String combineArguments(String[] parts, int startIndex) {
-        String text = "";
+    protected String combineArguments(String[] parts, int startIndex) {
+        StringBuilder text = new StringBuilder();
         for (int i = startIndex; i < parts.length; i++) {
-            text += (parts[i] + " ");
+            text.append(parts[i]).append(" ");
         }
 
-        return text.trim();
+        return text.toString().trim();
     }
 }

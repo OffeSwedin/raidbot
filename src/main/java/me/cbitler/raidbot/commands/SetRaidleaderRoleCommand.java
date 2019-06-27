@@ -11,7 +11,6 @@ public class SetRaidleaderRoleCommand extends Command {
         if (channel.getGuild().getMember(author).getPermissions().contains(Permission.MANAGE_SERVER)) {
             if (args.length >= 1) {
                 try {
-                    ;
                     String raidLeaderRole = args[0];
                     RaidBot.getInstance().setRaidLeaderRole(channel.getGuild().getId(), raidLeaderRole);
                     author.openPrivateChannel().queue(privateChannel -> privateChannel

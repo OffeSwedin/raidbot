@@ -1,7 +1,6 @@
 package me.cbitler.raidbot.raids;
 
 import java.sql.Timestamp;
-import java.util.Comparator;
 
 /**
  * Represents a raid user This class is not commented as the method names should
@@ -44,17 +43,11 @@ public class RaidUser {
 	}
 
 	public boolean isBenched() {
-		if (signupStatus.equals("1")) {
-			return true;
-		}
-		return false;
+		return signupStatus.equals("1");
 	}
 
 	public boolean isAccepted() {
-		if (signupStatus.equals("2")) {
-			return true;
-		}
-		return false;
+		return signupStatus.equals("2");
 	}
 
 }
