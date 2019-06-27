@@ -1,6 +1,6 @@
 package me.cbitler.raidbot.commands;
 
-import me.cbitler.raidbot.RaidBot;
+import me.cbitler.raidbot.utility.ServerSettings;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -12,7 +12,7 @@ public class SetRaiderRoleCommand extends Command {
             if (args.length >= 1) {
                 try {
                     String raiderRole = args[0];
-                    RaidBot.getInstance().setRaiderRole(channel.getGuild().getId(), raiderRole);
+                    ServerSettings.getInstance().setRaiderRole(channel.getGuild().getId(), raiderRole);
                     author.openPrivateChannel().queue(privateChannel -> privateChannel
                             .sendMessage("Raider role updated to: " + raiderRole).queue());
                 } catch (Exception exc) {

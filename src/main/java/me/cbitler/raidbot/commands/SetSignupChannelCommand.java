@@ -1,6 +1,6 @@
 package me.cbitler.raidbot.commands;
 
-import me.cbitler.raidbot.RaidBot;
+import me.cbitler.raidbot.utility.ServerSettings;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -12,7 +12,7 @@ public class SetSignupChannelCommand extends Command {
             if (args.length >= 1) {
                 try {
                     String signupChannel = args[0];
-                    RaidBot.getInstance().setSignupChannel(channel.getGuild().getId(), signupChannel);
+                    ServerSettings.getInstance().setSignupChannel(channel.getGuild().getId(), signupChannel);
                     author.openPrivateChannel().queue(privateChannel -> privateChannel
                             .sendMessage("Signup channel updated to: " + signupChannel).queue());
                 } catch (Exception exc) {

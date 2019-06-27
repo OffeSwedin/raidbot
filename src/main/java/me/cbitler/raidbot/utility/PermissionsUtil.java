@@ -1,6 +1,5 @@
 package me.cbitler.raidbot.utility;
 
-import me.cbitler.raidbot.RaidBot;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 
@@ -19,7 +18,7 @@ public class PermissionsUtil {
 	 */
 	public static boolean hasRaidLeaderRole(Member member) {
 
-		String raidLeaderRole = RaidBot.getInstance().getRaidLeaderRole(member.getGuild().getId());
+		String raidLeaderRole = ServerSettings.getInstance().getRaidLeaderRole(member.getGuild().getId());
 		for (Role role : member.getRoles()) {
 			if (role.getName().equalsIgnoreCase(raidLeaderRole)) {
 				return true;
@@ -30,7 +29,7 @@ public class PermissionsUtil {
 
 	public static boolean hasRaiderRole(Member member) {
 
-		String raiderRole = RaidBot.getInstance().getRaiderRole(member.getGuild().getId());
+		String raiderRole = ServerSettings.getInstance().getRaiderRole(member.getGuild().getId());
 		for (Role role : member.getRoles()) {
 			if (role.getName().equalsIgnoreCase(raiderRole)) {
 				return true;

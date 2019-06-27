@@ -5,6 +5,7 @@ import me.cbitler.raidbot.database.Database;
 import me.cbitler.raidbot.database.QueryResult;
 import me.cbitler.raidbot.utility.Reaction;
 import me.cbitler.raidbot.utility.Reactions;
+import me.cbitler.raidbot.utility.ServerSettings;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.*;
 
@@ -41,8 +42,8 @@ public class RaidManager {
 			roles.add(reaction.getSpec());
 		}
 
-		TextChannel channel = guild.getTextChannelsByName(RaidBot.getInstance().getSignupChannel(serverId), true).get(0);
-		Role role = guild.getRolesByName(bot.getRaiderRole(serverId), true).get(0);
+		TextChannel channel = guild.getTextChannelsByName(ServerSettings.getInstance().getSignupChannel(serverId), true).get(0);
+		Role role = guild.getRolesByName(ServerSettings.getInstance().getRaiderRole(serverId), true).get(0);
 
 		MessageBuilder mb = new MessageBuilder();
 		mb.setContent(role.getAsMention());
@@ -113,7 +114,7 @@ public class RaidManager {
 
 				Guild guild = RaidBot.getInstance().getServer(r.getServerId());
 				TextChannel archiveChannel = guild
-						.getTextChannelsByName(RaidBot.getInstance().getArchiveChannel(r.getServerId()), true).get(0);
+						.getTextChannelsByName(ServerSettings.getInstance().getArchiveChannel(r.getServerId()), true).get(0);
 
 				archiveChannel.sendMessage(r.buildEmbed()).queue(message1 -> {
 				});
