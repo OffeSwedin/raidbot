@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
  * etc
  */
 public class Raid {
-	private String messageId, name, date, time, serverId, channelId;
+	private String messageId, name, serverId, channelId;
 	private List<String> roles = new ArrayList<>();
 	private List<RaidUser> users = new ArrayList<>();
 
@@ -35,18 +35,12 @@ public class Raid {
 	 *            The announcement channel's id for this raid
 	 * @param name
 	 *            The name of the raid
-	 * @param date
-	 *            The date of the raid
-	 * @param time
-	 *            The time of the raid
 	 */
-	public Raid(String messageId, String serverId, String channelId, String name, String date, String time) {
+	public Raid(String messageId, String serverId, String channelId, String name) {
 		this.messageId = messageId;
 		this.serverId = serverId;
 		this.channelId = channelId;
 		this.name = name;
-		this.date = date;
-		this.time = time;
 	}
 
 	/**

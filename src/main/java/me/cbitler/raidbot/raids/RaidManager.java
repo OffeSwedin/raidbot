@@ -44,9 +44,6 @@ public class RaidManager {
 		raid.setAnnouncementChannel(announcementChannel);
 		raid.setLeaderName("");
 		raid.setDescription("");
-		raid.setDate("");
-		raid.setTime("");
-
 		for(Reaction reaction : Reactions.getReactions()){
 			raid.addRole(reaction.getSpec());
 		}
@@ -64,7 +61,7 @@ public class RaidManager {
 						message.getChannel().getId());
 				if (inserted) {
 					Raid newRaid = new Raid(message.getId(), message.getGuild().getId(),
-							message.getChannel().getId(), raid.getName(), raid.getDate(), raid.getTime());
+							message.getChannel().getId(), raid.getName());
 					newRaid.addRoles(raid.getRoles());
 					raids.add(newRaid);
 
@@ -180,7 +177,7 @@ public class RaidManager {
 			db.update(
 					"INSERT INTO `raids` (`raidId`, `serverId`, `channelId`, `leader`, `name`, `description`, `date`, `time`, `roles`) VALUES (?,?,?,?,?,?,?,?,?)",
 					new String[] { messageId, serverId, channelId, raid.getLeaderName(), raid.getName(),
-							raid.getDescription(), raid.getDate(), raid.getTime(), roles });
+							raid.getDescription(), "", "", roles });
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -202,8 +199,6 @@ public class RaidManager {
 			QueryResult results = db.query("SELECT * FROM `raids`", new String[] {});
 			while (results.getResults().next()) {
 				String name = results.getResults().getString("name");
-				String date = results.getResults().getString("date");
-				String time = results.getResults().getString("time");
 				String rolesText = results.getResults().getString("roles");
 				String messageId = results.getResults().getString("raidId");
 				String serverId = results.getResults().getString("serverId");
@@ -211,7 +206,7 @@ public class RaidManager {
 
 
 				try {
-					Raid raid = new Raid(messageId, serverId, channelId, name, date, time);
+					Raid raid = new Raid(messageId, serverId, channelId, name);
 					ArrayList<String> roles = new ArrayList<>();
 					String[] roleSplit = rolesText.split(";");
 					for (String role : roleSplit) {
