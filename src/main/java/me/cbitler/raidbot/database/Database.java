@@ -1,6 +1,8 @@
 package me.cbitler.raidbot.database;
 
 import me.cbitler.raidbot.utility.EnvVariables;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.*;
@@ -10,6 +12,8 @@ import java.sql.*;
  * @author Christopher Bitler
  */
 public class Database {
+    private static final Logger log = LoggerFactory.getLogger(Database.class);
+
     private Connection connection;
 
     //Thee are the queries for creating the tables
@@ -61,24 +65,20 @@ public class Database {
             String databasePassword = envVariables.getValue("DATABASE_PASSWORD");
             connection = DriverManager.getConnection(databaseUrl, databaseUsername, databasePassword);
         } catch (SQLException e) {
-            System.out.println("Database connection error: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Database connection error. ", e);
             System.exit(1);
         } catch(IOException e){
-            System.out.println("Error reading env-file for database connection string. " + e.getMessage());
-            e.printStackTrace();
+            log.error("Error reading env-file for database connection string. ", e);
             System.exit(1);
         }catch (ClassNotFoundException e){
-            System.out.println("Couldn't find or access the mysql jdbc driver. " + e.getMessage());
-            e.printStackTrace();
+            log.error("Couldn't find or access the mysql jdbc driver. ", e);
             System.exit(1);
         }
 
         try {
             tableInits();
         } catch (SQLException e) {
-            System.out.println("Couldn't create tables");
-            e.printStackTrace();
+            log.error("Couldn't create tables", e);
             System.exit(1);
         }
     }

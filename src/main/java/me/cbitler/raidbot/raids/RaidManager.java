@@ -10,6 +10,8 @@ import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.TextChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -24,6 +26,7 @@ import java.util.List;
  * @author Christopher Bitler
  */
 public class RaidManager {
+	private static final Logger log = LoggerFactory.getLogger(RaidManager.class);
 
 	private static final List<Raid> raids = new ArrayList<>();
 
@@ -71,8 +74,7 @@ public class RaidManager {
 			});
 
 		} catch (Exception e) {
-			System.out.println("Error encountered in sending message.");
-			e.printStackTrace();
+			log.error("Error encountered in sending message.", e);
 			throw e;
 		}
 	}
@@ -93,7 +95,7 @@ public class RaidManager {
 				RaidBot.getInstance().getDatabase().update("UPDATE `raids` SET `name` = ? WHERE `raidId` = ?",
 						new String[] { raidText, messageId });
 			} catch (Exception e) {
-				System.out.println("Error encountered updating raid");
+				log.error("Error encountered updating raid");
 			}
 
 			raid.editName(raidText);
@@ -125,7 +127,7 @@ public class RaidManager {
 						.getMessageById(messageId).queue(message -> message.delete().queue());
 
 			} catch (Exception e) {
-				System.out.println("Tried to delete raid without message");
+				log.error("Tried to delete raid without message");
 				// Nothing, the message doesn't exist - it can happen
 			}
 
@@ -137,7 +139,7 @@ public class RaidManager {
 				RaidBot.getInstance().getDatabase().update("DELETE FROM `raidUsers` WHERE `raidId` = ?",
 						new String[] { messageId });
 			} catch (Exception e) {
-				System.out.println("Error encountered deleting raid");
+				log.error("Error encountered deleting raid");
 			}
 
 			return true;
@@ -173,7 +175,7 @@ public class RaidManager {
 					new String[] { messageId, serverId, channelId, "", raidName,
 							"", "", "", roles });
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Could not insert raid into database. ", e);
 			return false;
 		}
 
@@ -208,7 +210,7 @@ public class RaidManager {
 					raid.addRoles(roles);
 					raids.add(raid);
 				} catch (Exception e) {
-					System.out.println("Raid couldn't load: " + e.getMessage());
+					log.error("Raid couldn't load: " + e.getMessage());
 				}
 			}
 			results.getResults().close();
@@ -240,8 +242,7 @@ public class RaidManager {
 				delay = raid.resetReactions(delay);
 			}
 		} catch (SQLException e) {
-			System.out.println("Couldn't load raids.. exiting");
-			e.printStackTrace();
+			log.error("Couldn't load raids.. exiting", e);
 			System.exit(1);
 		}
 	}

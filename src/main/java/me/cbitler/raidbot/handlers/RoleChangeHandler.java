@@ -6,16 +6,21 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberRoleAddEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberRoleRemoveEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class RoleChangeHandler extends ListenerAdapter {
-	
+	private static final Logger log = LoggerFactory.getLogger(RoleChangeHandler.class);
+
 	@Override
 	public void onGuildMemberRoleAdd(GuildMemberRoleAddEvent event) {
 		String guildID = event.getGuild().getId();
 		List<Raid> raids = RaidManager.getRaids();
-		
+
+		log.info("Parsing role add from " + event.getMember().getEffectiveName());
+
 		for(Raid raid : raids){
 			if(raid.getServerId().equals(guildID)){
 				raid.updateMessage();

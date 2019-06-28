@@ -3,16 +3,14 @@ package me.cbitler.raidbot;
 import me.cbitler.raidbot.commands.*;
 import me.cbitler.raidbot.database.Database;
 import me.cbitler.raidbot.database.QueryResult;
-import me.cbitler.raidbot.handlers.ChannelMessageHandler;
-import me.cbitler.raidbot.handlers.ReactionHandler;
-import me.cbitler.raidbot.handlers.RoleChangeHandler;
+import me.cbitler.raidbot.handlers.*;
 import me.cbitler.raidbot.raids.RaidManager;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Guild;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +24,8 @@ import java.util.concurrent.TimeUnit;
  * @author Christopher Bitler
  */
 public class RaidBot {
+    private static final Logger log = LoggerFactory.getLogger(RaidBot.class);
+
     private static RaidBot instance;
 
     private final JDA jda;
@@ -39,7 +39,8 @@ public class RaidBot {
         instance = this;
 
         this.jda = jda;
-        jda.addEventListener(new ChannelMessageHandler(), new ReactionHandler(), new RoleChangeHandler());
+        jda.addEventListener(new ChannelMessageHandler(), new ReactionHandler(), new RoleChangeHandler(),
+                new LeaveHandler(), new NicknameChangeHandler());
         
         db = new Database();
         db.connect();
@@ -61,18 +62,13 @@ public class RaidBot {
 
         ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
         Runnable task = () -> {
-            SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
-            Date date = new Date(System.currentTimeMillis());
-
-            System.out.println("Refreshing database connection at " + formatter.format(date));
             try{
                 QueryResult results = db.query("SELECT * FROM `serverSettings`", new String[]{});
 
                 results.getResults().close();
                 results.getStmt().close();
             } catch(SQLException e){
-                System.err.println(e.getMessage());
-                e.printStackTrace();
+                log.error("Failed with SQL query. ", e);
             }
         };
         ses.scheduleAtFixedRate(task, 0, 15, TimeUnit.MINUTES);

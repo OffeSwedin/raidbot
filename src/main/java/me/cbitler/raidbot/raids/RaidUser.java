@@ -10,11 +10,11 @@ import java.sql.Timestamp;
  */
 public class RaidUser {
 	public final String id;
-	public final String name;
 	public final String spec;
 	public final String role;
-	public String signupStatus;
 	public final Timestamp signupTime;
+	public String name;
+	public String signupStatus;
 
 	public RaidUser(String id, String name, String spec, String role, Timestamp signupTime) {
 		this.id = id;

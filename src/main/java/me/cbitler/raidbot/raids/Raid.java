@@ -5,6 +5,8 @@ import me.cbitler.raidbot.utility.*;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -17,6 +19,8 @@ import java.util.concurrent.TimeUnit;
  * etc
  */
 public class Raid {
+	private static final Logger log = LoggerFactory.getLogger(Raid.class);
+
 	private final String messageId;
 	private final String serverId;
 	private final String channelId;
@@ -102,7 +106,7 @@ public class Raid {
 						.update("INSERT INTO `raidUsers` (`userId`, `username`, `spec`, `role`, `raidId`, `signupStatus`, `signupTime`)"
 								+ " VALUES (?,?,?,?,?,?,?)", new String[] { user.id, user.name, user.spec, user.role, this.messageId, user.signupStatus, Long.toString(user.signupTime.getTime())});
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log.error("Could not add user to raid. ", e);
 			}
 		}
 
@@ -134,10 +138,10 @@ public class Raid {
 	private void updateUser(RaidUser user) {
 		try {
 			RaidBot.getInstance().getDatabase()
-					.update("UPDATE `raidUsers` SET `signupStatus` = ? WHERE `userId` = ? AND `raidId` = ?",
-							new String[] { user.signupStatus, user.id, this.messageId});
+					.update("UPDATE `raidUsers` SET `signupStatus` = ?, `username` = ? WHERE `userId` = ? AND `raidId` = ?",
+							new String[] { user.signupStatus, user.name, user.id, this.messageId});
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Could not update user in raid. ", e);
 		}
 	}
 
@@ -162,7 +166,14 @@ public class Raid {
 		this.roles.addAll(roles);
 	}
 
-
+	public void updateUserNickname(String userId, String newName){
+		for (RaidUser user : users){
+			if(user.id.equalsIgnoreCase(userId)){
+				user.name = newName;
+				updateUser(user);
+			}
+		}
+	}
 
 	/**
 	 * Remove a user from this raid. This also updates the database to remove
@@ -178,7 +189,7 @@ public class Raid {
 			RaidBot.getInstance().getDatabase().update("DELETE FROM `raidUsers` WHERE `userId` = ? AND `raidId` = ?",
 					new String[] { id, getMessageId() });
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Could not remove user from raid. ", e);
 		}
 	}
 
@@ -225,7 +236,7 @@ public class Raid {
 			RaidBot.getInstance().getServer(getServerId()).getTextChannelById(getChannelId())
 					.editMessageById(getMessageId(), message).queue();
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			log.error("Could not update message. ", e);
 		}
 	}
 
@@ -432,7 +443,7 @@ public class Raid {
 				delay += 1000;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Could not reset reactions. ", e);
 		}
 
 		return delay;

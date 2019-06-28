@@ -3,11 +3,15 @@ package me.cbitler.raidbot.utility;
 import me.cbitler.raidbot.RaidBot;
 import me.cbitler.raidbot.database.Database;
 import me.cbitler.raidbot.database.QueryResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.HashMap;
 
 public class ServerSettings {
+    private static final Logger log = LoggerFactory.getLogger(ServerSettings.class);
+
     private static ServerSettings instance;
     private final Database db;
 
@@ -142,7 +146,7 @@ public class ServerSettings {
                 db.update("UPDATE `serverSettings` SET `" + settingName + "` = ? WHERE `serverId` = ?",
                         new String[] { settingValue, serverId });
             } catch (SQLException e1) {
-                e1.printStackTrace();
+                log.error("Could not save server settings. ", e1);
             }
         }
     }
@@ -157,7 +161,7 @@ public class ServerSettings {
                 return null;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Could not load server settings. ", e);
             return null;
         }
     }
