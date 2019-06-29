@@ -2,8 +2,10 @@ package me.cbitler.raidbot.raids;
 
 import me.cbitler.raidbot.RaidBot;
 import me.cbitler.raidbot.database.Database;
-import me.cbitler.raidbot.utility.*;
-import net.dv8tion.jda.core.EmbedBuilder;
+import me.cbitler.raidbot.database.QueryResult;
+import me.cbitler.raidbot.utility.PermissionsUtil;
+import me.cbitler.raidbot.utility.Reaction;
+import me.cbitler.raidbot.utility.Reactions;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.*;
 import org.slf4j.Logger;
@@ -25,10 +27,10 @@ public class Raid {
 	public final String serverId;
 	public final String channelId;
 
-	private final List<String> roles;
-	private final List<RaidUser> users = new ArrayList<>();
+	public String name;
 
-	private String name;
+	protected final List<String> roles;
+	private final List<RaidUser> users = new ArrayList<>();
 
 	/**
 	 * Create a new Raid with the specified data
@@ -148,12 +150,31 @@ public class Raid {
 
         return null;
     }
+
+	/**
+	 * Get list of users in a role
+	 *
+	 * @param role
+	 *            The name of the role
+	 * @return The users in the role
+	 */
+	public List<RaidUser> getUsersInRole(String role) {
+		List<RaidUser> usersInRole = new ArrayList<>();
+
+		for (RaidUser user : users){
+			if (user.role.equalsIgnoreCase(role)){
+				usersInRole.add(user);
+			}
+		}
+
+		return usersInRole;
+	}
 		
 	/**
 	 * Update the embedded message for the raid
 	 */
 	public void updateMessage() {
-		MessageEmbed embed = buildEmbed();
+		MessageEmbed embed = RaidEmbedMessageBuilder.buildEmbed(this);
 
 		try {
 			MessageBuilder mb = new MessageBuilder();
@@ -165,149 +186,6 @@ public class Raid {
 		} catch (Exception e) {
 			log.error("Could not update message. ", e);
 		}
-	}
-
-	/**
-	 * Build the embedded message that shows the information about this raid
-	 *
-	 * @return The embedded message representing this raid
-	 */
-	public MessageEmbed buildEmbed() {
-		RaidBot bot = RaidBot.getInstance();
-		Guild guild = bot.getJda().getGuilds().get(0);
-
-		List<Member> notRespondedMembers = getNotRespondedMembers(guild);
-
-		EmbedBuilder builder = new EmbedBuilder();
-		builder.setTitle("**" + this.name + "**");
-		builder.addBlankField(false);
-
-		List<List<String>> roleTexts = buildRolesText(guild);
-
-		int uglyLoopCounterIndex = 0;
-		for(List<String> role: roleTexts){
-
-			String header = role.get(0);
-			role.remove(0);
-
-			StringBuilder fullRoleText = new StringBuilder();
-			for(String roleText : role){
-				fullRoleText.append(roleText).append("\n");
-			}
-			builder.addField(header, fullRoleText.toString(), true);
-			uglyLoopCounterIndex++;
-			if(uglyLoopCounterIndex == 3){
-				builder.addBlankField(false);
-			}
-		}
-
-		builder.addField("**Not responded: ("+notRespondedMembers.size()+")**", buildNotRespondedText(notRespondedMembers) , true);
-		builder.addBlankField(false);
-		builder.addField("ID: ", messageId, true);
-
-		return builder.build();
-	}
-
-	private List<Member> getNotRespondedMembers(Guild guild) {
-		List<Member> members = guild.getMembers();
-		List<Member> notRespondedMembers = new ArrayList<>();
-
-		for (Member member : members) {
-			if (getRaidUser(member.getUser().getId()) == null) {
-				if (PermissionsUtil.hasRaiderRole(member)) {
-					notRespondedMembers.add(member);
-				}
-			}
-		}
-		return notRespondedMembers;
-	}
-
-	/**
-	 * Build the not responded text
-	 *
-	 * @return The not responded text
-	 */
-	private String buildNotRespondedText(List<Member> notRespondedMembers) {
-		StringBuilder response = new StringBuilder();
-
-		for (Member member : notRespondedMembers) {
-			response.append("- ").append(member.getEffectiveName()).append("\n");
-		}
-
-		return response.toString();
-	}
-
-	/**
-	 * Build the role text, which shows the roles users are playing in the raids
-	 *
-	 * @return The role text
-	 */
-	private List<List<String>> buildRolesText(Guild guild) {
-		List<List<String>> roleTexts = new ArrayList<>();
-
-		for (String role : roles) {
-			ArrayList<String> roleStrings = new ArrayList<>();
-			roleTexts.add(roleStrings);
-
-			List<RaidUser> usersInRole = getUsersInRole(role);
-			usersInRole.sort(new TimestampComparator());
-
-			roleStrings.add("**" + role + " (" + usersInRole.size() + "):**");
-
-			for (RaidUser user : usersInRole) {
-				if(!role.equals("Not Attending")){
-					roleStrings.add("- "+ guild.getMemberById(user.id).getEffectiveName() + " " + createSignupStatusText(user));
-				}else{
-					roleStrings.add("- "+ guild.getMemberById(user.id).getEffectiveName());
-				}
-
-			}
-		}
-		return roleTexts;
-	}
-
-	private String createSignupStatusText(RaidUser user){
-		Emote emote;
-		if(user.isAccepted()){
-			if(EnvVariables.getInstance().isTestEnvironment()){
-				emote = RaidBot.getInstance().getJda().getEmoteById("590293224250408981");
-			}else{
-				emote = RaidBot.getInstance().getJda().getEmoteById("590293759166775307");
-			}
-		}else if(user.isBenched()){
-			if(EnvVariables.getInstance().isTestEnvironment()) {
-				emote = RaidBot.getInstance().getJda().getEmoteById("590292731436335166");
-			}else{
-				emote = RaidBot.getInstance().getJda().getEmoteById("590293760726925372");
-			}
-		}else{
-			if(EnvVariables.getInstance().isTestEnvironment()) {
-				emote = RaidBot.getInstance().getJda().getEmoteById("590292700842950656");
-			}else{
-				emote = RaidBot.getInstance().getJda().getEmoteById("590293759519096832");
-			}
-		}
-
-		return "<:" + emote.getName() + ":" + emote.getId() + ">";
-	}
-
-	/**
-	 * Get list of users in a role
-	 *
-	 * @param role
-	 *            The name of the role
-	 * @return The users in the role
-	 */
-	private List<RaidUser> getUsersInRole(String role) {
-		List<RaidUser> usersInRole = new ArrayList<>();
-
-		for (RaidUser user : users){
-			if (user.role.equalsIgnoreCase(role)){
-				usersInRole.add(user);
-			}
-		}
-
-		return usersInRole;
 	}
 
 	public void parseReactions() {
@@ -370,19 +248,25 @@ public class Raid {
 		String roleString = String.join(";", roles);
 
 		try {
-			db.update(
-					"INSERT INTO `raids` (`raidId`, `serverId`, `channelId`, `leader`, `name`, `description`, `date`, `time`, `roles`) VALUES (?,?,?,?,?,?,?,?,?)",
-					new String[] { messageId, serverId, channelId, "", name,
-							"", "", "", roleString });
-		} catch (SQLException e) {
-			try{
-				db.update(
-						"UPDATE `raids` SET `name` = ? WHERE `raidId` = ? AND `serverId` = ?",
+			QueryResult results = db.query("SELECT COUNT(*) FROM `raids` WHERE `raidId` = ? AND `serverId` = ?", new String[] { messageId, serverId });
+			results.getResults().next();
+			int count = Integer.parseInt(results.getResults().getString("COUNT(*)"));
+
+			results.getResults().close();
+			results.getStmt().close();
+
+			if (count == 0) {
+				db.update( "INSERT INTO `raids` " +
+								"(`raidId`, `serverId`, `channelId`, `leader`, `name`, `description`, `date`, `time`, `roles`) " +
+								"VALUES (?,?,?,?,?,?,?,?,?)",
+						new String[] { messageId, serverId, channelId, "", name, "", "", "", roleString });
+			} else {
+				db.update( "UPDATE `raids` SET `name` = ? WHERE `raidId` = ? AND `serverId` = ?",
 						new String[] { name, messageId, serverId });
-			} catch (SQLException e1){
-				log.error("Could not insert raid into database. ", e);
-				return false;
 			}
+		} catch (SQLException e) {
+			log.error("Could not update raid. ", e);
+			return false;
 		}
 
 		return true;

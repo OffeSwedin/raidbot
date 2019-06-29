@@ -2,6 +2,7 @@ package me.cbitler.raidbot.raids;
 
 import me.cbitler.raidbot.RaidBot;
 import me.cbitler.raidbot.database.Database;
+import me.cbitler.raidbot.database.QueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,16 +70,23 @@ public class RaidUser {
 		Database db = bot.getDatabase();
 
 		try {
-			db.update("INSERT INTO `raidUsers` (`userId`, `username`, `spec`, `role`, `raidId`, `signupStatus`, `signupTime`)"
-							+ " VALUES (?,?,?,?,?,?,?)", new String[] { id, name, spec, role, raidId, signupStatus, Long.toString(signupTime.getTime())});
-		} catch (SQLException e) {
-			try {
+			QueryResult results = db.query("SELECT COUNT(*) FROM `raidUsers` WHERE `userId` = ? AND `raidId` = ?", new String[] { id, raidId });
+			results.getResults().next();
+			int count = Integer.parseInt(results.getResults().getString("COUNT(*)"));
+
+			results.getResults().close();
+			results.getStmt().close();
+
+			if (count == 0) {
+				db.update("INSERT INTO `raidUsers` (`userId`, `username`, `spec`, `role`, `raidId`, `signupStatus`, `signupTime`)"
+						+ " VALUES (?,?,?,?,?,?,?)", new String[]{id, name, spec, role, raidId, signupStatus, Long.toString(signupTime.getTime())});
+			} else {
 				db.update("UPDATE `raidUsers` SET `signupStatus` = ?, `username` = ? WHERE `userId` = ? AND `raidId` = ?",
-								new String[] { signupStatus, name, id, raidId});
-			} catch (SQLException e1) {
-				log.error("Could not update user in raid. ", e);
-				return false;
+						new String[]{signupStatus, name, id, raidId});
 			}
+		} catch (SQLException e) {
+			log.error("Could not update user in raid. ", e);
+			return false;
 		}
 
 		return true;

@@ -96,7 +96,7 @@ public class RaidManager {
 				TextChannel archiveChannel = guild
 						.getTextChannelsByName(ServerSettings.getInstance().getArchiveChannel(raid.serverId), true).get(0);
 
-				archiveChannel.sendMessage(raid.buildEmbed()).queue();
+				archiveChannel.sendMessage(RaidEmbedMessageBuilder.buildEmbed(raid)).queue();
 
 				guild.getTextChannelById(raid.channelId).getMessageById(messageId)
                         .queue(message -> message.delete().queue());

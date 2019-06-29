@@ -30,8 +30,9 @@ public class ServerSettings {
      * @param role The role name
      */
     public void setRaidLeaderRole(String serverId, String role) {
-        raidLeaderRoleCache.put(serverId, role);
-        saveServerSetting(serverId, "raid_leader_role", role);
+        if(saveServerSetting(serverId, "raid_leader_role", role)){
+            raidLeaderRoleCache.put(serverId, role);
+        }
     }
 
     /**
@@ -58,8 +59,9 @@ public class ServerSettings {
      * @param role The role name
      */
     public void setRaiderRole(String serverId, String role) {
-        raiderRoleCache.put(serverId, role);
-        saveServerSetting(serverId, "raider_role", role);
+        if(saveServerSetting(serverId, "raider_role", role)){
+            raiderRoleCache.put(serverId, role);
+        }
     }
 
     /**
@@ -86,8 +88,9 @@ public class ServerSettings {
      * @param channelName The signup channel name
      */
     public void setSignupChannel(String serverId, String channelName) {
-        signupChannelCache.put(serverId, channelName);
-        saveServerSetting(serverId, "signup_channel", channelName);
+        if(saveServerSetting(serverId, "signup_channel", channelName)){
+            signupChannelCache.put(serverId, channelName);
+        }
     }
 
     /**
@@ -114,8 +117,9 @@ public class ServerSettings {
      * @param channelName The archive channel name
      */
     public void setArchiveChannel(String serverId, String channelName) {
-        archiveChannelCache.put(serverId, channelName);
-        saveServerSetting(serverId, "archive_channel", channelName);
+        if(saveServerSetting(serverId, "archive_channel", channelName)){
+            archiveChannelCache.put(serverId, channelName);
+        }
     }
 
     /**
@@ -136,19 +140,28 @@ public class ServerSettings {
         }
     }
 
-    private void saveServerSetting(String serverId, String settingName, String settingValue){
+    private boolean saveServerSetting(String serverId, String settingName, String settingValue){
         try {
-            db.update("INSERT INTO `serverSettings` (`serverId`,`" + settingName + "`) VALUES (?,?)",
-                    new String[] { serverId, settingValue});
-        } catch (SQLException e) {
-            //TODO: There is probably a much better way of doing this
-            try {
+            QueryResult results = db.query("SELECT COUNT(*) FROM `serverSettings` WHERE `serverId` = ?", new String[] { serverId });
+            results.getResults().next();
+            int count = Integer.parseInt(results.getResults().getString("COUNT(*)"));
+
+            results.getResults().close();
+            results.getStmt().close();
+
+            if (count == 0) {
+                db.update("INSERT INTO `serverSettings` (`serverId`,`" + settingName + "`) VALUES (?,?)",
+                        new String[] { serverId, settingValue});
+            } else {
                 db.update("UPDATE `serverSettings` SET `" + settingName + "` = ? WHERE `serverId` = ?",
                         new String[] { settingValue, serverId });
-            } catch (SQLException e1) {
-                log.error("Could not save server settings. ", e1);
             }
+        } catch (SQLException e) {
+            log.error("Could not update server setting. ", e);
+            return false;
         }
+
+        return true;
     }
 
     private String loadServerSetting(String serverId, String settingName) {
