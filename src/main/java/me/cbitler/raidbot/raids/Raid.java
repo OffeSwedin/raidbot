@@ -14,8 +14,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
 /**
  * Represents a raid and has methods for adding/removing users,
  * etc
@@ -23,9 +21,10 @@ import java.util.stream.Collectors;
 public class Raid {
 	private static final Logger log = LoggerFactory.getLogger(Raid.class);
 
-	private final String messageId;
-	private final String serverId;
-	private final String channelId;
+	public final String messageId;
+	public final String serverId;
+	public final String channelId;
+
 	private final List<String> roles;
 	private final List<RaidUser> users = new ArrayList<>();
 
@@ -33,7 +32,7 @@ public class Raid {
 
 	/**
 	 * Create a new Raid with the specified data
-	 * 
+	 *
 	 * @param messageId
 	 *            The embedded message Id related to this raid
 	 * @param serverId
@@ -52,33 +51,6 @@ public class Raid {
 	}
 
 	/**
-	 * Get the message ID for this raid
-	 * 
-	 * @return The message ID for this raid
-	 */
-	public String getMessageId() {
-		return messageId;
-	}
-
-	/**
-	 * Get the server ID for this raid
-	 * 
-	 * @return The server ID for this raid
-	 */
-	public String getServerId() {
-		return serverId;
-	}
-
-	/**
-	 * Get the channel ID for this raid
-	 * 
-	 * @return The channel ID for this raid
-	 */
-	public String getChannelId() {
-		return channelId;
-	}
-
-	/**
 	 * Get the channel ID for this raid
 	 *
 	 * @param name
@@ -87,8 +59,6 @@ public class Raid {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-
 
 	/**
 	 * Add a user to this raid. This first creates the user and attempts to
@@ -102,124 +72,82 @@ public class Raid {
 	 *            the roles are loaded from the database.
 	 */
 	public void addUser(RaidUser user, boolean db_insert) {
-
 		if (db_insert) {
-			try {
-				RaidBot.getInstance().getDatabase()
-						.update("INSERT INTO `raidUsers` (`userId`, `username`, `spec`, `role`, `raidId`, `signupStatus`, `signupTime`)"
-								+ " VALUES (?,?,?,?,?,?,?)", new String[] { user.id, user.name, user.spec, user.role, this.messageId, user.signupStatus, Long.toString(user.signupTime.getTime())});
-			} catch (SQLException e) {
-				log.error("Could not add user to raid. ", e);
-			}
+			user.save();
 		}
 
 		users.add(user);
 	}
 
+    /**
+     * Remove a user from this raid. This also updates the database to remove
+     * them from the raid
+     *
+     * @param id
+     *            The user's id
+     */
+    public void removeUser(String id) {
+        boolean removed = users.removeIf((RaidUser user) -> user.id.equalsIgnoreCase(id));
+
+        if(removed){
+            try {
+                RaidBot.getInstance().getDatabase().update("DELETE FROM `raidUsers` WHERE `userId` = ? AND `raidId` = ?",
+                        new String[] { id, messageId });
+            } catch (SQLException e) {
+                log.error("Could not remove user from raid. ", e);
+            }
+        }
+    }
+
+    /**
+     * Accept a user to a raid
+     *
+     * @param username The username of the User to be accepted
+     * @return If the user was accepted or not
+     */
 	public boolean acceptUser(String username){
 		for(RaidUser user : users){
 			if(user.name.equalsIgnoreCase(username)){
 				user.accept();
-				updateUser(user);
+				user.save();
 				return true;
 			}
 		}
 		return false;
 	}
 
+    /**
+     * Bench a user for a raid
+     *
+     * @param username The username of the User to be benched
+     * @return If the user was accepted or not
+     */
 	public boolean benchUser(String username){
 		for(RaidUser user : users){
 			if(user.name.equalsIgnoreCase(username)){
 				user.bench();
-				updateUser(user);
+				user.save();
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private void updateUser(RaidUser user) {
-		try {
-			RaidBot.getInstance().getDatabase()
-					.update("UPDATE `raidUsers` SET `signupStatus` = ?, `username` = ? WHERE `userId` = ? AND `raidId` = ?",
-							new String[] { user.signupStatus, user.name, user.id, this.messageId});
-		} catch (SQLException e) {
-			log.error("Could not update user in raid. ", e);
-		}
-	}
 
-	/**
-	 * Check if a specific user is in this raid
-	 *
-	 * @param id
-	 *            The id of the user
-	 * @return True if they are in the raid, false otherwise
-	 */
-	private boolean isUserInRaid(String id) {
-		for (RaidUser user : users){
-			if(user.id.equalsIgnoreCase(id)){
-				return true;
-			}
-		}
+    /**
+     * Gets the specified RaidUser from the raid
+     * @param userId The user to get
+     * @return The user, or null if not found
+     */
+	public RaidUser getRaidUser(String userId){
+        for (RaidUser user : users){
+            if(user.id.equalsIgnoreCase(userId)){
+                return user;
+            }
+        }
 
-		return false;
-	}
-
-	public void updateUserNickname(String userId, String newName){
-		for (RaidUser user : users){
-			if(user.id.equalsIgnoreCase(userId)){
-				user.name = newName;
-				updateUser(user);
-			}
-		}
-	}
-
-	/**
-	 * Remove a user from this raid. This also updates the database to remove
-	 * them from the raid
-	 * 
-	 * @param id
-	 *            The user's id
-	 */
-	public void removeUser(String id) {
-		users.removeIf((RaidUser user) -> user.id.equalsIgnoreCase(id));
-
-		try {
-			RaidBot.getInstance().getDatabase().update("DELETE FROM `raidUsers` WHERE `userId` = ? AND `raidId` = ?",
-					new String[] { id, getMessageId() });
-		} catch (SQLException e) {
-			log.error("Could not remove user from raid. ", e);
-		}
-	}
-
-	/**
-	 * Send the dps report log links to the players in this raid
-	 * 
-	 * @param logLinks
-	 *            The list of links
-	 */
-	public void messagePlayersWithLogLinks(List<String> logLinks) {
-		StringBuilder logLinkMessage = new StringBuilder("ArcDPS reports from **" + this.name + "**:\n");
-		for (String link : logLinks) {
-			logLinkMessage.append(link).append("\n");
-		}
-
-		final String finalLogLinkMessage = logLinkMessage.toString();
-		for (RaidUser user : this.users) {
-			RaidBot.getInstance().getServer(this.serverId).getMemberById(user.id).getUser().openPrivateChannel()
-					.queue(privateChannel -> privateChannel.sendMessage(finalLogLinkMessage).queue());
-		}
-	}
-
-	public void removePossibleRaidersOnRoleChange(Guild guild){
-		List<Member> members = guild.getMembers();
-		
-		for (Member member : members) {
-			if(this.isUserInRaid(member.getUser().getId()) && !PermissionsUtil.hasRaiderRole(member)) {
-				this.removeUser(member.getUser().getId());
-			}
-		}
-	}
+        return null;
+    }
 		
 	/**
 	 * Update the embedded message for the raid
@@ -232,8 +160,8 @@ public class Raid {
 			mb.setEmbed(embed);
 			mb.setContent(" ");
 			Message message = mb.build();
-			RaidBot.getInstance().getServer(getServerId()).getTextChannelById(getChannelId())
-					.editMessageById(getMessageId(), message).queue();
+			RaidBot.getInstance().getServer(serverId).getTextChannelById(channelId)
+					.editMessageById(messageId, message).queue();
 		} catch (Exception e) {
 			log.error("Could not update message. ", e);
 		}
@@ -241,7 +169,7 @@ public class Raid {
 
 	/**
 	 * Build the embedded message that shows the information about this raid
-	 * 
+	 *
 	 * @return The embedded message representing this raid
 	 */
 	public MessageEmbed buildEmbed() {
@@ -253,7 +181,7 @@ public class Raid {
 		EmbedBuilder builder = new EmbedBuilder();
 		builder.setTitle("**" + this.name + "**");
 		builder.addBlankField(false);
-		
+
 		List<List<String>> roleTexts = buildRolesText(guild);
 
 		int uglyLoopCounterIndex = 0;
@@ -261,7 +189,7 @@ public class Raid {
 
 			String header = role.get(0);
 			role.remove(0);
-			
+
 			StringBuilder fullRoleText = new StringBuilder();
 			for(String roleText : role){
 				fullRoleText.append(roleText).append("\n");
@@ -272,7 +200,7 @@ public class Raid {
 				builder.addBlankField(false);
 			}
 		}
-		
+
 		builder.addField("**Not responded: ("+notRespondedMembers.size()+")**", buildNotRespondedText(notRespondedMembers) , true);
 		builder.addBlankField(false);
 		builder.addField("ID: ", messageId, true);
@@ -285,7 +213,7 @@ public class Raid {
 		List<Member> notRespondedMembers = new ArrayList<>();
 
 		for (Member member : members) {
-			if (!this.isUserInRaid(member.getUser().getId())) {
+			if (getRaidUser(member.getUser().getId()) == null) {
 				if (PermissionsUtil.hasRaiderRole(member)) {
 					notRespondedMembers.add(member);
 				}
@@ -296,12 +224,12 @@ public class Raid {
 
 	/**
 	 * Build the not responded text
-	 * 
+	 *
 	 * @return The not responded text
 	 */
 	private String buildNotRespondedText(List<Member> notRespondedMembers) {
 		StringBuilder response = new StringBuilder();
-		
+
 		for (Member member : notRespondedMembers) {
 			response.append("- ").append(member.getEffectiveName()).append("\n");
 		}
@@ -311,7 +239,7 @@ public class Raid {
 
 	/**
 	 * Build the role text, which shows the roles users are playing in the raids
-	 * 
+	 *
 	 * @return The role text
 	 */
 	private List<List<String>> buildRolesText(Guild guild) {
@@ -320,19 +248,19 @@ public class Raid {
 		for (String role : roles) {
 			ArrayList<String> roleStrings = new ArrayList<>();
 			roleTexts.add(roleStrings);
-			
+
 			List<RaidUser> usersInRole = getUsersInRole(role);
 			usersInRole.sort(new TimestampComparator());
-			
+
 			roleStrings.add("**" + role + " (" + usersInRole.size() + "):**");
-			
+
 			for (RaidUser user : usersInRole) {
 				if(!role.equals("Not Attending")){
 					roleStrings.add("- "+ guild.getMemberById(user.id).getEffectiveName() + " " + createSignupStatusText(user));
 				}else{
 					roleStrings.add("- "+ guild.getMemberById(user.id).getEffectiveName());
 				}
-					
+
 			}
 		}
 		return roleTexts;
@@ -362,7 +290,7 @@ public class Raid {
 
 		return "<:" + emote.getName() + ":" + emote.getId() + ">";
 	}
-	
+
 	/**
 	 * Get list of users in a role
 	 *
@@ -382,25 +310,9 @@ public class Raid {
 		return usersInRole;
 	}
 
-	/**
-	 * Get a RaidUser in this raid by their name
-	 * 
-	 * @param name
-	 *            The user's name
-	 * @return The RaidUser if they are in this raid, null otherwise
-	 */
-	public RaidUser getUserByName(String name) {
-		for (RaidUser user : users) {
-			if (user.name.equalsIgnoreCase(name)) {
-				return user;
-			}
-		}
-		return null;
-	}
-
 	public void parseReactions() {
 		Guild guild = RaidBot.getInstance().getJda().getGuilds().get(0);
-		Message message = RaidBot.getInstance().getServer(getServerId()).getTextChannelById(getChannelId()).getMessageById(getMessageId()).complete();
+		Message message = RaidBot.getInstance().getServer(serverId).getTextChannelById(channelId).getMessageById(messageId).complete();
 		for(MessageReaction reaction : message.getReactions()){
 			List<User> users = reaction.getUsers().complete();
 			for(User user : users){
@@ -417,17 +329,17 @@ public class Raid {
 			String emojiId = emote.getId();
 			Reaction reaction = Reactions.getReactionFromEmojiId(emojiId);
 			if (reaction != null) {
-				if (this.isUserInRaid(member.getUser().getId())) {
-					this.removeUser(member.getUser().getId());
+				if (getRaidUser(member.getUser().getId()) != null) {
+					removeUser(member.getUser().getId());
 				}
 
 				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-				RaidUser user = new RaidUser(member.getUser().getId(), member.getEffectiveName(), "", reaction.getSpec(), timestamp);
-				this.addUser(user, true);
+				RaidUser user = new RaidUser(member.getUser().getId(), member.getEffectiveName(), "", reaction.getSpec(), timestamp, messageId);
+				addUser(user, true);
 
 				if(update_message){
-					this.updateMessage();
+					updateMessage();
 				}
 			}
 		}
@@ -435,10 +347,10 @@ public class Raid {
 
 	public int resetReactions(int delay){
 		try {
-			RaidBot.getInstance().getServer(getServerId()).getTextChannelById(getChannelId()).clearReactionsById(getMessageId()).queueAfter(delay, TimeUnit.MILLISECONDS);
+			RaidBot.getInstance().getServer(serverId).getTextChannelById(channelId).clearReactionsById(messageId).queueAfter(delay, TimeUnit.MILLISECONDS);
 			delay += 1000;
 			for (Reaction reaction : Reactions.getReactions()){
-				RaidBot.getInstance().getServer(getServerId()).getTextChannelById(getChannelId()).addReactionById(getMessageId(), reaction.getEmote()).queueAfter(delay, TimeUnit.MILLISECONDS);
+				RaidBot.getInstance().getServer(serverId).getTextChannelById(channelId).addReactionById(messageId, reaction.getEmote()).queueAfter(delay, TimeUnit.MILLISECONDS);
 				delay += 1000;
 			}
 		} catch (Exception e) {
@@ -449,13 +361,13 @@ public class Raid {
 	}
 
 	/**
-	 * Insert the raid into the database
+	 * Save the raid in the database
 	 */
 	public boolean save() {
 		RaidBot bot = RaidBot.getInstance();
 		Database db = bot.getDatabase();
 
-		String roleString = roles.stream().collect(Collectors.joining(";"));
+		String roleString = String.join(";", roles);
 
 		try {
 			db.update(
@@ -475,4 +387,18 @@ public class Raid {
 
 		return true;
 	}
+
+	public boolean delete(){
+        try {
+            RaidBot.getInstance().getDatabase().update("DELETE FROM `raids` WHERE `raidId` = ?",
+                    new String[] { messageId });
+            RaidBot.getInstance().getDatabase().update("DELETE FROM `raidUsers` WHERE `raidId` = ?",
+                    new String[] { messageId });
+        } catch (Exception e) {
+            log.error("Error encountered deleting raid");
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -7,10 +7,6 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 public class EndRaidCommand extends Command {
     @Override
     public void handleCommand(String[] args, TextChannel channel, User author) {
@@ -20,12 +16,7 @@ public class EndRaidCommand extends Command {
             if(args.length >= 1) {
                 String raidId = args[0];
                 Raid raid = RaidManager.getRaid(raidId);
-                if (raid != null && raid.getServerId().equalsIgnoreCase(channel.getGuild().getId())) {
-                    //Get list of log messages and send them
-                    if (args.length > 1) {
-                        List<String> links = new ArrayList<>(Arrays.asList(args));
-                        raid.messagePlayersWithLogLinks(links);
-                    }
+                if (raid != null && raid.serverId.equalsIgnoreCase(channel.getGuild().getId())) {
                     boolean deleted = RaidManager.deleteRaid(raidId);
                     if (deleted) {
                         author.openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage("Raid ended").queue());

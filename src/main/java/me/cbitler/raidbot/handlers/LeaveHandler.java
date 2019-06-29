@@ -20,7 +20,7 @@ public class LeaveHandler extends ListenerAdapter {
 		log.info("Parsing leave server event from " + event.getUser().getName());
 		
 		for(Raid raid : raids){
-			if(raid.getServerId().equals(guildID)){
+			if(raid.serverId.equals(guildID)){
 				raid.removeUser(event.getUser().getId());
 				raid.updateMessage();
 			}

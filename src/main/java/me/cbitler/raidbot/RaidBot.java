@@ -45,7 +45,7 @@ public class RaidBot {
         db = new Database();
         db.connect();
 
-        RaidManager.loadRaids();
+        RaidManager.loadRaidsFromDatabase();
 
         CommandRegistry.addCommand("help", new HelpCommand());
         CommandRegistry.addCommand("info", new InfoCommand());

@@ -22,8 +22,8 @@ public class RemoveFromRaidCommand extends Command {
 
                 Raid raid = RaidManager.getRaid(messageId);
 
-                if (raid != null && raid.getServerId().equalsIgnoreCase(channel.getGuild().getId())) {
-                    RaidUser user = raid.getUserByName(name);
+                if (raid != null && raid.serverId.equalsIgnoreCase(channel.getGuild().getId())) {
+                    RaidUser user = raid.getRaidUser(name);
                     if (user != null) {
                         raid.removeUser(user.id);
                     }

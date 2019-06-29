@@ -87,37 +87,29 @@ public class RaidManager {
 	 * @return true if deleted, false if not deleted
 	 */
 	public static boolean deleteRaid(String messageId) {
-		Raid r = getRaid(messageId);
-		if (r != null) {
+		Raid raid = getRaid(messageId);
+
+		if (raid != null) {
 			try {
 
-				Guild guild = RaidBot.getInstance().getServer(r.getServerId());
+				Guild guild = RaidBot.getInstance().getServer(raid.serverId);
 				TextChannel archiveChannel = guild
-						.getTextChannelsByName(ServerSettings.getInstance().getArchiveChannel(r.getServerId()), true).get(0);
+						.getTextChannelsByName(ServerSettings.getInstance().getArchiveChannel(raid.serverId), true).get(0);
 
-				archiveChannel.sendMessage(r.buildEmbed()).queue(message1 -> {
-				});
+				archiveChannel.sendMessage(raid.buildEmbed()).queue();
 
-				RaidBot.getInstance().getServer(r.getServerId()).getTextChannelById(r.getChannelId())
-						.getMessageById(messageId).queue(message -> message.delete().queue());
+				guild.getTextChannelById(raid.channelId).getMessageById(messageId)
+                        .queue(message -> message.delete().queue());
 
 			} catch (Exception e) {
-				log.error("Tried to delete raid without message");
-				// Nothing, the message doesn't exist - it can happen
+				log.error("Tried to delete raid without message", e);
 			}
 
-			raids.removeIf((Raid raid) -> raid.getMessageId().equalsIgnoreCase(messageId));
+			if(raid.delete()){
+                raids.removeIf((Raid r) -> r.messageId.equalsIgnoreCase(messageId));
 
-			try {
-				RaidBot.getInstance().getDatabase().update("DELETE FROM `raids` WHERE `raidId` = ?",
-						new String[] { messageId });
-				RaidBot.getInstance().getDatabase().update("DELETE FROM `raidUsers` WHERE `raidId` = ?",
-						new String[] { messageId });
-			} catch (Exception e) {
-				log.error("Error encountered deleting raid");
-			}
-
-			return true;
+                return true;
+            }
 		}
 
 		return false;
@@ -128,7 +120,7 @@ public class RaidManager {
 	 * and adds the raids to the raid list Then, it queries the raid users and
 	 * inserts them into their relevant raids, updating the embedded messages
 	 */
-	public static void loadRaids() {
+	public static void loadRaidsFromDatabase() {
 		RaidBot bot = RaidBot.getInstance();
 		Database db = bot.getDatabase();
 
@@ -170,7 +162,7 @@ public class RaidManager {
 
 				Raid raid = RaidManager.getRaid(raidId);
 				if (raid != null) {
-					RaidUser user = new RaidUser(id, name, spec, role, signupStatus, timestamp);
+					RaidUser user = new RaidUser(id, name, spec, role, signupStatus, timestamp, raid.messageId);
 					raid.addUser(user, false);
 				}
 			}
@@ -196,12 +188,9 @@ public class RaidManager {
 	 * @return The raid object related to that messageId, if it exist.
 	 */
 	public static Raid getRaid(String messageId) {
-		for (Raid raid : raids) {
-			if (raid.getMessageId().equalsIgnoreCase(messageId)) {
-				return raid;
-			}
-		}
-		return null;
+        return raids.stream().filter(
+                (Raid raid) -> raid.messageId.equalsIgnoreCase(messageId)
+        ).findFirst().orElse(null);
 	}
 
 	public static List<Raid> getRaids() {

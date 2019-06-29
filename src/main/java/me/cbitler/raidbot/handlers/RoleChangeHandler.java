@@ -2,6 +2,7 @@ package me.cbitler.raidbot.handlers;
 
 import me.cbitler.raidbot.raids.Raid;
 import me.cbitler.raidbot.raids.RaidManager;
+import me.cbitler.raidbot.utility.PermissionsUtil;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberRoleAddEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberRoleRemoveEvent;
@@ -22,7 +23,7 @@ public class RoleChangeHandler extends ListenerAdapter {
 		log.info("Parsing role add from " + event.getMember().getEffectiveName());
 
 		for(Raid raid : raids){
-			if(raid.getServerId().equals(guildID)){
+			if(raid.serverId.equals(guildID)){
 				raid.updateMessage();
 			}
 		}
@@ -31,14 +32,13 @@ public class RoleChangeHandler extends ListenerAdapter {
 	@Override
 	public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent event) {
 		Guild guild = event.getGuild();
-		String guildID = guild.getId();
-		
-		List<Raid> raids = RaidManager.getRaids();
-		
-		for(Raid raid : raids){
-			if(raid.getServerId().equals(guildID)){
-				raid.removePossibleRaidersOnRoleChange(guild);
-				raid.updateMessage();
+
+		if(!PermissionsUtil.hasRaiderRole(event.getMember())){
+			for(Raid raid : RaidManager.getRaids()){
+				if(raid.serverId.equals(guild.getId())){
+					raid.removeUser(event.getUser().getId());
+					raid.updateMessage();
+				}
 			}
 		}
 	}

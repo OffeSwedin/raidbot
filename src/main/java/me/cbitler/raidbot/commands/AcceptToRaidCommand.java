@@ -25,7 +25,7 @@ public class AcceptToRaidCommand extends Command {
 
                 Raid raid = RaidManager.getRaid(messageId);
 
-                if (raid != null && raid.getServerId().equalsIgnoreCase(channel.getGuild().getId())) {
+                if (raid != null && raid.serverId.equalsIgnoreCase(channel.getGuild().getId())) {
                     boolean needToUpdateMessage = false;
                     for (String name : names){
                         if(raid.acceptUser(name)) {

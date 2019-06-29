@@ -2,6 +2,7 @@ package me.cbitler.raidbot.handlers;
 
 import me.cbitler.raidbot.raids.Raid;
 import me.cbitler.raidbot.raids.RaidManager;
+import me.cbitler.raidbot.raids.RaidUser;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberNickChangeEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.slf4j.Logger;
@@ -21,8 +22,10 @@ public class NicknameChangeHandler extends ListenerAdapter {
 				" to " + event.getMember().getEffectiveName());
 
 		for(Raid raid : raids){
-			if(raid.getServerId().equals(guildID)){
-				raid.updateUserNickname(event.getUser().getId(), event.getMember().getEffectiveName());
+			if(raid.serverId.equals(guildID)){
+				RaidUser user = raid.getRaidUser(event.getUser().getId());
+				user.name = event.getMember().getEffectiveName();
+				user.save();
 				raid.updateMessage();
 			}
 		}

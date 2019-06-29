@@ -6,6 +6,8 @@ import me.cbitler.raidbot.raids.RaidManager;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Handle channel message-related events sent to the bot
@@ -13,6 +15,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
  * @author Christopher Bitler
  */
 public class ChannelMessageHandler extends ListenerAdapter {
+	private static final Logger log = LoggerFactory.getLogger(ChannelMessageHandler.class);
 
 	/**
 	 * Handle receiving a message. This checks to see if it matches the
@@ -40,6 +43,7 @@ public class ChannelMessageHandler extends ListenerAdapter {
 				} catch (Exception exception) {
 					e.getMember().getUser().openPrivateChannel().queue(privateChannel -> privateChannel
 							.sendMessage("Make sure that the bot has the 'Manage message' permission").queue());
+					log.error("Failed with SQL query. ", e);
 				}
 			}
 		}
