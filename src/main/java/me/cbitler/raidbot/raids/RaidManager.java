@@ -56,12 +56,11 @@ public class RaidManager {
 		try {
 			mb.sendTo(channel).queue(message -> {
 
-				boolean inserted = insertToDatabase(raidText, roles, message.getId(), message.getGuild().getId(),
-						message.getChannel().getId());
+				Raid newRaid = new Raid(message.getId(), message.getGuild().getId(),
+						message.getChannel().getId(), raidText, roles);
+				boolean inserted = newRaid.save();
+
 				if (inserted) {
-					Raid newRaid = new Raid(message.getId(), message.getGuild().getId(),
-							message.getChannel().getId(), raidText);
-					newRaid.addRoles(roles);
 					raids.add(newRaid);
 
 					for (Reaction reaction : Reactions.getReactions()) {
@@ -76,30 +75,6 @@ public class RaidManager {
 		} catch (Exception e) {
 			log.error("Error encountered in sending message.", e);
 			throw e;
-		}
-	}
-
-	/**
-	 * Create a raid.
-	 *
-	 * @param messageId
-	 * 				The id of the raidmessage to edit
-	 * @param raidText
-	 *          	The header-text for the raid
-	 */
-	public static void editRaid(String messageId, String raidText){
-		Raid raid = getRaid(messageId);
-
-		if (raid != null) {
-			try {
-				RaidBot.getInstance().getDatabase().update("UPDATE `raids` SET `name` = ? WHERE `raidId` = ?",
-						new String[] { raidText, messageId });
-			} catch (Exception e) {
-				log.error("Error encountered updating raid");
-			}
-
-			raid.editName(raidText);
-			raid.updateMessage();
 		}
 	}
 
@@ -149,40 +124,6 @@ public class RaidManager {
 	}
 
 	/**
-	 * Insert a raid into the database
-	 * 
-	 * @param raidName
-	 *            The name of the raid to insert
-	 * @param raidRoles
-	 *            The roles for the raid
-	 * @param messageId
-	 *            The embedded message / 'raidId'
-	 * @param serverId
-	 *            The serverId related to this raid
-	 * @param channelId
-	 *            The channelId for the announcement of this raid
-	 * @return True if inserted, false otherwise
-	 */
-	private static boolean insertToDatabase(String raidName, List<String> raidRoles, String messageId, String serverId, String channelId) {
-		RaidBot bot = RaidBot.getInstance();
-		Database db = bot.getDatabase();
-
-		String roles = formatRolesForDatabase(raidRoles);
-
-		try {
-			db.update(
-					"INSERT INTO `raids` (`raidId`, `serverId`, `channelId`, `leader`, `name`, `description`, `date`, `time`, `roles`) VALUES (?,?,?,?,?,?,?,?,?)",
-					new String[] { messageId, serverId, channelId, "", raidName,
-							"", "", "", roles });
-		} catch (SQLException e) {
-			log.error("Could not insert raid into database. ", e);
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * Load raids This first queries all of the raids and loads the raid data
 	 * and adds the raids to the raid list Then, it queries the raid users and
 	 * inserts them into their relevant raids, updating the embedded messages
@@ -202,12 +143,11 @@ public class RaidManager {
 
 
 				try {
-					Raid raid = new Raid(messageId, serverId, channelId, name);
 					ArrayList<String> roles = new ArrayList<>();
 					String[] roleSplit = rolesText.split(";");
 					Collections.addAll(roles, roleSplit);
 
-					raid.addRoles(roles);
+					Raid raid = new Raid(messageId, serverId, channelId, name, roles);
 					raids.add(raid);
 				} catch (Exception e) {
 					log.error("Raid couldn't load: " + e.getMessage());
@@ -262,30 +202,6 @@ public class RaidManager {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Formats the roles associated with a raid in a form that can be inserted
-	 * into a database row. This combines them as
-	 * [number]:[name];[number]:[name];...
-	 * 
-	 * @param rolesWithNumbers
-	 *            The roles and their amounts
-	 * @return The formatted string
-	 */
-	private static String formatRolesForDatabase(List<String> rolesWithNumbers) {
-		StringBuilder data = new StringBuilder();
-
-		for (int i = 0; i < rolesWithNumbers.size(); i++) {
-			String role = rolesWithNumbers.get(i);
-			if (i == rolesWithNumbers.size() - 1) {
-				data.append(role);
-			} else {
-				data.append(role).append(";");
-			}
-		}
-
-		return data.toString();
 	}
 
 	public static List<Raid> getRaids() {

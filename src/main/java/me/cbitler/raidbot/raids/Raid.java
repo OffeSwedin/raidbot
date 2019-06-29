@@ -1,6 +1,7 @@
 package me.cbitler.raidbot.raids;
 
 import me.cbitler.raidbot.RaidBot;
+import me.cbitler.raidbot.database.Database;
 import me.cbitler.raidbot.utility.*;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -13,6 +14,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * Represents a raid and has methods for adding/removing users,
@@ -24,7 +26,7 @@ public class Raid {
 	private final String messageId;
 	private final String serverId;
 	private final String channelId;
-	private final List<String> roles = new ArrayList<>();
+	private final List<String> roles;
 	private final List<RaidUser> users = new ArrayList<>();
 
 	private String name;
@@ -41,11 +43,12 @@ public class Raid {
 	 * @param name
 	 *            The name of the raid
 	 */
-	public Raid(String messageId, String serverId, String channelId, String name) {
+	public Raid(String messageId, String serverId, String channelId, String name, List<String> roles) {
 		this.messageId = messageId;
 		this.serverId = serverId;
 		this.channelId = channelId;
 		this.name = name;
+		this.roles = roles;
 	}
 
 	/**
@@ -81,7 +84,7 @@ public class Raid {
 	 * @param name
 	 *		The new raidText for this raid
 	 */
-	public void editName(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
@@ -160,10 +163,6 @@ public class Raid {
 		}
 
 		return false;
-	}
-
-	public void addRoles(List<String> roles){
-		this.roles.addAll(roles);
 	}
 
 	public void updateUserNickname(String userId, String newName){
@@ -447,5 +446,33 @@ public class Raid {
 		}
 
 		return delay;
+	}
+
+	/**
+	 * Insert the raid into the database
+	 */
+	public boolean save() {
+		RaidBot bot = RaidBot.getInstance();
+		Database db = bot.getDatabase();
+
+		String roleString = roles.stream().collect(Collectors.joining(";"));
+
+		try {
+			db.update(
+					"INSERT INTO `raids` (`raidId`, `serverId`, `channelId`, `leader`, `name`, `description`, `date`, `time`, `roles`) VALUES (?,?,?,?,?,?,?,?,?)",
+					new String[] { messageId, serverId, channelId, "", name,
+							"", "", "", roleString });
+		} catch (SQLException e) {
+			try{
+				db.update(
+						"UPDATE `raids` SET `name` = ? WHERE `raidId` = ? AND `serverId` = ?",
+						new String[] { name, messageId, serverId });
+			} catch (SQLException e1){
+				log.error("Could not insert raid into database. ", e);
+				return false;
+			}
+		}
+
+		return true;
 	}
 }
