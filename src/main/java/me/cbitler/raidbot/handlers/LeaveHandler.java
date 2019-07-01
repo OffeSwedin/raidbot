@@ -14,16 +14,20 @@ public class LeaveHandler extends ListenerAdapter {
 
 	@Override
 	public void onGuildMemberLeave(GuildMemberLeaveEvent event) {
-		String guildID = event.getGuild().getId();
-		List<Raid> raids = RaidManager.getRaids();
+		try{
+			String guildID = event.getGuild().getId();
+			List<Raid> raids = RaidManager.getRaids();
 
-		log.info("Parsing leave server event from " + event.getUser().getName());
-		
-		for(Raid raid : raids){
-			if(raid.serverId.equals(guildID)){
-				raid.removeUser(event.getUser().getId());
-				raid.updateMessage();
+			log.info("Parsing leave server event from " + event.getUser().getName());
+
+			for(Raid raid : raids){
+				if(raid.serverId.equals(guildID)){
+					raid.removeUser(event.getUser().getId());
+					raid.updateMessage();
+				}
 			}
+		} catch(Exception bigError){
+			log.error("Something went wrong when pasring message. ", bigError);
 		}
 	}
 }

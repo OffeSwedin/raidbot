@@ -12,17 +12,21 @@ public class ReactionHandler extends ListenerAdapter {
 
 	@Override
 	public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
-		Raid raid = RaidManager.getRaid(event.getMessageId());
-		if (event.getUser().isBot()) {
-			return;
-		}
+		try{
+			Raid raid = RaidManager.getRaid(event.getMessageId());
+			if (event.getUser().isBot()) {
+				return;
+			}
 
-		if (raid != null) {
-			log.info("Parsing " + event.getReactionEmote().getEmote().getName() +
-					" reaction from " + event.getMember().getEffectiveName());
+			if (raid != null) {
+				log.info("Parsing " + event.getReactionEmote().getEmote().getName() +
+						" reaction from " + event.getMember().getEffectiveName());
 
-			raid.parseReaction(event.getMember(), event.getReactionEmote().getEmote(), true);
-			event.getReaction().removeReaction(event.getUser()).queue();
+				raid.parseReaction(event.getMember(), event.getReactionEmote().getEmote(), true);
+				event.getReaction().removeReaction(event.getUser()).queue();
+			}
+		} catch(Exception bigError){
+			log.error("Something went wrong when pasring message. ", bigError);
 		}
 	}
 }

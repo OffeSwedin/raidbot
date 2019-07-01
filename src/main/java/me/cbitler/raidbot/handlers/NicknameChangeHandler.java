@@ -15,19 +15,23 @@ public class NicknameChangeHandler extends ListenerAdapter {
 
 	@Override
 	public void onGuildMemberNickChange(GuildMemberNickChangeEvent event) {
-		String guildID = event.getGuild().getId();
-		List<Raid> raids = RaidManager.getRaids();
+		try{
+			String guildID = event.getGuild().getId();
+			List<Raid> raids = RaidManager.getRaids();
 
-		log.info("Parsing namechange from " + event.getPrevNick() +
-				" to " + event.getMember().getEffectiveName());
+			log.info("Parsing namechange from " + event.getPrevNick() +
+					" to " + event.getMember().getEffectiveName());
 
-		for(Raid raid : raids){
-			if(raid.serverId.equals(guildID)){
-				RaidUser user = raid.getRaidUser(event.getUser().getId());
-				user.name = event.getMember().getEffectiveName();
-				user.save();
-				raid.updateMessage();
+			for(Raid raid : raids){
+				if(raid.serverId.equals(guildID)){
+					RaidUser user = raid.getRaidUser(event.getUser().getId());
+					user.name = event.getMember().getEffectiveName();
+					user.save();
+					raid.updateMessage();
+				}
 			}
+		} catch(Exception bigError){
+			log.error("Something went wrong when pasring message. ", bigError);
 		}
 	}
 }

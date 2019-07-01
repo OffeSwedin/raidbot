@@ -17,29 +17,37 @@ public class RoleChangeHandler extends ListenerAdapter {
 
 	@Override
 	public void onGuildMemberRoleAdd(GuildMemberRoleAddEvent event) {
-		String guildID = event.getGuild().getId();
-		List<Raid> raids = RaidManager.getRaids();
+		try{
+			String guildID = event.getGuild().getId();
+			List<Raid> raids = RaidManager.getRaids();
 
-		log.info("Parsing role add from " + event.getMember().getEffectiveName());
+			log.info("Parsing role add from " + event.getMember().getEffectiveName());
 
-		for(Raid raid : raids){
-			if(raid.serverId.equals(guildID)){
-				raid.updateMessage();
+			for(Raid raid : raids){
+				if(raid.serverId.equals(guildID)){
+					raid.updateMessage();
+				}
 			}
+		} catch(Exception bigError){
+			log.error("Something went wrong when pasring message. ", bigError);
 		}
 	}
     
 	@Override
 	public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent event) {
-		Guild guild = event.getGuild();
+		try{
+			Guild guild = event.getGuild();
 
-		if(!PermissionsUtil.hasRaiderRole(event.getMember())){
-			for(Raid raid : RaidManager.getRaids()){
-				if(raid.serverId.equals(guild.getId())){
-					raid.removeUser(event.getUser().getId());
-					raid.updateMessage();
+			if(!PermissionsUtil.hasRaiderRole(event.getMember())){
+				for(Raid raid : RaidManager.getRaids()){
+					if(raid.serverId.equals(guild.getId())){
+						raid.removeUser(event.getUser().getId());
+						raid.updateMessage();
+					}
 				}
 			}
+		} catch(Exception bigError){
+			log.error("Something went wrong when pasring message. ", bigError);
 		}
 	}
 }

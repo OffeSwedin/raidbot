@@ -26,33 +26,41 @@ public class ChannelMessageHandler extends ListenerAdapter {
 	 */
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
-		if (e.getAuthor().isBot()) {
-			return;
-		}
+		try{
+			if (e.getAuthor().isBot()) {
+				return;
+			}
 
-		if (e.getMessage().getContentRaw().startsWith("!")) {
-			String[] messageParts = e.getMessage().getContentRaw().split(" ");
-			String[] arguments = CommandRegistry.getArguments(messageParts);
+			if (e.getMessage().getContentRaw().startsWith("!")) {
+				String[] messageParts = e.getMessage().getContentRaw().split(" ");
+				String[] arguments = CommandRegistry.getArguments(messageParts);
 
-			Command command = CommandRegistry.getCommand(messageParts[0].replace("!", ""));
-			if (command != null) {
-				command.handleCommand(arguments, e.getChannel(), e.getAuthor());
+				Command command = CommandRegistry.getCommand(messageParts[0].replace("!", ""));
+				if (command != null) {
+					command.handleCommand(arguments, e.getChannel(), e.getAuthor());
 
-				try {
-					e.getMessage().delete().queue();
-				} catch (Exception exception) {
-					e.getMember().getUser().openPrivateChannel().queue(privateChannel -> privateChannel
-							.sendMessage("Make sure that the bot has the 'Manage message' permission").queue());
-					log.error("Failed with SQL query. ", e);
+					try {
+						e.getMessage().delete().queue();
+					} catch (Exception exception) {
+						e.getMember().getUser().openPrivateChannel().queue(privateChannel -> privateChannel
+								.sendMessage("Make sure that the bot has the 'Manage message' permission").queue());
+						log.error("Failed with SQL query. ", e);
+					}
 				}
 			}
+		} catch(Exception bigError){
+			log.error("Something went wrong when pasring message. ", bigError);
 		}
 	}
 
 	@Override
 	public void onGuildMessageDelete(GuildMessageDeleteEvent e) {
-		if (RaidManager.getRaid(e.getMessageId()) != null) {
-			RaidManager.deleteRaid(e.getMessageId());
+		try{
+			if (RaidManager.getRaid(e.getMessageId()) != null) {
+				RaidManager.deleteRaid(e.getMessageId());
+			}
+		} catch(Exception bigError){
+			log.error("Something went wrong when pasring message. ", bigError);
 		}
 	}
 }
