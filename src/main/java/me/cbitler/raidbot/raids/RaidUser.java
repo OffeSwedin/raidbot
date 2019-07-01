@@ -20,10 +20,10 @@ public class RaidUser {
 
 	public final String id;
 	public final String spec;
-	public final String role;
 	public final Timestamp signupTime;
 	public final String raidId;
 	public String name;
+	public String role;
 	public String signupStatus;
 
 	public RaidUser(String id, String name, String spec, String role, Timestamp signupTime, String raidId) {
@@ -81,8 +81,8 @@ public class RaidUser {
 				db.update("INSERT INTO `raidUsers` (`userId`, `username`, `spec`, `role`, `raidId`, `signupStatus`, `signupTime`)"
 						+ " VALUES (?,?,?,?,?,?,?)", new String[]{id, name, spec, role, raidId, signupStatus, Long.toString(signupTime.getTime())});
 			} else {
-				db.update("UPDATE `raidUsers` SET `signupStatus` = ?, `username` = ? WHERE `userId` = ? AND `raidId` = ?",
-						new String[]{signupStatus, name, id, raidId});
+				db.update("UPDATE `raidUsers` SET `signupStatus` = ?, `username` = ?, `role` = ? WHERE `userId` = ? AND `raidId` = ?",
+						new String[]{signupStatus, name, role, id, raidId});
 			}
 		} catch (SQLException e) {
 			log.error("Could not update user in raid. ", e);

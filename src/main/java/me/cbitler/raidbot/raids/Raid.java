@@ -169,6 +169,16 @@ public class Raid {
 
 		return usersInRole;
 	}
+
+	/**
+	 * Checks if the role exists in the raid
+	 *
+	 * @param role The role to check if it exists
+	 * @return If the role exists or not
+	 */
+	public boolean roleExists(String role){
+		return roles.contains(role);
+	}
 		
 	/**
 	 * Update the embedded message for the raid

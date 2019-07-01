@@ -54,7 +54,7 @@ public class RaidBot {
         CommandRegistry.addCommand("editRaid", new EditRaidCommand());
         CommandRegistry.addCommand("accept", new AcceptToRaidCommand());
         CommandRegistry.addCommand("bench", new BenchForRaidCommand());
-        CommandRegistry.addCommand("removeFromRaid", new RemoveFromRaidCommand());
+        CommandRegistry.addCommand("moveToRole", new MoveToRoleCommand());
         CommandRegistry.addCommand("setRaidleaderRole", new SetRaidleaderRoleCommand());
         CommandRegistry.addCommand("setRaiderRole", new SetRaiderRoleCommand());
         CommandRegistry.addCommand("setSignupChannel", new SetSignupChannelCommand());
