@@ -31,7 +31,7 @@ public class NicknameChangeHandler extends ListenerAdapter {
 				}
 			}
 		} catch(Exception bigError){
-			log.error("Something went wrong when pasring message. ", bigError);
+			log.error("Something went wrong when parsing message. ", bigError);
 		}
 	}
 }

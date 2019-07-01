@@ -26,7 +26,7 @@ public class ReactionHandler extends ListenerAdapter {
 				event.getReaction().removeReaction(event.getUser()).queue();
 			}
 		} catch(Exception bigError){
-			log.error("Something went wrong when pasring message. ", bigError);
+			log.error("Something went wrong when parsing message. ", bigError);
 		}
 	}
 }
