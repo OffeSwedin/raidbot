@@ -7,7 +7,7 @@ public class HelpCommand extends Command {
     private final String helpMessage =
             "Commands:\n" +
             "**!createRaid [raidText]** - Creates a raid with the specified raid-text. Only usable by raid leaders\n" +
-            "**!editRaid [raidText]** - Edits a raids raid-text to the specified one. Only usable by raid leaders\n" +
+            "**!editRaid [raidId] [raidText]** - Edits a raids raid-text to the specified one. Only usable by raid leaders\n" +
             "**!endRaid [raidId]** - End a raid, removing the message and putting it in the archive. Only usable by raid leaders\n" +
             "**!accept [raidId] [userName] [userName] [...]** - Accepts players to a raid. Only usable by raid leaders\n" +
             "**!bench [raidId] [userName] [userName] [...]** - Benches players for a raid. Only usable by raid leaders\n" +

@@ -106,7 +106,7 @@ public class RaidEmbedMessageBuilder {
             roleStrings.add("**" + role + " (" + usersInRole.size() + "):**");
 
             for (RaidUser user : usersInRole) {
-                if(!role.equals("Not Attending")){
+                if(!role.equals("Can't Attend")){
                     roleStrings.add("- "+ guild.getMemberById(user.id).getEffectiveName() + " " + createSignupStatusText(user));
                 }else{
                     roleStrings.add("- "+ guild.getMemberById(user.id).getEffectiveName());

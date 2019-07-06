@@ -25,8 +25,10 @@ public class NicknameChangeHandler extends ListenerAdapter {
 			for(Raid raid : raids){
 				if(raid.serverId.equals(guildID)){
 					RaidUser user = raid.getRaidUser(event.getUser().getId());
-					user.name = event.getMember().getEffectiveName();
-					user.save();
+					if(user != null){
+						user.name = event.getMember().getEffectiveName();
+						user.save();
+					}
 					raid.updateMessage();
 				}
 			}
