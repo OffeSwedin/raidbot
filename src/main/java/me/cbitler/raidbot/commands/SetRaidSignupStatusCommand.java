@@ -44,7 +44,7 @@ public abstract class SetRaidSignupStatusCommand extends Command {
                 }
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage(commandFormat() + "").queue());
+                        .sendMessage("Format for command: " + commandFormat()).queue());
             }
         }
     }

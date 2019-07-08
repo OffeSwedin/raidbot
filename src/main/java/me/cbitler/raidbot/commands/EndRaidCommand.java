@@ -28,7 +28,7 @@ public class EndRaidCommand extends Command {
                 }
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage(commandFormat() + " [raidId]").queue());
+                        .sendMessage("Format for command: " + commandFormat()).queue());
             }
         }
     }

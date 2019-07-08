@@ -21,7 +21,7 @@ public class SetArchiveChannelCommand extends Command {
                 }
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage(commandFormat() + " [channelName]").queue());
+                        .sendMessage("Format for command: " + commandFormat()).queue());
             }
         }
     }

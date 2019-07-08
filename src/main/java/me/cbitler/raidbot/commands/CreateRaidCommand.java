@@ -19,7 +19,7 @@ public class CreateRaidCommand extends Command {
                 RaidManager.createRaid(raidText, guild.getId());
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage(helpMessage()).queue());
+                        .sendMessage("Format for command: " + commandFormat()).queue());
             }
         }
     }

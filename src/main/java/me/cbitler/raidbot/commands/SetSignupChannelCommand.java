@@ -21,7 +21,7 @@ public class SetSignupChannelCommand extends Command {
                 }
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage(helpMessage()).queue());
+                        .sendMessage("Format for command: " + commandFormat()).queue());
             }
         }
     }

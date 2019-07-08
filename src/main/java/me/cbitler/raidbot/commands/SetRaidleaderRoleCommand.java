@@ -21,7 +21,7 @@ public class SetRaidleaderRoleCommand extends Command {
                 }
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage(commandFormat() + " [roleName]").queue());
+                        .sendMessage("Format for command: " + commandFormat()).queue());
             }
         }
     }

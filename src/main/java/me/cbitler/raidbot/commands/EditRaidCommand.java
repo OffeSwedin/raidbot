@@ -25,7 +25,7 @@ public class EditRaidCommand extends Command {
                 raid.updateMessage();
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage(commandFormat() + " [raidID] [raidText]").queue());
+                        .sendMessage("Format for command: " + commandFormat()).queue());
             }
         }
     }

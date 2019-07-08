@@ -56,7 +56,7 @@ public class MoveToRoleCommand extends Command {
                 }
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage(commandFormat() + " [raid id] [name]").queue());
+                        .sendMessage("Format for command: " + commandFormat()).queue());
             }
         }
     }
