@@ -10,7 +10,7 @@ public class CommandRegistry {
 
     public static List<Command> getAllCommands(){
         ArrayList commandList = new ArrayList(commands.values());
-        commandList.sort(Comparator.comparing(Command::commandName));
+        commandList.sort(Comparator.comparing((Command c) -> c.commandName()));
         return commandList;
     }
 

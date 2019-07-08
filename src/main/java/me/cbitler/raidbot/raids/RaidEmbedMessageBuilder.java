@@ -3,7 +3,6 @@ package me.cbitler.raidbot.raids;
 import me.cbitler.raidbot.RaidBot;
 import me.cbitler.raidbot.utility.EnvVariables;
 import me.cbitler.raidbot.utility.PermissionsUtil;
-import me.cbitler.raidbot.utility.TimestampComparator;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Guild;
@@ -11,6 +10,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class RaidEmbedMessageBuilder {
@@ -101,7 +101,7 @@ public class RaidEmbedMessageBuilder {
             roleTexts.add(roleStrings);
 
             List<RaidUser> usersInRole = raid.getUsersInRole(role);
-            usersInRole.sort(new TimestampComparator());
+            usersInRole.sort(Comparator.comparing((RaidUser u) -> u.signupTime));
 
             roleStrings.add("**" + role + " (" + usersInRole.size() + "):**");
 
