@@ -54,6 +54,7 @@ public class RaidBot {
         CommandRegistry.addCommand("editRaid", new EditRaidCommand());
         CommandRegistry.addCommand("accept", new AcceptToRaidCommand());
         CommandRegistry.addCommand("standby", new StandbyToRaidCommand());
+        CommandRegistry.addCommand("noshow", new NoShowToRaidCommand());
         CommandRegistry.addCommand("moveToRole", new MoveToRoleCommand());
         CommandRegistry.addCommand("setRaidleaderRole", new SetRaidleaderRoleCommand());
         CommandRegistry.addCommand("setRaiderRole", new SetRaiderRoleCommand());

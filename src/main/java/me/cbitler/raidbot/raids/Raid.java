@@ -124,10 +124,27 @@ public class Raid {
      * @param username The username of the User to be benched
      * @return If the user was accepted or not
      */
-	public boolean benchUser(String username){
+	public boolean standbyUser(String username){
 		for(RaidUser user : users){
 			if(user.name.equalsIgnoreCase(username)){
 				user.bench();
+				user.save();
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Bench a user for a raid
+	 *
+	 * @param username The username of the User to be benched
+	 * @return If the user was accepted or not
+	 */
+	public boolean noShowUser(String username){
+		for(RaidUser user : users){
+			if(user.name.equalsIgnoreCase(username)){
+				user.noShow();
 				user.save();
 				return true;
 			}

@@ -54,6 +54,8 @@ public class RaidUser {
 		signupStatus = "2";
 	}
 
+	public void noShow() { signupStatus = "3"; }
+
 	public boolean isBenched() {
 		return signupStatus.equals("1");
 	}
@@ -61,6 +63,8 @@ public class RaidUser {
 	public boolean isAccepted() {
 		return signupStatus.equals("2");
 	}
+
+	public boolean isNoShow() { return signupStatus.equals("3"); }
 
 	/**
 	 * Save the raiduser in the database

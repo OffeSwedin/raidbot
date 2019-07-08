@@ -131,6 +131,12 @@ public class RaidEmbedMessageBuilder {
             }else{
                 emote = RaidBot.getInstance().getJda().getEmoteById("590293760726925372");
             }
+        }else if(user.isNoShow()){
+            if(EnvVariables.getInstance().isTestEnvironment()) {
+                emote = RaidBot.getInstance().getJda().getEmoteById("597751514307493888");
+            }else{
+                emote = RaidBot.getInstance().getJda().getEmoteById("588459958484598784");
+            }
         }else{
             if(EnvVariables.getInstance().isTestEnvironment()) {
                 emote = RaidBot.getInstance().getJda().getEmoteById("590292700842950656");
