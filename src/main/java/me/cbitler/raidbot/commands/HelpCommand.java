@@ -10,7 +10,7 @@ public class HelpCommand extends Command {
             "**!editRaid [raidId] [raidText]** - Edits a raids raid-text to the specified one. Only usable by raid leaders\n" +
             "**!endRaid [raidId]** - End a raid, removing the message and putting it in the archive. Only usable by raid leaders\n" +
             "**!accept [raidId] [userName] [userName] [...]** - Accepts players to a raid. Only usable by raid leaders\n" +
-            "**!bench [raidId] [userName] [userName] [...]** - Benches players for a raid. Only usable by raid leaders\n" +
+            "**!standby [raidId] [userName] [userName] [...]** - Benches players for a raid. Only usable by raid leaders\n" +
             "**!moveToRole [raidId] [userName] [roleName]** - Set a player as the specified role in a raid. Only usable by raid leaders\n" +
             "**!setRaidLeaderRole [roleName]** - Set the role that serves as a raid leader. Only usable by server admins\n" +
             "**!setRaiderRole [roleName]** - Set the role that serves as a raider. Only usable by server admins\n" +

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class BenchForRaidCommand extends Command {
+public class StandbyToRaidCommand extends Command {
     @Override
     public void handleCommand(String[] args, TextChannel channel, User author) {
         Guild guild = channel.getGuild();
@@ -45,7 +45,7 @@ public class BenchForRaidCommand extends Command {
                 }
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage("Format for !bench: !bench [raid id] [name]").queue());
+                        .sendMessage("Format for !bench: !standby [raid id] [name]").queue());
             }
         }
     }
