@@ -45,7 +45,7 @@ public class StandbyToRaidCommand extends Command {
                 }
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage("Format for !bench: !standby [raid id] [name]").queue());
+                        .sendMessage("Format for !standby: !standby [raid id] [name]").queue());
             }
         }
     }
