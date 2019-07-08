@@ -28,7 +28,7 @@ public class StandbyToRaidCommand extends Command {
                 if (raid != null && raid.serverId.equalsIgnoreCase(channel.getGuild().getId())) {
                     boolean needToUpdateMessage = false;
                     for (String name : names){
-                        if(raid.benchUser(name)) {
+                        if(raid.standbyUser(name)) {
                             needToUpdateMessage = true;
                         }else{
                             author.openPrivateChannel()
