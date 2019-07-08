@@ -25,8 +25,23 @@ public class EditRaidCommand extends Command {
                 raid.updateMessage();
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage("Format for !editRaid: !editRaid [raidID] [raidText]").queue());
+                        .sendMessage(commandFormat() + " [raidID] [raidText]").queue());
             }
         }
+    }
+
+    @Override
+    public String helpMessage() {
+        return commandFormat() + " - Edits a raids raid-text to the specified one. Only usable by raid leaders. ";
+    }
+
+    @Override
+    public String commandName() {
+        return "editRaid";
+    }
+
+    @Override
+    public String commandParameters(){
+        return "[raidId] [raidText]";
     }
 }

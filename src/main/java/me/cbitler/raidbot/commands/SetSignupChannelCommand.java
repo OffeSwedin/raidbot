@@ -21,8 +21,23 @@ public class SetSignupChannelCommand extends Command {
                 }
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage("Format for !setSignupChannel: !setSignupChannel [channelName]").queue());
+                        .sendMessage(helpMessage()).queue());
             }
         }
+    }
+
+    @Override
+    public String helpMessage() {
+        return commandFormat() + " - Set the channel that serves as the signup channel. Only usable by server admins. ";
+    }
+
+    @Override
+    public String commandName() {
+        return "setSignupChannel";
+    }
+
+    @Override
+    public String commandParameters(){
+        return "[channelName]";
     }
 }

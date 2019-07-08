@@ -19,8 +19,23 @@ public class CreateRaidCommand extends Command {
                 RaidManager.createRaid(raidText, guild.getId());
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage("Format for !createRaid: !createRaid [raidText]").queue());
+                        .sendMessage(helpMessage()).queue());
             }
         }
+    }
+
+    @Override
+    public String helpMessage() {
+        return commandFormat() + " - Creates a raid with the specified raid-text. Only usable by raid leaders. ";
+    }
+
+    @Override
+    public String commandName() {
+        return "createRaid";
+    }
+
+    @Override
+    public String commandParameters(){
+        return "[raidText]";
     }
 }

@@ -21,8 +21,23 @@ public class SetRaidleaderRoleCommand extends Command {
                 }
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage("Format for !setRaidleaderRole: !setRaidleaderRole [roleName]").queue());
+                        .sendMessage(commandFormat() + " [roleName]").queue());
             }
         }
+    }
+
+    @Override
+    public String helpMessage() {
+        return commandFormat() + " - Set the role that denotes a raidleader. Only usable by server admins. ";
+    }
+
+    @Override
+    public String commandName() {
+        return "setRaidleaderRole";
+    }
+
+    @Override
+    public String commandParameters(){
+        return "[roleName]";
     }
 }

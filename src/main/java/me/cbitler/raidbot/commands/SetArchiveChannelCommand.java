@@ -21,8 +21,23 @@ public class SetArchiveChannelCommand extends Command {
                 }
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage("Format for !setArchiveChannel: !setArchiveChannel [channelName]").queue());
+                        .sendMessage(commandFormat() + " [channelName]").queue());
             }
         }
+    }
+
+    @Override
+    public String helpMessage() {
+        return commandFormat() + " - Set the channel that serves as the archive channel. Only usable by server admins. ";
+    }
+
+    @Override
+    public String commandName() {
+        return "setArchiveChannel";
+    }
+
+    @Override
+    public String commandParameters(){
+        return "[channelName]";
     }
 }

@@ -56,8 +56,23 @@ public class MoveToRoleCommand extends Command {
                 }
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage("Format for !removeFromRaid: !removeFromRaid [raid id] [name]").queue());
+                        .sendMessage(commandFormat() + " [raid id] [name]").queue());
             }
         }
+    }
+
+    @Override
+    public String helpMessage() {
+        return commandFormat() + " - Move a player to the specified role in a raid. Only usable by raid leaders. ";
+    }
+
+    @Override
+    public String commandName() {
+        return "moveToRole";
+    }
+
+    @Override
+    public String commandParameters(){
+        return "[raidId] [userName] [roleName]";
     }
 }

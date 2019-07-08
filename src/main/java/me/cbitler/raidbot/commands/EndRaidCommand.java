@@ -28,8 +28,23 @@ public class EndRaidCommand extends Command {
                 }
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage("Format for !endRaid: !endRaid [raidId]").queue());
+                        .sendMessage(commandFormat() + " [raidId]").queue());
             }
         }
+    }
+
+    @Override
+    public String helpMessage() {
+        return commandFormat() + " - End a raid, removing the message and putting it in the archive. Only usable by raid leaders. ";
+    }
+
+    @Override
+    public String commandName() {
+        return "endRaid";
+    }
+
+    @Override
+    public String commandParameters(){
+        return "[raidId]";
     }
 }

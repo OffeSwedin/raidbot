@@ -21,8 +21,23 @@ public class SetRaiderRoleCommand extends Command {
                 }
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage("Format for !setRaiderRole: !setRaiderRole [roleName]").queue());
+                        .sendMessage(commandFormat() + " [roleName]").queue());
             }
         }
+    }
+
+    @Override
+    public String helpMessage() {
+        return commandFormat() + " - Set the role that denotes a raider. Only usable by server admins. ";
+    }
+
+    @Override
+    public String commandName() {
+        return "setRaiderRole";
+    }
+
+    @Override
+    public String commandParameters(){
+        return "[roleName]";
     }
 }

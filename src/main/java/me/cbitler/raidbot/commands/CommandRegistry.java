@@ -1,12 +1,21 @@
 package me.cbitler.raidbot.commands;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 
 public class CommandRegistry {
     private static final HashMap<String, Command> commands = new HashMap<>();
 
-    public static void addCommand(String commandText, Command cmd) {
-        commands.put(commandText.toLowerCase(), cmd);
+    public static List<Command> getAllCommands(){
+        ArrayList commandList = new ArrayList(commands.values());
+        commandList.sort(Comparator.comparing(Command::commandName));
+        return commandList;
+    }
+
+    public static void addCommand(Command cmd) {
+        commands.put(cmd.commandName().toLowerCase(), cmd);
     }
 
     public static Command getCommand(String command) {

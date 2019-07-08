@@ -47,19 +47,19 @@ public class RaidBot {
 
         RaidManager.loadRaidsFromDatabase();
 
-        CommandRegistry.addCommand("help", new HelpCommand());
-        CommandRegistry.addCommand("info", new InfoCommand());
-        CommandRegistry.addCommand("endRaid", new EndRaidCommand());
-        CommandRegistry.addCommand("createRaid", new CreateRaidCommand());
-        CommandRegistry.addCommand("editRaid", new EditRaidCommand());
-        CommandRegistry.addCommand("accept", new AcceptToRaidCommand());
-        CommandRegistry.addCommand("standby", new StandbyToRaidCommand());
-        CommandRegistry.addCommand("noshow", new NoShowToRaidCommand());
-        CommandRegistry.addCommand("moveToRole", new MoveToRoleCommand());
-        CommandRegistry.addCommand("setRaidleaderRole", new SetRaidleaderRoleCommand());
-        CommandRegistry.addCommand("setRaiderRole", new SetRaiderRoleCommand());
-        CommandRegistry.addCommand("setSignupChannel", new SetSignupChannelCommand());
-        CommandRegistry.addCommand("setArchiveChannel", new SetArchiveChannelCommand());
+        CommandRegistry.addCommand(new HelpCommand());
+        CommandRegistry.addCommand(new InfoCommand());
+        CommandRegistry.addCommand(new EndRaidCommand());
+        CommandRegistry.addCommand(new CreateRaidCommand());
+        CommandRegistry.addCommand(new EditRaidCommand());
+        CommandRegistry.addCommand(new AcceptToRaidCommand());
+        CommandRegistry.addCommand(new StandbyToRaidCommand());
+        CommandRegistry.addCommand(new NoShowToRaidCommand());
+        CommandRegistry.addCommand(new MoveToRoleCommand());
+        CommandRegistry.addCommand(new SetRaidleaderRoleCommand());
+        CommandRegistry.addCommand(new SetRaiderRoleCommand());
+        CommandRegistry.addCommand(new SetSignupChannelCommand());
+        CommandRegistry.addCommand(new SetArchiveChannelCommand());
 
         ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
         Runnable task = () -> {
