@@ -1,5 +1,6 @@
-package me.cbitler.raidbot.commands;
+package me.cbitler.raidbot.commands.setRaidSignupStatusCommands;
 
+import me.cbitler.raidbot.commands.SetRaidSignupStatusCommand;
 import me.cbitler.raidbot.raids.Raid;
 
 public class NoShowToRaidCommand extends SetRaidSignupStatusCommand {

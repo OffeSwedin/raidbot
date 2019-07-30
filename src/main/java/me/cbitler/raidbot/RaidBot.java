@@ -1,6 +1,10 @@
 package me.cbitler.raidbot;
 
 import me.cbitler.raidbot.commands.*;
+import me.cbitler.raidbot.commands.setRaidSignupStatusCommands.AcceptToRaidCommand;
+import me.cbitler.raidbot.commands.setRaidSignupStatusCommands.NoShowToRaidCommand;
+import me.cbitler.raidbot.commands.setRaidSignupStatusCommands.StandbyToRaidCommand;
+import me.cbitler.raidbot.commands.setServerSettingCommands.*;
 import me.cbitler.raidbot.database.Database;
 import me.cbitler.raidbot.database.QueryResult;
 import me.cbitler.raidbot.handlers.*;

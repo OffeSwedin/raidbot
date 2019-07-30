@@ -1,5 +1,6 @@
-package me.cbitler.raidbot.commands;
+package me.cbitler.raidbot.commands.setServerSettingCommands;
 
+import me.cbitler.raidbot.commands.SetServerSettingCommand;
 import me.cbitler.raidbot.utility.ServerSettings;
 
 public class SetSignupChannelCommand extends SetServerSettingCommand {
