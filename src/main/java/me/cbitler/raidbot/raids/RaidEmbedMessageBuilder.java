@@ -2,7 +2,6 @@ package me.cbitler.raidbot.raids;
 
 import me.cbitler.raidbot.RaidBot;
 import me.cbitler.raidbot.utility.EnvVariables;
-import me.cbitler.raidbot.utility.PermissionsUtil;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Guild;
@@ -14,14 +13,9 @@ import java.util.Comparator;
 import java.util.List;
 
 public class RaidEmbedMessageBuilder {
-    /**
-     * Build the embedded message that shows the information about the raid
-     *
-     * @param raid The raid to build an embed message for
-     * @return The embedded message representing this raid
-     */
+
     public static MessageEmbed buildEmbed(Raid raid) {
-        List<Member> notRespondedMembers = getNotRespondedMembers(raid);
+        List<Member> notRespondedMembers = raid.getNotRespondedMembers();
 
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle("**" + raid.name + "**");
@@ -51,23 +45,6 @@ public class RaidEmbedMessageBuilder {
         builder.addField("ID: ", raid.messageId, true);
 
         return builder.build();
-    }
-
-    private static List<Member> getNotRespondedMembers(Raid raid) {
-        RaidBot bot = RaidBot.getInstance();
-        Guild guild = bot.getServer(raid.serverId);
-
-        List<Member> members = guild.getMembers();
-        List<Member> notRespondedMembers = new ArrayList<>();
-
-        for (Member member : members) {
-            if (raid.getRaidUser(member.getUser().getId()) == null) {
-                if (PermissionsUtil.isRaider(member)) {
-                    notRespondedMembers.add(member);
-                }
-            }
-        }
-        return notRespondedMembers;
     }
 
     /**

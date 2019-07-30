@@ -10,6 +10,7 @@ import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.exceptions.ErrorResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -169,9 +170,15 @@ public class RaidManager {
 
 			int delay = 0;
 			for (Raid raid : raids) {
-				raid.parseReactions();
-				raid.updateMessage();
-				delay = raid.resetReactions(delay);
+				try{
+					raid.parseReactions();
+					raid.updateMessage();
+					delay = raid.resetReactions(delay);
+				} catch (ErrorResponseException e){
+					if(e.getErrorCode() == 10008){ //MessageNotFound
+						raid.delete();
+					}
+				}
 			}
 		} catch (SQLException e) {
 			log.error("Couldn't load raids.. exiting", e);

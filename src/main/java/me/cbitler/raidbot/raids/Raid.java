@@ -187,6 +187,23 @@ public class Raid {
 		return usersInRole;
 	}
 
+	public List<Member> getNotRespondedMembers() {
+		RaidBot bot = RaidBot.getInstance();
+		Guild guild = bot.getServer(serverId);
+
+		List<Member> members = guild.getMembers();
+		List<Member> notRespondedMembers = new ArrayList<>();
+
+		for (Member member : members) {
+			if (getRaidUser(member.getUser().getId()) == null) {
+				if (PermissionsUtil.isRaider(member)) {
+					notRespondedMembers.add(member);
+				}
+			}
+		}
+		return notRespondedMembers;
+	}
+
 	/**
 	 * Checks if the role exists in the raid
 	 *

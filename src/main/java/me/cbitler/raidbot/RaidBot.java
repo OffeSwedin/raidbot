@@ -41,15 +41,11 @@ public class RaidBot {
      */
     public RaidBot(JDA jda) {
         instance = this;
-
         this.jda = jda;
-        jda.addEventListener(new ChannelMessageHandler(), new ReactionHandler(), new RoleChangeHandler(),
-                new LeaveHandler(), new NicknameChangeHandler());
-        
+
         db = new Database();
         db.connect();
-
-        RaidManager.loadRaidsFromDatabase();
+        setupDatabaseKeepAlive();
 
         CommandRegistry.addCommand(new HelpCommand());
         CommandRegistry.addCommand(new InfoCommand());
@@ -65,7 +61,15 @@ public class RaidBot {
         CommandRegistry.addCommand(new SetSignupChannelCommand());
         CommandRegistry.addCommand(new SetArchiveChannelCommand());
         CommandRegistry.addCommand(new SetSocialRoleCommand());
+        CommandRegistry.addCommand(new RemindRaidCommand());
 
+        RaidManager.loadRaidsFromDatabase();
+
+        jda.addEventListener(new ChannelMessageHandler(), new ReactionHandler(), new RoleChangeHandler(),
+                new LeaveHandler(), new NicknameChangeHandler());
+    }
+
+    private void setupDatabaseKeepAlive() {
         ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
         Runnable task = () -> {
             try{
