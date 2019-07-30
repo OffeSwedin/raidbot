@@ -42,6 +42,7 @@ public class Database {
             + " serverId VARCHAR(255) PRIMARY KEY, \n"
             + " raid_leader_role text, \n"
             + " raider_role text, \n"
+            + " social_role text,  \n"
             + " signup_channel text, \n"
             + " archive_channel text)";
     

@@ -9,29 +9,28 @@ import net.dv8tion.jda.core.entities.Role;
  * @author Christopher Bitler
  */
 public class PermissionsUtil {
-	/**
-	 * Check to see if a member has the raid leader role
-	 * 
-	 * @param member
-	 *            The member to check
-	 * @return True if they have the role, false if they don't
-	 */
-	public static boolean hasRaidLeaderRole(Member member) {
-
-		String raidLeaderRole = ServerSettings.getInstance().getRaidLeaderRole(member.getGuild().getId());
-		for (Role role : member.getRoles()) {
-			if (role.getName().equalsIgnoreCase(raidLeaderRole)) {
-				return true;
-			}
-		}
-		return false;
+	public static boolean isAllowedToRaid(Member member){
+		return isRaider(member) || isSocial(member);
 	}
 
-	public static boolean hasRaiderRole(Member member) {
+	public static boolean isRaidLeader(Member member) {
+		String raidLeaderRole = ServerSettings.getInstance().getRaidLeaderRole(member.getGuild().getId());
+		return hasRole(member, raidLeaderRole);
+	}
 
+	public static boolean isRaider(Member member) {
 		String raiderRole = ServerSettings.getInstance().getRaiderRole(member.getGuild().getId());
+		return hasRole(member, raiderRole);
+	}
+
+	public static boolean isSocial(Member member) {
+		String socialRole = ServerSettings.getInstance().getSocialRole(member.getGuild().getId());
+		return hasRole(member, socialRole);
+	}
+
+	private static boolean hasRole(Member member, String roleName) {
 		for (Role role : member.getRoles()) {
-			if (role.getName().equalsIgnoreCase(raiderRole)) {
+			if (role.getName().equalsIgnoreCase(roleName)) {
 				return true;
 			}
 		}

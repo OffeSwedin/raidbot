@@ -12,7 +12,7 @@ public class EndRaidCommand extends Command {
     public void handleCommand(String[] args, TextChannel channel, User author) {
         Member member = channel.getGuild().getMember(author);
                 
-        if(PermissionsUtil.hasRaidLeaderRole(member)) {
+        if(PermissionsUtil.isRaidLeader(member)) {
             if(args.length >= 1) {
                 String raidId = args[0];
                 Raid raid = RaidManager.getRaid(raidId);

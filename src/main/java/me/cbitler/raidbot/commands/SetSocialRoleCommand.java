@@ -2,25 +2,25 @@ package me.cbitler.raidbot.commands;
 
 import me.cbitler.raidbot.utility.ServerSettings;
 
-public class SetArchiveChannelCommand extends SetServerSettingCommand {
+public class SetSocialRoleCommand extends SetServerSettingCommand {
 
     @Override
     public void handleServerSetting(String guildId, String serverSettingValue) {
-        ServerSettings.getInstance().setArchiveChannel(guildId, serverSettingValue);
+        ServerSettings.getInstance().setSocialRole(guildId, serverSettingValue);
     }
 
     @Override
     public String helpMessage() {
-        return commandFormat() + " - Set the channel that serves as the archive channel. Only usable by server admins. ";
+        return commandFormat() + " - Set the role that denotes a social. Only usable by server admins. ";
     }
 
     @Override
     public String commandName() {
-        return "setArchiveChannel";
+        return "setSocialRole";
     }
 
     @Override
     public String commandParameters(){
-        return "[channelName]";
+        return "[roleName]";
     }
 }

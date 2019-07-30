@@ -9,8 +9,8 @@ public class CommandRegistry {
     private static final HashMap<String, Command> commands = new HashMap<>();
 
     public static List<Command> getAllCommands(){
-        ArrayList commandList = new ArrayList(commands.values());
-        commandList.sort(Comparator.comparing((Command c) -> c.commandName()));
+        ArrayList<Command> commandList = new ArrayList<>(commands.values());
+        commandList.sort(Comparator.comparing(Command::commandName));
         return commandList;
     }
 

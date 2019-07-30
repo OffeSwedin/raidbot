@@ -17,7 +17,7 @@ public class MoveToRoleCommand extends Command {
         Guild guild = channel.getGuild();
         Member member = guild.getMember(author);
 
-        if (PermissionsUtil.hasRaidLeaderRole(member)) {
+        if (PermissionsUtil.isRaidLeader(member)) {
             if (args.length >= 2) {
                 String messageId = args[0];
                 String userName = args[1];

@@ -13,7 +13,7 @@ public class CreateRaidCommand extends Command {
         Guild guild = channel.getGuild();
         Member member = guild.getMember(author);
 
-        if(PermissionsUtil.hasRaidLeaderRole(member)) {
+        if(PermissionsUtil.isRaidLeader(member)) {
             if (args.length >= 1) {
                 String raidText = combineArguments(args, 0);
                 RaidManager.createRaid(raidText, guild.getId());

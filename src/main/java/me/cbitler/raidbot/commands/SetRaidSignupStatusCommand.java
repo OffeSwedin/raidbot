@@ -18,7 +18,7 @@ public abstract class SetRaidSignupStatusCommand extends Command {
         Guild guild = channel.getGuild();
         Member member = guild.getMember(author);
 
-        if (PermissionsUtil.hasRaidLeaderRole(member)) {
+        if (PermissionsUtil.isRaidLeader(member)) {
             if (args.length >= 2) {
                 List<String> names = new ArrayList<>(Arrays.asList(args));
                 String messageId = names.remove(0);

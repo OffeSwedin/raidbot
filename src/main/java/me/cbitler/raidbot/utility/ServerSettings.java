@@ -17,6 +17,7 @@ public class ServerSettings {
 
     private final HashMap<String, String> raidLeaderRoleCache = new HashMap<>();
     private final HashMap<String, String> raiderRoleCache = new HashMap<>();
+    private final HashMap<String, String> socialRoleCache = new HashMap<>();
     private final HashMap<String, String> signupChannelCache = new HashMap<>();
     private final HashMap<String, String> archiveChannelCache = new HashMap<>();
 
@@ -30,9 +31,7 @@ public class ServerSettings {
      * @param role The role name
      */
     public void setRaidLeaderRole(String serverId, String role) {
-        if(saveServerSetting(serverId, "raid_leader_role", role)){
-            raidLeaderRoleCache.put(serverId, role);
-        }
+        saveServerSetting(serverId, "raid_leader_role", role, raidLeaderRoleCache);
     }
 
     /**
@@ -41,16 +40,7 @@ public class ServerSettings {
      * @return The name of the role that is considered the raid leader for that server
      */
     public String getRaidLeaderRole(String serverId) {
-        if (raidLeaderRoleCache.get(serverId) != null) {
-            return raidLeaderRoleCache.get(serverId);
-        } else {
-            String raidleaderRole = loadServerSetting(serverId, "raid_leader_role");
-            if(raidleaderRole == null){
-                raidleaderRole = "raidleader";
-            }
-            raidLeaderRoleCache.put(serverId, raidleaderRole);
-            return raidleaderRole;
-        }
+        return loadServerSetting(serverId, "raid_leader_role", raidLeaderRoleCache, "raidleader");
     }
 
     /**
@@ -59,9 +49,7 @@ public class ServerSettings {
      * @param role The role name
      */
     public void setRaiderRole(String serverId, String role) {
-        if(saveServerSetting(serverId, "raider_role", role)){
-            raiderRoleCache.put(serverId, role);
-        }
+        saveServerSetting(serverId, "raider_role", role, raiderRoleCache);
     }
 
     /**
@@ -70,16 +58,25 @@ public class ServerSettings {
      * @return The name of the role that is considered the raider for that server
      */
     public String getRaiderRole(String serverId) {
-        if (raiderRoleCache.get(serverId) != null) {
-            return raiderRoleCache.get(serverId);
-        } else {
-            String raiderRole = loadServerSetting(serverId, "raider_role");
-            if(raiderRole == null){
-                raiderRole = "raider";
-            }
-            raidLeaderRoleCache.put(serverId, raiderRole);
-            return raiderRole;
-        }
+        return loadServerSetting(serverId, "raider_role", raiderRoleCache, "raider");
+    }
+
+    /**
+     * Set the raider role for a server.
+     * @param serverId The server ID
+     * @param role The role name
+     */
+    public void setSocialRole(String serverId, String role) {
+        saveServerSetting(serverId, "social_role", role, socialRoleCache);
+    }
+
+    /**
+     * Get the raider role for a specific server.
+     * @param serverId the ID of the server
+     * @return The name of the role that is considered the raider for that server
+     */
+    public String getSocialRole(String serverId) {
+        return loadServerSetting(serverId, "social_role", socialRoleCache, "social");
     }
 
     /**
@@ -88,9 +85,7 @@ public class ServerSettings {
      * @param channelName The signup channel name
      */
     public void setSignupChannel(String serverId, String channelName) {
-        if(saveServerSetting(serverId, "signup_channel", channelName)){
-            signupChannelCache.put(serverId, channelName);
-        }
+        saveServerSetting(serverId, "signup_channel", channelName, signupChannelCache);
     }
 
     /**
@@ -99,16 +94,7 @@ public class ServerSettings {
      * @return The signup channel that is set for that server
      */
     public String getSignupChannel(String serverId) {
-        if (signupChannelCache.get(serverId) != null) {
-            return signupChannelCache.get(serverId);
-        } else {
-            String signupChannel = loadServerSetting(serverId, "signup_channel");
-            if(signupChannel == null){
-                signupChannel = "signup";
-            }
-            signupChannelCache.put(serverId, signupChannel);
-            return signupChannel;
-        }
+        return loadServerSetting(serverId, "signup_channel", signupChannelCache, "signup");
     }
 
     /**
@@ -117,9 +103,7 @@ public class ServerSettings {
      * @param channelName The archive channel name
      */
     public void setArchiveChannel(String serverId, String channelName) {
-        if(saveServerSetting(serverId, "archive_channel", channelName)){
-            archiveChannelCache.put(serverId, channelName);
-        }
+        saveServerSetting(serverId, "archive_channel", channelName, archiveChannelCache);
     }
 
     /**
@@ -128,19 +112,10 @@ public class ServerSettings {
      * @return The archive channel that is set for that server
      */
     public String getArchiveChannel(String serverId) {
-        if (archiveChannelCache.get(serverId) != null) {
-            return archiveChannelCache.get(serverId);
-        } else {
-            String archiveChannel = loadServerSetting(serverId, "archive_channel");
-            if(archiveChannel == null){
-                archiveChannel = "archive";
-            }
-            archiveChannelCache.put(serverId, archiveChannel);
-            return archiveChannel;
-        }
+        return loadServerSetting(serverId, "archive_channel", archiveChannelCache, "archive");
     }
 
-    private boolean saveServerSetting(String serverId, String settingName, String settingValue){
+    private void saveServerSetting(String serverId, String settingName, String settingValue, HashMap<String, String> cache){
         try {
             QueryResult results = db.query("SELECT COUNT(*) FROM `serverSettings` WHERE `serverId` = ?", new String[] { serverId });
             results.getResults().next();
@@ -158,24 +133,29 @@ public class ServerSettings {
             }
         } catch (SQLException e) {
             log.error("Could not update server setting. ", e);
-            return false;
         }
 
-        return true;
+        cache.put(serverId, settingValue);
     }
 
-    private String loadServerSetting(String serverId, String settingName) {
+    private String loadServerSetting(String serverId, String settingName, HashMap<String, String> cache, String defaultRole) {
+        if (cache.get(serverId) != null) {
+            return cache.get(serverId);
+        }
+
         try {
             QueryResult results = db.query("SELECT `" + settingName + "` FROM `serverSettings` WHERE `serverId` = ?",
                     new String[]{serverId});
             if (results.getResults().next()) {
-                return results.getResults().getString(settingName);
+                String raidleaderRole = results.getResults().getString(settingName);
+                cache.put(serverId, raidleaderRole);
+                return raidleaderRole;
             } else {
-                return null;
+                return defaultRole;
             }
         } catch (Exception e) {
             log.error("Could not load server settings. ", e);
-            return null;
+            return defaultRole;
         }
     }
 

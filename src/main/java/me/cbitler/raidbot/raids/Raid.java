@@ -229,7 +229,7 @@ public class Raid {
 	}
 
 	public void parseReaction(Member member, Emote emote, boolean update_message){
-		if (PermissionsUtil.hasRaiderRole(member)) {
+		if (PermissionsUtil.isAllowedToRaid(member)) {
 
 			String emojiId = emote.getId();
 			Reaction reaction = Reactions.getReactionFromEmojiId(emojiId);

@@ -38,7 +38,7 @@ public class RoleChangeHandler extends ListenerAdapter {
 		try{
 			Guild guild = event.getGuild();
 
-			if(!PermissionsUtil.hasRaiderRole(event.getMember())){
+			if(!PermissionsUtil.isAllowedToRaid(event.getMember())){
 				for(Raid raid : RaidManager.getRaids()){
 					if(raid.serverId.equals(guild.getId())){
 						raid.removeUser(event.getUser().getId());

@@ -62,7 +62,7 @@ public class RaidEmbedMessageBuilder {
 
         for (Member member : members) {
             if (raid.getRaidUser(member.getUser().getId()) == null) {
-                if (PermissionsUtil.hasRaiderRole(member)) {
+                if (PermissionsUtil.isRaider(member)) {
                     notRespondedMembers.add(member);
                 }
             }

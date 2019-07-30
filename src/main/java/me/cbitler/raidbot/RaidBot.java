@@ -60,6 +60,7 @@ public class RaidBot {
         CommandRegistry.addCommand(new SetRaiderRoleCommand());
         CommandRegistry.addCommand(new SetSignupChannelCommand());
         CommandRegistry.addCommand(new SetArchiveChannelCommand());
+        CommandRegistry.addCommand(new SetSocialRoleCommand());
 
         ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
         Runnable task = () -> {
