@@ -135,7 +135,7 @@ public class RaidEmbedMessageBuilder {
             if(EnvVariables.getInstance().isTestEnvironment()) {
                 emote = RaidBot.getInstance().getJda().getEmoteById("597751514307493888");
             }else{
-                emote = RaidBot.getInstance().getJda().getEmoteById("588459958484598784");
+                emote = RaidBot.getInstance().getJda().getEmoteById("605719936123404298");
             }
         }else{
             if(EnvVariables.getInstance().isTestEnvironment()) {
