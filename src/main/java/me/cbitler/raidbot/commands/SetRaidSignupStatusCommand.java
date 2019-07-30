@@ -50,14 +50,11 @@ public abstract class SetRaidSignupStatusCommand extends Command {
     }
 
     @Override
-    public String helpMessage() {
-        return commandFormat() + " - Accepts players to a raid. Only usable by raid leaders";
-    }
-
-    @Override
     public String commandParameters(){
         return "[raidId] [userName] [userName] [...]";
     }
+
+    public abstract String helpMessage();
 
     public abstract boolean handleUser(Raid raid, String userName);
 }

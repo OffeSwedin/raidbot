@@ -6,6 +6,11 @@ import me.cbitler.raidbot.raids.Raid;
 public class StandbyToRaidCommand extends SetRaidSignupStatusCommand {
 
     @Override
+    public String helpMessage() {
+        return commandFormat() + " - Standby players to a raid. Only usable by raid leaders";
+    }
+
+    @Override
     public boolean handleUser(Raid raid, String userName) {
         return raid.standbyUser(userName);
     }

@@ -11,6 +11,11 @@ public class NoShowToRaidCommand extends SetRaidSignupStatusCommand {
     }
 
     @Override
+    public String helpMessage() {
+        return commandFormat() + " - Sets players to noShow for a raid. Only usable by raid leaders";
+    }
+
+    @Override
     public String commandName() {
         return "noShow";
     }
