@@ -21,30 +21,33 @@ public class ChannelMessageHandler extends ListenerAdapter {
 	 * Handle receiving a message. This checks to see if it matches the
 	 * !createRaid or !removeFromRaid commands and acts on them accordingly.
 	 *
-	 * @param e
+	 * @param event
 	 *            The event
 	 */
 	@Override
-	public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
+	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
 		try{
-			if (e.getAuthor().isBot()) {
+			if (event.getAuthor().isBot()) {
 				return;
 			}
 
-			if (e.getMessage().getContentRaw().startsWith("!")) {
-				String[] messageParts = e.getMessage().getContentRaw().split(" ");
+			if (event.getMessage().getContentRaw().startsWith("!")) {
+
+				log.info("Parsing channel command message event from " + event.getMember().getEffectiveName());
+
+				String[] messageParts = event.getMessage().getContentRaw().split(" ");
 				String[] arguments = CommandRegistry.getArguments(messageParts);
 
 				Command command = CommandRegistry.getCommand(messageParts[0].replace("!", ""));
 				if (command != null) {
-					command.handleCommand(arguments, e.getChannel(), e.getAuthor());
+					command.handleCommand(arguments, event.getChannel(), event.getAuthor());
 
 					try {
-						e.getMessage().delete().queue();
+						event.getMessage().delete().queue();
 					} catch (Exception exception) {
-						e.getMember().getUser().openPrivateChannel().queue(privateChannel -> privateChannel
+						event.getMember().getUser().openPrivateChannel().queue(privateChannel -> privateChannel
 								.sendMessage("Make sure that the bot has the 'Manage message' permission").queue());
-						log.error("Failed with SQL query. ", e);
+						log.error("Failed when deleting channel message. ", event);
 					}
 				}
 			}
