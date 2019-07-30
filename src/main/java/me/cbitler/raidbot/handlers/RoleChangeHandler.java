@@ -17,38 +17,41 @@ public class RoleChangeHandler extends ListenerAdapter {
 
 	@Override
 	public void onGuildMemberRoleAdd(GuildMemberRoleAddEvent event) {
-		try{
+		try {
 			String guildID = event.getGuild().getId();
 			List<Raid> raids = RaidManager.getRaids();
 
 			log.info("Parsing role add from " + event.getMember().getEffectiveName());
 
-			for(Raid raid : raids){
-				if(raid.serverId.equals(guildID)){
+			for (Raid raid : raids) {
+				if (raid.serverId.equals(guildID)) {
 					raid.updateMessage();
 				}
 			}
-		} catch(Exception bigError){
+		} catch (Exception bigError) {
 			log.error("Something went wrong when parsing message. ", bigError);
 		}
 	}
-    
+
 	@Override
 	public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent event) {
-		try{
+		try {
 			Guild guild = event.getGuild();
 
 			log.info("Parsing role remove from " + event.getMember().getEffectiveName());
 
-			if(!PermissionsUtil.isAllowedToRaid(event.getMember())){
-				for(Raid raid : RaidManager.getRaids()){
-					if(raid.serverId.equals(guild.getId())){
+			Boolean isNotAllowedToRaid = !PermissionsUtil.isAllowedToRaid(event.getMember());
+
+			for (Raid raid : RaidManager.getRaids()) {
+				if (raid.serverId.equals(guild.getId())) {
+					if (isNotAllowedToRaid) {
 						raid.removeUser(event.getUser().getId());
-						raid.updateMessage();
 					}
+					raid.updateMessage();
 				}
 			}
-		} catch(Exception bigError){
+
+		} catch (Exception bigError) {
 			log.error("Something went wrong when pasring message. ", bigError);
 		}
 	}
