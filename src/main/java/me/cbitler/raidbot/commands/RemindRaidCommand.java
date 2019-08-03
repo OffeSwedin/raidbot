@@ -23,10 +23,15 @@ public class RemindRaidCommand extends Command {
 
                 List<Member> notRespondedMembers = raid.getNotRespondedMembers();
 
+                author.openPrivateChannel().queue(privateChannel -> privateChannel
+                        .sendMessage("Starting to remind " + notRespondedMembers.size() + " persons about raid: \"" + raid.name + "\" (ID: " + raid.messageId + ")").queue());
                 for(Member notRespondedMember : notRespondedMembers){
                     notRespondedMember.getUser().openPrivateChannel().queue(privateChannel -> privateChannel
                             .sendMessage("Reminder to please sign up for the raid: \"" + raid.name + "\" (ID: " + raid.messageId + ")").queue());
                 }
+
+                author.openPrivateChannel().queue(privateChannel -> privateChannel
+                        .sendMessage("Reminded everyone successfully. ").queue());
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
                         .sendMessage("Format for command: " + commandFormat()).queue());
