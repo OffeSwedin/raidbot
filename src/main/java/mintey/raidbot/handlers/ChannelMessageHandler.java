@@ -8,22 +8,8 @@ import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-/**
- * Handle channel message-related events sent to the bot
- * 
- * @author Christopher Bitler
- */
 public class ChannelMessageHandler extends ListenerAdapter {
 	private static final Logger log = LoggerFactory.getLogger(ChannelMessageHandler.class);
-
-	/**
-	 * Handle receiving a message. This checks to see if it matches the
-	 * !createRaid or !removeFromRaid commands and acts on them accordingly.
-	 *
-	 * @param event
-	 *            The event
-	 */
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
 		try{

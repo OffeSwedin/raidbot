@@ -7,11 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.*;
-
-/**
- * Class for managing the SQLite database for this bot
- * @author Christopher Bitler
- */
 public class Database {
     private static final Logger log = LoggerFactory.getLogger(Database.class);
 
@@ -55,15 +50,7 @@ public class Database {
             + ServerSettings.BenchedEmote + " text, \n"
             + ServerSettings.NoShowEmote + " text, \n"
             + ServerSettings.NotDecidedEmote + " text)";
-    
-    /**
-     * Create a new database
-     */
     public Database(){}
-
-    /**
-     * Connect to the SQLite database and create the tables if they don't exist
-     */
     public void connect() {
         try {
             EnvVariables envVariables = new EnvVariables();
@@ -92,14 +79,6 @@ public class Database {
             System.exit(1);
         }
     }
-
-    /**
-     * Run a query and return the results using the specified query and parameters
-     * @param query The query with ?s where the parameters need to be placed
-     * @param data The parameters to put in the query
-     * @return QueryResult representing the statement used and the ResultSet
-     * @throws SQLException SQLException
-     */
     public QueryResult query(String query, String[] data) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement(query);
         int i = 1;
@@ -112,13 +91,6 @@ public class Database {
 
         return new QueryResult(stmt, rs);
     }
-
-    /**
-     * Run an update query with the specified parameters
-     * @param query The query with ?s where the parameters need to be placed
-     * @param data The parameters to put in the query
-     * @throws SQLException SQLException
-     */
     public void update(String query, String[] data) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement(query);
         int i = 1;
@@ -130,11 +102,6 @@ public class Database {
         stmt.execute();
         stmt.close();
     }
-
-    /**
-     * Create the database tables. Also alters the raid table to add the leader column if it doesn't exist.
-     * @throws SQLException SQLException
-     */
     private void tableInits() throws SQLException {
         connection.createStatement().execute(raidTableInit);
         connection.createStatement().execute(raidUsersTableInit);

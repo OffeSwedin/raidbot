@@ -8,11 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
-
-/**
- * Start the program, read the token, and start the bot
- * @author Christopher Bitler
- */
 public class Main {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
 
@@ -29,12 +24,6 @@ public class Main {
         jda.awaitReady();
         new RaidBot(jda);
     }
-
-    /**
-     * Read the token from the token file
-     * @return The token text
-     * @throws IOException IOException
-     */
     private static String readToken() throws IOException {
         EnvVariables variables = new EnvVariables();
         variables.loadFromEnvFile();

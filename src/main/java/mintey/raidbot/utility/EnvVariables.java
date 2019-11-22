@@ -5,18 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
-
-/**
- * Class for loading variables from .env file
- * @author Christopher Bitler
- */
 public class EnvVariables {
     private final HashMap<String,String> variables = new HashMap<>();
-
-    /**
-     * Load variables from .env file
-     * @throws IOException IOException
-     */
     public void loadFromEnvFile() throws IOException {
         File file = new File(".env");
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -30,12 +20,6 @@ public class EnvVariables {
             }
         }
     }
-
-    /**
-     * Get a variable that was set in the .env file
-     * @param key The variable name to get the value of
-     * @return The value of the variable
-     */
     public String getValue(String key) {
         return variables.get(key);
     }

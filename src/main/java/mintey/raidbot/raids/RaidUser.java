@@ -8,13 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
-
-/**
- * Represents a raid user This class is not commented as the method names should
- * be self-explanatory
- * 
- * @author Christopher Bitler
- */
 public class RaidUser {
 	private static final Logger log = LoggerFactory.getLogger(RaidUser.class);
 
@@ -65,10 +58,6 @@ public class RaidUser {
 	}
 
 	public boolean isNoShow() { return signupStatus.equals("3"); }
-
-	/**
-	 * Save the raiduser in the database
-	 */
 	public void save() {
 		RaidBot bot = RaidBot.getInstance();
 		Database db = bot.getDatabase();

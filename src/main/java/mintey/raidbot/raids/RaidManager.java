@@ -19,26 +19,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-/**
- * Serves as a manager for all of the raids. This includes creating, loading,
- * and deleting raids
- * 
- * @author Christopher Bitler
- */
 public class RaidManager {
 	private static final Logger log = LoggerFactory.getLogger(RaidManager.class);
 
 	private static final List<Raid> raids = new ArrayList<>();
-
-	/**
-	 * Create a raid.
-	 * 
-	 * @param raidText
-	 *          	The header-text for the raid
-	 * @param serverId
-	 * 				The id of the server to create the raid for
-	 */
 	public static void createRaid(String raidText, String serverId) {
 		RaidBot bot = RaidBot.getInstance();
 		Guild guild = bot.getServer(serverId);
@@ -78,15 +62,6 @@ public class RaidManager {
 			throw e;
 		}
 	}
-
-	/**
-	 * Delete the raid from the database and maps, and delete the message if it
-	 * is still there
-	 *
-	 * @param messageId
-	 *            The raid ID
-	 * @return true if deleted, false if not deleted
-	 */
 	public static boolean deleteRaid(String messageId) {
 		Raid raid = getRaid(messageId);
 
@@ -115,12 +90,6 @@ public class RaidManager {
 
 		return false;
 	}
-
-	/**
-	 * Load raids This first queries all of the raids and loads the raid data
-	 * and adds the raids to the raid list Then, it queries the raid users and
-	 * inserts them into their relevant raids, updating the embedded messages
-	 */
 	public static void loadRaidsFromDatabase() {
 		RaidBot bot = RaidBot.getInstance();
 		Database db = bot.getDatabase();
@@ -185,15 +154,6 @@ public class RaidManager {
 			System.exit(1);
 		}
 	}
-
-	/**
-	 * Get a raid from the discord message ID
-	 * 
-	 * @param messageId
-	 *            The discord message ID associated with the raid's embedded
-	 *            message
-	 * @return The raid object related to that messageId, if it exist.
-	 */
 	public static Raid getRaid(String messageId) {
         return raids.stream().filter(
                 (Raid raid) -> raid.messageId.equalsIgnoreCase(messageId)

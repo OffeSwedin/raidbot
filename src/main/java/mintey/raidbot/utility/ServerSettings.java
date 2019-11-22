@@ -85,11 +85,6 @@ public class ServerSettings {
             return null;
         }
     }
-
-    /**
-     * Get the current instance of the serversettings
-     * @return The current instance of the serversettings.
-     */
     public static ServerSettings getInstance() {
         if(instance == null){
             instance = new ServerSettings(RaidBot.getInstance().getDatabase());

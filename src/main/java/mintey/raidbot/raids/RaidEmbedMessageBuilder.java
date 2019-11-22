@@ -46,12 +46,6 @@ public class RaidEmbedMessageBuilder {
 
         return builder.build();
     }
-
-    /**
-     * Build the not responded text
-     *
-     * @return The not responded text
-     */
     private static String buildNotRespondedText(List<Member> notRespondedMembers) {
         StringBuilder response = new StringBuilder();
 
@@ -61,12 +55,6 @@ public class RaidEmbedMessageBuilder {
 
         return response.toString();
     }
-
-    /**
-     * Build the role text, which shows the roles users are playing in the raids
-     *
-     * @return The role text
-     */
     private static List<List<String>> buildRolesText(Raid raid) {
         RaidBot bot = RaidBot.getInstance();
         Guild guild = bot.getServer(raid.serverId);

@@ -18,15 +18,6 @@ import java.sql.SQLException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-/**
- * Class representing the raid bot itself.
- * This stores the creation/roleSelection map data and also the list of pendingRaids
- * Additionally, it also stores the database in use by the bot and serves as a way
- * for other classes to access it.
- *
- * @author Christopher Bitler
- */
 public class RaidBot {
     private static final Logger log = LoggerFactory.getLogger(RaidBot.class);
 
@@ -34,11 +25,6 @@ public class RaidBot {
 
     private final JDA jda;
     private final Database db;
-
-    /**
-     * Create a new instance of the raid bot with the specified JDA api
-     * @param jda The API for the bot to use
-     */
     public RaidBot(JDA jda) {
         instance = this;
         this.jda = jda;
@@ -92,36 +78,15 @@ public class RaidBot {
         };
         ses.scheduleAtFixedRate(task, 0, 15, TimeUnit.MINUTES);
     }
-
-    /**
-     * Get the JDA server object related to the server ID
-     * @param id The server ID
-     * @return The server related to that that ID
-     */
     public Guild getServer(String id) {
         return jda.getGuildById(id);
     }
-
-    /**
-     * Exposes the underlying library. This is mainly necessary for getting Emojis
-     * @return The JDA library object
-     */
     public JDA getJda() {
         return jda;
     }
-
-    /**
-     * Get the database that the bot is using
-     * @return The database that the bot is using
-     */
     public Database getDatabase() {
         return db;
     }
-    
-    /**
-     * Get the current instance of the bot
-     * @return The current instance of the bot.
-     */
     public static RaidBot getInstance() {
         return instance;
     }
