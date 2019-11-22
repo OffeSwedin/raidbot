@@ -7,7 +7,7 @@ public class SetSocialRoleCommand extends SetServerSettingCommand {
 
     @Override
     public void handleServerSetting(String guildId, String serverSettingValue) {
-        ServerSettings.getInstance().setSocialRole(guildId, serverSettingValue);
+        ServerSettings.getInstance().saveServerSetting(guildId, ServerSettings.SocialRole, serverSettingValue);
     }
 
     @Override

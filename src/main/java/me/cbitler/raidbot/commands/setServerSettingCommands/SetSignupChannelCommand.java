@@ -7,7 +7,7 @@ public class SetSignupChannelCommand extends SetServerSettingCommand {
 
     @Override
     public void handleServerSetting(String guildId, String serverSettingValue) {
-        ServerSettings.getInstance().setSignupChannel(guildId, serverSettingValue);
+        ServerSettings.getInstance().saveServerSetting(guildId, ServerSettings.SignupChannel, serverSettingValue);
     }
 
     @Override

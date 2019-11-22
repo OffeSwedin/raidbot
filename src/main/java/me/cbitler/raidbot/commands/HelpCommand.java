@@ -10,10 +10,22 @@ public class HelpCommand extends Command {
         StringBuilder helpMessage = new StringBuilder("Commands: ");
 
         for(Command command : CommandRegistry.getAllCommands()){
-            helpMessage.append("\n").append(command.helpMessage());
+            if(!SetServerSettingCommand.class.isAssignableFrom(command.getClass())){
+                helpMessage.append("\n").append(command.helpMessage());
+            }
         }
 
         channel.sendMessage(helpMessage.toString()).queue();
+
+        StringBuilder helpMessage2 = new StringBuilder();
+
+        for(Command command : CommandRegistry.getAllCommands()){
+            if(SetServerSettingCommand.class.isAssignableFrom(command.getClass())){
+                helpMessage2.append("\n").append(command.helpMessage());
+            }
+        }
+
+        channel.sendMessage(helpMessage2.toString()).queue();
     }
 
     @Override

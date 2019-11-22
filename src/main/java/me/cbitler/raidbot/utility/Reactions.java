@@ -5,41 +5,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Reactions {
-
-    private final static Reaction[] reactions = {
-            new Reaction("Tank", "588456264716124162"),
-            new Reaction("Healer", "588452960661536777"),
-            new Reaction("Melee", "588455826625265684"),
-            new Reaction("Ranged", "588456430185480194"),
-            new Reaction("Can't Attend", "588459958484598784")
-    };
-
-    private final static Reaction[] testReactions = {
-            new Reaction("Tank", "587246785144160256"),
-            new Reaction("Healer", "587244937846849536"),
-            new Reaction("Melee", "587246755741958166"),
-            new Reaction("Ranged", "587246716345122817"),
-            new Reaction("Can't Attend", "587246903369138187")
-    };
-
-    public static List<Reaction> getReactions(){
-        Reaction[] reactionsToUse;
-        if(EnvVariables.getInstance().isTestEnvironment()){
-            reactionsToUse = testReactions;
-        }else{
-            reactionsToUse = reactions;
-        }
+    public static List<Reaction> getSignupReactions(String serverId){
+        Reaction[] reactionsToUse = getSignupReactionForServer(serverId);
 
         return new ArrayList<>(Arrays.asList(reactionsToUse));
     }
 
-    public static Reaction getReactionFromEmojiId(String emojiId){
-        Reaction[] reactionsToUse;
-        if(EnvVariables.getInstance().isTestEnvironment()){
-            reactionsToUse = testReactions;
-        }else{
-            reactionsToUse = reactions;
-        }
+    public static Reaction getSignupReactionFromEmojiId(String emojiId, String serverId){
+        Reaction[] reactionsToUse = getSignupReactionForServer(serverId);
 
         for(Reaction reaction : reactionsToUse){
             if(reaction.getEmote().getId().equals(emojiId)){
@@ -48,5 +21,16 @@ public class Reactions {
         }
 
         return null;
+    }
+
+    private static Reaction[] getSignupReactionForServer(String serverId){
+        ServerSettings settings = ServerSettings.getInstance();
+        return new Reaction[]{
+                new Reaction("Tank", settings.loadServerSetting(serverId, ServerSettings.TankReaction)),
+                new Reaction("Healer", settings.loadServerSetting(serverId, ServerSettings.HealerReaction)),
+                new Reaction("Melee", settings.loadServerSetting(serverId, ServerSettings.MeleeReaction)),
+                new Reaction("Ranged", settings.loadServerSetting(serverId, ServerSettings.RangedReaction)),
+                new Reaction("Can't Attend", settings.loadServerSetting(serverId, ServerSettings.CantAttendReaction))
+        };
     }
 }

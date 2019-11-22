@@ -1,6 +1,7 @@
 package me.cbitler.raidbot.database;
 
 import me.cbitler.raidbot.utility.EnvVariables;
+import me.cbitler.raidbot.utility.ServerSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,12 +41,20 @@ public class Database {
     
     private final String botServerSettingsInit = "CREATE TABLE IF NOT EXISTS serverSettings (\n"
             + " serverId VARCHAR(255) PRIMARY KEY, \n"
-            + " raid_leader_role text, \n"
-            + " raider_role text, \n"
-            + " social_role text,  \n"
-            + " signup_channel text, \n"
-            + " archive_channel text)";
-    
+            + ServerSettings.RaidLeaderRole + " text, \n"
+            + ServerSettings.RaiderRole + " text, \n"
+            + ServerSettings.SocialRole + " text,  \n"
+            + ServerSettings.SignupChannel + " text, \n"
+            + ServerSettings.ArchiveChannel + " text, \n"
+            + ServerSettings.TankReaction + " text, \n"
+            + ServerSettings.HealerReaction + " text, \n"
+            + ServerSettings.MeleeReaction + " text, \n"
+            + ServerSettings.RangedReaction + " text, \n"
+            + ServerSettings.CantAttendReaction + " text, \n"
+            + ServerSettings.AcceptedEmote + " text, \n"
+            + ServerSettings.BenchedEmote + " text, \n"
+            + ServerSettings.NoShowEmote + " text, \n"
+            + ServerSettings.NotDecidedEmote + " text)";
     
     /**
      * Create a new database

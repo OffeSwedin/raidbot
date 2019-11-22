@@ -62,6 +62,15 @@ public class RaidBot {
         CommandRegistry.addCommand(new SetArchiveChannelCommand());
         CommandRegistry.addCommand(new SetSocialRoleCommand());
         CommandRegistry.addCommand(new RemindRaidCommand());
+        CommandRegistry.addCommand(new SetTankEmoteCommand());
+        CommandRegistry.addCommand(new SetHealerEmoteCommand());
+        CommandRegistry.addCommand(new SetMeleeEmoteCommand());
+        CommandRegistry.addCommand(new SetRangedEmoteCommand());
+        CommandRegistry.addCommand(new SetCantAttendEmoteCommand());
+        CommandRegistry.addCommand(new SetAcceptedEmoteCommand());
+        CommandRegistry.addCommand(new SetStandbyEmoteCommand());
+        CommandRegistry.addCommand(new SetNoShowEmoteCommand());
+        CommandRegistry.addCommand(new SetNotDecidedEmoteCommand());
 
         RaidManager.loadRaidsFromDatabase();
 

@@ -44,12 +44,12 @@ public class RaidManager {
 		Guild guild = bot.getServer(serverId);
 
 		List<String> roles = new ArrayList<>();
-		for(Reaction reaction : Reactions.getReactions()){
+		for(Reaction reaction : Reactions.getSignupReactions(serverId)){
 			roles.add(reaction.getSpec());
 		}
 
-		TextChannel channel = guild.getTextChannelsByName(ServerSettings.getInstance().getSignupChannel(serverId), true).get(0);
-		Role role = guild.getRolesByName(ServerSettings.getInstance().getRaiderRole(serverId), true).get(0);
+		TextChannel channel = guild.getTextChannelsByName(ServerSettings.getInstance().loadServerSetting(serverId, ServerSettings.SignupChannel), true).get(0);
+		Role role = guild.getRolesByName(ServerSettings.getInstance().loadServerSetting(serverId, ServerSettings.RaiderRole), true).get(0);
 
 		MessageBuilder mb = new MessageBuilder();
 		mb.setContent(role.getAsMention());
@@ -64,7 +64,7 @@ public class RaidManager {
 				if (inserted) {
 					raids.add(newRaid);
 
-					for (Reaction reaction : Reactions.getReactions()) {
+					for (Reaction reaction : Reactions.getSignupReactions(serverId)) {
 						message.addReaction(reaction.getEmote()).queue();
 					}
 					newRaid.updateMessage();
@@ -95,7 +95,7 @@ public class RaidManager {
 
 				Guild guild = RaidBot.getInstance().getServer(raid.serverId);
 				TextChannel archiveChannel = guild
-						.getTextChannelsByName(ServerSettings.getInstance().getArchiveChannel(raid.serverId), true).get(0);
+						.getTextChannelsByName(ServerSettings.getInstance().loadServerSetting(raid.serverId, ServerSettings.ArchiveChannel), true).get(0);
 
 				archiveChannel.sendMessage(RaidEmbedMessageBuilder.buildEmbed(raid)).queue();
 

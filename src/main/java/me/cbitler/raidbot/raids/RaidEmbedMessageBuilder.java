@@ -2,6 +2,7 @@ package me.cbitler.raidbot.raids;
 
 import me.cbitler.raidbot.RaidBot;
 import me.cbitler.raidbot.utility.EnvVariables;
+import me.cbitler.raidbot.utility.ServerSettings;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Guild;
@@ -84,7 +85,7 @@ public class RaidEmbedMessageBuilder {
 
             for (RaidUser user : usersInRole) {
                 if(!role.equals("Can't Attend")){
-                    roleStrings.add("- "+ guild.getMemberById(user.id).getEffectiveName() + " " + createSignupStatusText(user));
+                    roleStrings.add("- "+ guild.getMemberById(user.id).getEffectiveName() + " " + createSignupStatusText(user, raid));
                 }else{
                     roleStrings.add("- "+ guild.getMemberById(user.id).getEffectiveName());
                 }
@@ -94,32 +95,16 @@ public class RaidEmbedMessageBuilder {
         return roleTexts;
     }
 
-    private static String createSignupStatusText(RaidUser user){
+    private static String createSignupStatusText(RaidUser user, Raid raid){
         Emote emote;
         if(user.isAccepted()){
-            if(EnvVariables.getInstance().isTestEnvironment()){
-                emote = RaidBot.getInstance().getJda().getEmoteById("590293224250408981");
-            }else{
-                emote = RaidBot.getInstance().getJda().getEmoteById("590293759166775307");
-            }
+            emote = RaidBot.getInstance().getJda().getEmoteById(ServerSettings.getInstance().loadServerSetting(raid.serverId, ServerSettings.AcceptedEmote));
         }else if(user.isBenched()){
-            if(EnvVariables.getInstance().isTestEnvironment()) {
-                emote = RaidBot.getInstance().getJda().getEmoteById("590292731436335166");
-            }else{
-                emote = RaidBot.getInstance().getJda().getEmoteById("590293760726925372");
-            }
+            emote = RaidBot.getInstance().getJda().getEmoteById(ServerSettings.getInstance().loadServerSetting(raid.serverId, ServerSettings.BenchedEmote));
         }else if(user.isNoShow()){
-            if(EnvVariables.getInstance().isTestEnvironment()) {
-                emote = RaidBot.getInstance().getJda().getEmoteById("597751514307493888");
-            }else{
-                emote = RaidBot.getInstance().getJda().getEmoteById("605719936123404298");
-            }
+            emote = RaidBot.getInstance().getJda().getEmoteById(ServerSettings.getInstance().loadServerSetting(raid.serverId, ServerSettings.NoShowEmote));
         }else{
-            if(EnvVariables.getInstance().isTestEnvironment()) {
-                emote = RaidBot.getInstance().getJda().getEmoteById("590292700842950656");
-            }else{
-                emote = RaidBot.getInstance().getJda().getEmoteById("590293759519096832");
-            }
+            emote = RaidBot.getInstance().getJda().getEmoteById(ServerSettings.getInstance().loadServerSetting(raid.serverId, ServerSettings.NotDecidedEmote));
         }
 
         return "<:" + emote.getName() + ":" + emote.getId() + ">";

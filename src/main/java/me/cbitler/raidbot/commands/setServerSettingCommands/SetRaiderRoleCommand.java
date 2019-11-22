@@ -7,7 +7,7 @@ public class SetRaiderRoleCommand extends SetServerSettingCommand {
 
     @Override
     public void handleServerSetting(String guildId, String serverSettingValue) {
-        ServerSettings.getInstance().setRaiderRole(guildId, serverSettingValue);
+        ServerSettings.getInstance().saveServerSetting(guildId, ServerSettings.RaiderRole, serverSettingValue);
     }
 
     @Override

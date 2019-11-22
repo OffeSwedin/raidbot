@@ -249,7 +249,7 @@ public class Raid {
 		if (PermissionsUtil.isAllowedToRaid(member)) {
 
 			String emojiId = emote.getId();
-			Reaction reaction = Reactions.getReactionFromEmojiId(emojiId);
+			Reaction reaction = Reactions.getSignupReactionFromEmojiId(emojiId, serverId);
 			if (reaction != null) {
 				if (getRaidUser(member.getUser().getId()) != null) {
 					removeUser(member.getUser().getId());
@@ -271,7 +271,7 @@ public class Raid {
 		try {
 			RaidBot.getInstance().getServer(serverId).getTextChannelById(channelId).clearReactionsById(messageId).queueAfter(delay, TimeUnit.MILLISECONDS);
 			delay += 1000;
-			for (Reaction reaction : Reactions.getReactions()){
+			for (Reaction reaction : Reactions.getSignupReactions(serverId)){
 				RaidBot.getInstance().getServer(serverId).getTextChannelById(channelId).addReactionById(messageId, reaction.getEmote()).queueAfter(delay, TimeUnit.MILLISECONDS);
 				delay += 1000;
 			}
