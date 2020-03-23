@@ -6,8 +6,8 @@ import mintey.raidbot.utility.ServerSettings;
 public class SetRaiderRoleCommand extends SetServerSettingCommand {
 
     @Override
-    public void handleServerSetting(String guildId, String serverSettingValue) {
-        ServerSettings.getInstance().saveServerSetting(guildId, ServerSettings.RaiderRole, serverSettingValue);
+    public String serverSettingName(){
+        return ServerSettings.RaiderRole;
     }
 
     @Override

@@ -6,8 +6,8 @@ import mintey.raidbot.utility.ServerSettings;
 public class SetSignupChannelCommand extends SetServerSettingCommand {
 
     @Override
-    public void handleServerSetting(String guildId, String serverSettingValue) {
-        ServerSettings.getInstance().saveServerSetting(guildId, ServerSettings.SignupChannel, serverSettingValue);
+    public String serverSettingName(){
+        return ServerSettings.SignupChannel;
     }
 
     @Override

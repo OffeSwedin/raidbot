@@ -33,6 +33,8 @@ public class RaidBot {
         db.connect();
         setupDatabaseKeepAlive();
 
+        log.info("Database connected");
+
         CommandRegistry.addCommand(new HelpCommand());
         CommandRegistry.addCommand(new InfoCommand());
         CommandRegistry.addCommand(new EndRaidCommand());
