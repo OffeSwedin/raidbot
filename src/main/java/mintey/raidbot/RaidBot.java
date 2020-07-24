@@ -1,14 +1,14 @@
 package mintey.raidbot;
 
+import mintey.raidbot.commands.*;
 import mintey.raidbot.commands.setRaidSignupStatusCommands.AcceptToRaidCommand;
 import mintey.raidbot.commands.setRaidSignupStatusCommands.NoShowToRaidCommand;
 import mintey.raidbot.commands.setRaidSignupStatusCommands.StandbyToRaidCommand;
+import mintey.raidbot.commands.setServerSettingCommands.*;
 import mintey.raidbot.database.Database;
 import mintey.raidbot.database.QueryResult;
 import mintey.raidbot.handlers.*;
 import mintey.raidbot.raids.RaidManager;
-import mintey.raidbot.commands.*;
-import mintey.raidbot.commands.setServerSettingCommands.*;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Guild;
 import org.slf4j.Logger;
@@ -57,6 +57,7 @@ public class RaidBot {
         CommandRegistry.addCommand(new SetStandbyEmoteCommand());
         CommandRegistry.addCommand(new SetNoShowEmoteCommand());
         CommandRegistry.addCommand(new SetNotDecidedEmoteCommand());
+        CommandRegistry.addCommand(new ShowServerSettingsCommand());
 
         RaidManager.loadRaidsFromDatabase();
 
