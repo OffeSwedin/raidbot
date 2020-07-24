@@ -1,5 +1,7 @@
 package mintey.raidbot.commands;
 
+import mintey.raidbot.RaidBot;
+import mintey.raidbot.utility.ServerSettings;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -11,12 +13,12 @@ public abstract class SetServerSettingCommand extends Command {
             if (args.length >= 1) {
                 try {
                     String serverSettingValue = args[0];
-                    handleServerSetting(channel.getGuild().getId(), serverSettingValue);
+                    ServerSettings.getInstance().saveServerSetting(channel.getGuild().getId(), serverSettingName(), handleServerSettingValue(serverSettingValue));
                     author.openPrivateChannel().queue(privateChannel -> privateChannel
                             .sendMessage("Setting successfully updated to: " + serverSettingValue).queue());
                 } catch (Exception exc) {
                     author.openPrivateChannel().queue(privateChannel -> privateChannel
-                            .sendMessage("Make sure that the bot has the 'Manage messages' permission").queue());
+                            .sendMessage("Invalid value for setting. ").queue());
                 }
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
@@ -25,11 +27,24 @@ public abstract class SetServerSettingCommand extends Command {
         }
     }
 
+    public String ParsePossibleEmote(String input){
+        String[] parts = input.split("<|>|:");
+        if(parts.length > 1){
+            input = parts[3];
+        }
+
+        return RaidBot.getInstance().getJda().getEmoteById(input).getId();
+    }
+
+    public String handleServerSettingValue(String serverSettingValue){
+        return serverSettingValue;
+    }
+
+    public abstract String serverSettingName();
+
     public abstract String helpMessage();
 
     public abstract String commandName();
 
     public abstract String commandParameters();
-
-    public abstract void handleServerSetting(String guildId, String serverSettingValue);
 }

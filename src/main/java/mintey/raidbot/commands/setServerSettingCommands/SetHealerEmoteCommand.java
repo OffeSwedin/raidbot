@@ -6,8 +6,13 @@ import mintey.raidbot.utility.ServerSettings;
 public class SetHealerEmoteCommand extends SetServerSettingCommand {
 
     @Override
-    public void handleServerSetting(String guildId, String serverSettingValue) {
-        ServerSettings.getInstance().saveServerSetting(guildId, ServerSettings.HealerReaction, serverSettingValue);
+    public String handleServerSettingValue(String serverSettingValue) {
+        return ParsePossibleEmote(serverSettingValue);
+    }
+
+    @Override
+    public String serverSettingName(){
+        return ServerSettings.HealerReaction;
     }
 
     @Override
