@@ -1,5 +1,6 @@
 package mintey.raidbot.commands;
 
+import mintey.raidbot.RaidBot;
 import mintey.raidbot.utility.ServerSettings;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -15,20 +16,20 @@ public class ShowServerSettingsCommand extends Command {
 
         StringBuilder serverSettingsMessage = new StringBuilder("Server Settings: ");
 
-        serverSettingsMessage.append(ServerSettings.RaidLeaderRole + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.RaidLeaderRole));
-        serverSettingsMessage.append(ServerSettings.RaiderRole + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.RaiderRole));
-        serverSettingsMessage.append(ServerSettings.SocialRole + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.SocialRole));
-        serverSettingsMessage.append(ServerSettings.SignupChannel + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.SignupChannel));
-        serverSettingsMessage.append(ServerSettings.ArchiveChannel + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.ArchiveChannel));
-        serverSettingsMessage.append(ServerSettings.TankReaction + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.TankReaction));
-        serverSettingsMessage.append(ServerSettings.HealerReaction + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.HealerReaction));
-        serverSettingsMessage.append(ServerSettings.MeleeReaction + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.MeleeReaction));
-        serverSettingsMessage.append(ServerSettings.RangedReaction + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.RangedReaction));
-        serverSettingsMessage.append(ServerSettings.CantAttendReaction + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.CantAttendReaction));
-        serverSettingsMessage.append(ServerSettings.AcceptedEmote + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.AcceptedEmote));
-        serverSettingsMessage.append(ServerSettings.BenchedEmote + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.BenchedEmote));
-        serverSettingsMessage.append(ServerSettings.NoShowEmote + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.NoShowEmote));
-        serverSettingsMessage.append(ServerSettings.NotDecidedEmote + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.NotDecidedEmote));
+        serverSettingsMessage.append("\n" + ServerSettings.RaidLeaderRole + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.RaidLeaderRole));
+        serverSettingsMessage.append("\n" + ServerSettings.RaiderRole + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.RaiderRole));
+        serverSettingsMessage.append("\n" + ServerSettings.SocialRole + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.SocialRole));
+        serverSettingsMessage.append("\n" + ServerSettings.SignupChannel + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.SignupChannel));
+        serverSettingsMessage.append("\n" + ServerSettings.ArchiveChannel + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.ArchiveChannel));
+        serverSettingsMessage.append("\n" + ServerSettings.TankReaction + ": " + RaidBot.getInstance().getJda().getEmoteById(ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.TankReaction)));
+        serverSettingsMessage.append("\n" + ServerSettings.HealerReaction + ": " + RaidBot.getInstance().getJda().getEmoteById(ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.HealerReaction)));
+        serverSettingsMessage.append("\n" + ServerSettings.MeleeReaction + ": " + RaidBot.getInstance().getJda().getEmoteById(ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.MeleeReaction)));
+        serverSettingsMessage.append("\n" + ServerSettings.RangedReaction + ": " + RaidBot.getInstance().getJda().getEmoteById(ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.RangedReaction)));
+        serverSettingsMessage.append("\n" + ServerSettings.CantAttendReaction + ": " + RaidBot.getInstance().getJda().getEmoteById(ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.CantAttendReaction)));
+        serverSettingsMessage.append("\n" + ServerSettings.AcceptedEmote + ": " + RaidBot.getInstance().getJda().getEmoteById(ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.AcceptedEmote)));
+        serverSettingsMessage.append("\n" + ServerSettings.BenchedEmote + ": " + RaidBot.getInstance().getJda().getEmoteById(ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.BenchedEmote)));
+        serverSettingsMessage.append("\n" + ServerSettings.NoShowEmote + ": " + RaidBot.getInstance().getJda().getEmoteById(ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.NoShowEmote)));
+        serverSettingsMessage.append("\n" + ServerSettings.NotDecidedEmote + ": " + RaidBot.getInstance().getJda().getEmoteById(ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.NotDecidedEmote)));
 
         channel.sendMessage(serverSettingsMessage.toString()).queue();
     }
