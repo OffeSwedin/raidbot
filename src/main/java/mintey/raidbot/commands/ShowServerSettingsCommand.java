@@ -29,6 +29,8 @@ public class ShowServerSettingsCommand extends Command {
         serverSettingsMessage.append(ServerSettings.BenchedEmote + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.BenchedEmote));
         serverSettingsMessage.append(ServerSettings.NoShowEmote + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.NoShowEmote));
         serverSettingsMessage.append(ServerSettings.NotDecidedEmote + ": " + ServerSettings.getInstance().loadServerSetting(member.getGuild().getId(), ServerSettings.NotDecidedEmote));
+
+        channel.sendMessage(serverSettingsMessage.toString()).queue();
     }
 
     @Override
