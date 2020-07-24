@@ -33,7 +33,7 @@ public class ShowServerSettingsCommand extends Command {
     }
 
     private String ServerSettingToPrintableString(String guildId, String serverSettingToPrint, boolean printAsEmote){
-        String serverSettingValue = ServerSettings.getInstance().loadServerSetting(guildId, ServerSettings.RaidLeaderRole);
+        String serverSettingValue = ServerSettings.getInstance().loadServerSetting(guildId, serverSettingToPrint);
         if(printAsEmote){
             Emote emote = RaidBot.getInstance().getJda().getEmoteById(serverSettingValue);
             serverSettingValue = emote.getAsMention();
