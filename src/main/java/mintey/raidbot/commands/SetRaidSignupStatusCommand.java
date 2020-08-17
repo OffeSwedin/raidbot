@@ -19,7 +19,7 @@ public abstract class SetRaidSignupStatusCommand extends Command {
         Member member = guild.getMember(author);
 
         if (PermissionsUtil.isRaidLeader(member)) {
-            if (args.length >= 2) {
+            if (args.length >= 1) {
                 List<String> names = new ArrayList<>(Arrays.asList(args));
                 String messageId = names.remove(0);
 
@@ -27,6 +27,16 @@ public abstract class SetRaidSignupStatusCommand extends Command {
 
                 if (raid != null && raid.serverId.equalsIgnoreCase(channel.getGuild().getId())) {
                     boolean needToUpdateMessage = false;
+                    if(names.size() == 0){
+                        names = raid.getNotDecidedNames();
+                        if(names.size() == 0){
+                            author.openPrivateChannel()
+                                    .queue(privateChannel -> privateChannel.sendMessage(
+                                            "No raiders found with status 'NotDecided'. Format for command: " +
+                                                    commandFormat()).queue());
+                            return;
+                        }
+                    }
                     for (String name : names){
                         if(handleUser(raid, name)) {
                             needToUpdateMessage = true;
@@ -44,7 +54,7 @@ public abstract class SetRaidSignupStatusCommand extends Command {
                 }
             } else {
                 author.openPrivateChannel().queue(privateChannel -> privateChannel
-                        .sendMessage("Format for command: " + commandFormat()).queue());
+                        .sendMessage("No arguments found. Format for command: " + commandFormat()).queue());
             }
         }
     }

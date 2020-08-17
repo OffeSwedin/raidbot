@@ -16,6 +16,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 public class Raid {
 	private static final Logger log = LoggerFactory.getLogger(Raid.class);
 
@@ -123,6 +125,14 @@ public class Raid {
 		}
 		return notRespondedMembers;
 	}
+
+	public List<String> getNotDecidedNames(){
+		return this.users.stream()
+				.filter(user -> !user.isAccepted() &&  !user.isBenched() && !user.isNoShow())
+				.map(raidUser -> raidUser.name)
+				.collect(Collectors.toList());
+	}
+
 	public boolean roleExists(String role){
 		return roles.contains(role);
 	}
