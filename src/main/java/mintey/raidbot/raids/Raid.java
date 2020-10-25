@@ -152,7 +152,7 @@ public class Raid {
 	}
 
 	public void parseReactions() {
-		Guild guild = RaidBot.getInstance().getJda().getGuilds().get(0);
+		Guild guild = RaidBot.getInstance().getServer(serverId);
 		Message message = RaidBot.getInstance().getServer(serverId).getTextChannelById(channelId).getMessageById(messageId).complete();
 		for(MessageReaction reaction : message.getReactions()){
 			List<User> users = reaction.getUsers().complete();
