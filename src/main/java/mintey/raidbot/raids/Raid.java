@@ -6,8 +6,8 @@ import mintey.raidbot.database.QueryResult;
 import mintey.raidbot.utility.PermissionsUtil;
 import mintey.raidbot.utility.Reaction;
 import mintey.raidbot.utility.Reactions;
-import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -153,12 +153,12 @@ public class Raid {
 
 	public void parseReactions() {
 		Guild guild = RaidBot.getInstance().getServer(serverId);
-		Message message = RaidBot.getInstance().getServer(serverId).getTextChannelById(channelId).getMessageById(messageId).complete();
+		Message message = RaidBot.getInstance().getServer(serverId).getTextChannelById(channelId).retrieveMessageById(messageId).complete();
 		for(MessageReaction reaction : message.getReactions()){
-			List<User> users = reaction.getUsers().complete();
+			List<User> users = reaction.retrieveUsers().complete();
 			for(User user : users){
 				if(!user.isBot()){
-					parseReaction(guild.getMember(user), reaction.getReactionEmote().getEmote(), false);
+					parseReaction(guild.retrieveMember(user).complete(), reaction.getReactionEmote().getEmote(), false);
 				}
 			}
 		}

@@ -3,15 +3,18 @@ package mintey.raidbot.handlers;
 import mintey.raidbot.commands.Command;
 import mintey.raidbot.commands.CommandRegistry;
 import mintey.raidbot.raids.RaidManager;
-import net.dv8tion.jda.core.events.message.guild.GuildMessageDeleteEvent;
-import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 public class ChannelMessageHandler extends ListenerAdapter {
 	private static final Logger log = LoggerFactory.getLogger(ChannelMessageHandler.class);
+
 	@Override
-	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+	public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
 		try{
 			if (event.getAuthor().isBot()) {
 				return;
@@ -19,7 +22,9 @@ public class ChannelMessageHandler extends ListenerAdapter {
 
 			if (event.getMessage().getContentRaw().startsWith("!")) {
 
-				log.info("Parsing channel command message event from " + event.getMember().getEffectiveName());
+				if(event.getMember() != null){
+					log.info("Parsing channel command message event from " + event.getMember().getEffectiveName());
+				}
 
 				String[] messageParts = event.getMessage().getContentRaw().split(" ");
 				String[] arguments = CommandRegistry.getArguments(messageParts);
@@ -43,7 +48,7 @@ public class ChannelMessageHandler extends ListenerAdapter {
 	}
 
 	@Override
-	public void onGuildMessageDelete(GuildMessageDeleteEvent e) {
+	public void onGuildMessageDelete(@NotNull GuildMessageDeleteEvent e) {
 		try{
 			if (RaidManager.getRaid(e.getMessageId()) != null) {
 				RaidManager.deleteRaid(e.getMessageId());

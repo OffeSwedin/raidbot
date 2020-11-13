@@ -4,10 +4,10 @@ import mintey.raidbot.raids.Raid;
 import mintey.raidbot.raids.RaidManager;
 import mintey.raidbot.raids.RaidUser;
 import mintey.raidbot.utility.PermissionsUtil;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 
 import java.sql.Timestamp;
 
@@ -15,9 +15,9 @@ public class MoveToRoleCommand extends Command {
     @Override
     public void handleCommand(String[] args, TextChannel channel, User author) {
         Guild guild = channel.getGuild();
-        Member member = guild.getMember(author);
+        Member member = guild.retrieveMember(author).complete();
 
-        if (PermissionsUtil.isRaidLeader(member)) {
+        if (member != null && PermissionsUtil.isRaidLeader(member)) {
             if (args.length >= 2) {
                 String messageId = args[0];
                 String userName = args[1];

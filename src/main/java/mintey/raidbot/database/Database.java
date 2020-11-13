@@ -33,6 +33,18 @@ public class Database {
             + " raidId text, \n"
             + " signupStatus text, \n"
             + " signupTime text)";
+
+    private final String userStatsTableInit = "CREATE TABLE IF NOT EXISTS userStats (\n"
+            + " guildId text, \n"
+            + " userId text, \n"
+            + " joinDate datetime, \n"
+            + " totalRaids int, \n"
+            + " totalRaidsSignedFor int, \n"
+            + " totalRaidsNotSignedFor int, \n"
+            + " totalRaidsAccepted int, \n"
+            + " totalRaidsStandby int, \n"
+            + " totalRaidsNoShow int, \n"
+            + " latestStandby datetime)";
     
     private final String botServerSettingsInit = "CREATE TABLE IF NOT EXISTS serverSettings (\n"
             + " serverId VARCHAR(255) PRIMARY KEY, \n"
@@ -106,5 +118,6 @@ public class Database {
         connection.createStatement().execute(raidTableInit);
         connection.createStatement().execute(raidUsersTableInit);
         connection.createStatement().execute(botServerSettingsInit);
+        connection.createStatement().execute(userStatsTableInit);
     }
 }

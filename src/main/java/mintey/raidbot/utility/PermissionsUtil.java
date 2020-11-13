@@ -1,7 +1,7 @@
 package mintey.raidbot.utility;
 
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 public class PermissionsUtil {
 	public static boolean isAllowedToRaid(Member member){
 		return isRaider(member) || isSocial(member);

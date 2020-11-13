@@ -2,11 +2,11 @@ package mintey.raidbot.raids;
 
 import mintey.raidbot.RaidBot;
 import mintey.raidbot.utility.ServerSettings;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Emote;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Emote;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -71,10 +71,11 @@ public class RaidEmbedMessageBuilder {
             roleStrings.add("**" + role + " (" + usersInRole.size() + "):**");
 
             for (RaidUser user : usersInRole) {
+                Member member = guild.retrieveMemberById(user.id).complete();
                 if(!role.equals("Can't Attend")){
-                    roleStrings.add("- "+ guild.getMemberById(user.id).getEffectiveName() + " " + createSignupStatusText(user, raid));
+                    roleStrings.add("- "+ member.getEffectiveName() + " " + createSignupStatusText(user, raid));
                 }else{
-                    roleStrings.add("- "+ guild.getMemberById(user.id).getEffectiveName());
+                    roleStrings.add("- "+ member.getEffectiveName());
                 }
 
             }

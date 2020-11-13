@@ -9,8 +9,8 @@ import mintey.raidbot.database.Database;
 import mintey.raidbot.database.QueryResult;
 import mintey.raidbot.handlers.*;
 import mintey.raidbot.raids.RaidManager;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -3,16 +3,16 @@ package mintey.raidbot.commands;
 import mintey.raidbot.raids.Raid;
 import mintey.raidbot.raids.RaidManager;
 import mintey.raidbot.utility.PermissionsUtil;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 
 public class EndRaidCommand extends Command {
     @Override
     public void handleCommand(String[] args, TextChannel channel, User author) {
-        Member member = channel.getGuild().getMember(author);
+        Member member = channel.getGuild().retrieveMember(author).complete();
                 
-        if(PermissionsUtil.isRaidLeader(member)) {
+        if(member != null && PermissionsUtil.isRaidLeader(member)) {
             if(args.length >= 1) {
                 String raidId = args[0];
                 Raid raid = RaidManager.getRaid(raidId);

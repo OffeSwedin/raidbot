@@ -2,8 +2,9 @@ package mintey.raidbot.handlers;
 
 import mintey.raidbot.raids.Raid;
 import mintey.raidbot.raids.RaidManager;
-import net.dv8tion.jda.core.events.message.guild.react.GuildMessageReactionAddEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +12,7 @@ public class ReactionHandler extends ListenerAdapter {
 	private static final Logger log = LoggerFactory.getLogger(ReactionHandler.class);
 
 	@Override
-	public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
+	public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
 		try{
 			Raid raid = RaidManager.getRaid(event.getMessageId());
 			if (event.getUser().isBot()) {

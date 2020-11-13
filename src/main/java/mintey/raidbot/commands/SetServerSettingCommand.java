@@ -2,14 +2,16 @@ package mintey.raidbot.commands;
 
 import mintey.raidbot.RaidBot;
 import mintey.raidbot.utility.ServerSettings;
-import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 
 public abstract class SetServerSettingCommand extends Command {
     @Override
     public void handleCommand(String[] args, TextChannel channel, User author) {
-        if (channel.getGuild().getMember(author).getPermissions().contains(Permission.MANAGE_SERVER)) {
+        Member member = channel.getGuild().retrieveMember(author).complete();
+        if (member != null && member.getPermissions().contains(Permission.MANAGE_SERVER)) {
             if (args.length >= 1) {
                 try {
                     String serverSettingValue = args[0];

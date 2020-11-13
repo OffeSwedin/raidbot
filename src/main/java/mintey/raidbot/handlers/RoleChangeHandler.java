@@ -3,10 +3,11 @@ package mintey.raidbot.handlers;
 import mintey.raidbot.raids.Raid;
 import mintey.raidbot.raids.RaidManager;
 import mintey.raidbot.utility.PermissionsUtil;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.events.guild.member.GuildMemberRoleAddEvent;
-import net.dv8tion.jda.core.events.guild.member.GuildMemberRoleRemoveEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleRemoveEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +17,7 @@ public class RoleChangeHandler extends ListenerAdapter {
 	private static final Logger log = LoggerFactory.getLogger(RoleChangeHandler.class);
 
 	@Override
-	public void onGuildMemberRoleAdd(GuildMemberRoleAddEvent event) {
+	public void onGuildMemberRoleAdd(@NotNull GuildMemberRoleAddEvent event) {
 		try {
 			String guildID = event.getGuild().getId();
 			List<Raid> raids = RaidManager.getRaids();
@@ -34,7 +35,7 @@ public class RoleChangeHandler extends ListenerAdapter {
 	}
 
 	@Override
-	public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent event) {
+	public void onGuildMemberRoleRemove(@NotNull GuildMemberRoleRemoveEvent event) {
 		try {
 			Guild guild = event.getGuild();
 

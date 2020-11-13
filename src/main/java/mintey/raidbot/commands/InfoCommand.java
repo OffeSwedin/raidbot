@@ -1,7 +1,7 @@
 package mintey.raidbot.commands;
 
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 
 public class InfoCommand extends Command {
     private final String information = "RaidSignUpBot Information:\n" +

@@ -1,7 +1,7 @@
 package mintey.raidbot.commands;
 
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 
 public abstract class Command {
     public abstract void handleCommand(String[] args, TextChannel channel, User author);

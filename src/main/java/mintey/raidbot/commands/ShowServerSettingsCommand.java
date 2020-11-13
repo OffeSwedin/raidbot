@@ -2,9 +2,9 @@ package mintey.raidbot.commands;
 
 import mintey.raidbot.RaidBot;
 import mintey.raidbot.utility.ServerSettings;
-import net.dv8tion.jda.core.entities.Emote;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.api.entities.Emote;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 
 public class ShowServerSettingsCommand extends Command {
 

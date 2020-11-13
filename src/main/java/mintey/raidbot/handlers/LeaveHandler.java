@@ -2,8 +2,9 @@ package mintey.raidbot.handlers;
 
 import mintey.raidbot.raids.Raid;
 import mintey.raidbot.raids.RaidManager;
-import net.dv8tion.jda.core.events.guild.member.GuildMemberLeaveEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +14,7 @@ public class LeaveHandler extends ListenerAdapter {
 	private static final Logger log = LoggerFactory.getLogger(LeaveHandler.class);
 
 	@Override
-	public void onGuildMemberLeave(GuildMemberLeaveEvent event) {
+	public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent event) {
 		try{
 			String guildID = event.getGuild().getId();
 			List<Raid> raids = RaidManager.getRaids();

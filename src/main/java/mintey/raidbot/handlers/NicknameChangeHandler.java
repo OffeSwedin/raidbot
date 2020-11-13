@@ -3,8 +3,9 @@ package mintey.raidbot.handlers;
 import mintey.raidbot.raids.Raid;
 import mintey.raidbot.raids.RaidManager;
 import mintey.raidbot.raids.RaidUser;
-import net.dv8tion.jda.core.events.guild.member.GuildMemberNickChangeEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateNicknameEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,12 +15,12 @@ public class NicknameChangeHandler extends ListenerAdapter {
 	private static final Logger log = LoggerFactory.getLogger(NicknameChangeHandler.class);
 
 	@Override
-	public void onGuildMemberNickChange(GuildMemberNickChangeEvent event) {
+	public void onGuildMemberUpdateNickname(@NotNull GuildMemberUpdateNicknameEvent event) {
 		try{
 			String guildID = event.getGuild().getId();
 			List<Raid> raids = RaidManager.getRaids();
 
-			log.info("Parsing namechange from " + event.getPrevNick() +
+			log.info("Parsing namechange from " + event.getOldNickname() +
 					" to " + event.getMember().getEffectiveName());
 
 			for(Raid raid : raids){

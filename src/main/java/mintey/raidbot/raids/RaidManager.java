@@ -6,11 +6,11 @@ import mintey.raidbot.database.QueryResult;
 import mintey.raidbot.utility.Reaction;
 import mintey.raidbot.utility.Reactions;
 import mintey.raidbot.utility.ServerSettings;
-import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Role;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.exceptions.ErrorResponseException;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,7 +74,7 @@ public class RaidManager {
 
 				archiveChannel.sendMessage(RaidEmbedMessageBuilder.buildEmbed(raid)).queue();
 
-				guild.getTextChannelById(raid.channelId).getMessageById(messageId)
+				guild.getTextChannelById(raid.channelId).retrieveMessageById(messageId)
                         .queue(message -> message.delete().queue());
 
 			} catch (Exception e) {

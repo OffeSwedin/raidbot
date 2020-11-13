@@ -1,7 +1,7 @@
 package mintey.raidbot.utility;
 
 import mintey.raidbot.RaidBot;
-import net.dv8tion.jda.core.entities.Emote;
+import net.dv8tion.jda.api.entities.Emote;
 
 public class Reaction {
     private final String spec;
